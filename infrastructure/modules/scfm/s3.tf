@@ -35,24 +35,32 @@ resource "aws_s3_bucket_acl" "audio" {
   acl    = "public-read"
 }
 
+resource "aws_s3_bucket_versioning" "audio" {
+  bucket = aws_s3_bucket.audio.id
+
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
 resource "aws_s3_bucket_policy" "audio" {
   bucket = aws_s3_bucket.audio.id
 
-  policy = <<POLICY
-{
-  "Version":"2012-10-17",
-  "Statement":[
+  policy = jsonencode(
     {
-      "Effect": "Allow",
-      "Principal": "*",
-      "Action": [
-        "s3:GetObject"
-      ],
-      "Resource": [
-        "${aws_s3_bucket.audio.arn}/*"
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Effect" : "Allow",
+          "Principal" : "*",
+          "Action" : [
+            "s3:GetObject"
+          ],
+          "Resource" : [
+            "${aws_s3_bucket.audio.arn}/*"
+          ]
+        }
       ]
     }
-  ]
-}
-  POLICY
+  )
 }
