@@ -449,8 +449,7 @@ GEM
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
-    rexml (3.3.6)
-      strscan
+    rexml (3.3.9)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
@@ -559,7 +558,6 @@ GEM
     stringio (3.1.0)
     strip_attributes (1.13.0)
       activemodel (>= 3.0, < 8.0)
-    strscan (3.1.0)
     temple (0.10.3)
     terminal-table (3.0.2)
       unicode-display_width (>= 1.1.1, < 3)
