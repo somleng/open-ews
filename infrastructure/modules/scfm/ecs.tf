@@ -1,3 +1,111 @@
+locals {
+  shared_container_secrets = [
+    {
+      name      = "RAILS_MASTER_KEY"
+      valueFrom = aws_ssm_parameter.rails_master_key.arn
+    },
+    {
+      name      = "DATABASE_PASSWORD"
+      valueFrom = aws_ssm_parameter.db_master_password.arn
+    }
+  ]
+
+  shared_container_healthcheck = {
+    command  = ["CMD-SHELL", "wget --server-response --spider --quiet http://localhost:3000/health_checks 2>&1 | grep '200 OK' > /dev/null"],
+    interval = 10,
+    retries  = 10,
+    timeout  = 5
+  }
+
+  shared_container_environment = [
+    {
+      name  = "RAILS_ENV",
+      value = var.app_environment
+    },
+    {
+      name  = "RACK_ENV",
+      value = var.app_environment
+    },
+    {
+      name  = "AWS_SQS_HIGH_PRIORITY_QUEUE_NAME",
+      value = aws_sqs_queue.high_priority.name
+    },
+    {
+      name  = "AWS_SQS_DEFAULT_QUEUE_NAME",
+      value = aws_sqs_queue.default.name
+    },
+    {
+      name  = "AWS_SQS_LOW_PRIORITY_QUEUE_NAME",
+      value = aws_sqs_queue.low_priority.name
+    },
+    {
+      name  = "AWS_SQS_SCHEDULER_QUEUE_NAME",
+      value = aws_sqs_queue.scheduler.name
+    },
+    {
+      name  = "AWS_DEFAULT_REGION",
+      value = var.aws_region
+    },
+    {
+      name  = "DATABASE_NAME",
+      value = var.db_name
+    },
+    {
+      name  = "DATABASE_USERNAME",
+      value = aws_rds_cluster.db.master_username
+    },
+    {
+      name  = "DATABASE_HOST",
+      value = aws_rds_cluster.db.endpoint
+    },
+    {
+      name  = "DATABASE_PORT",
+      value = tostring(aws_rds_cluster.db.port)
+    },
+    {
+      name  = "DB_POOL",
+      value = tostring(var.db_pool)
+    },
+    {
+      name  = "RAILS_LOG_TO_STDOUT",
+      value = "true"
+    },
+    {
+      name  = "RAILS_SERVE_STATIC_FILES",
+      value = "true"
+    },
+    {
+      name  = "UPLOADS_BUCKET",
+      value = aws_s3_bucket.uploads.id
+    },
+    {
+      name  = "AUDIO_BUCKET",
+      value = aws_s3_bucket.audio.id
+    }
+  ]
+
+  worker_container_definitions = [
+    {
+      name  = "worker",
+      image = "${var.app_image}:latest",
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.worker.name,
+          awslogs-region        = var.region.aws_region,
+          awslogs-stream-prefix = var.app_environment
+        }
+      },
+      command      = ["bundle", "exec", "shoryuken", "-R", "-C", "config/shoryuken.yml"],
+      startTimeout = 120,
+      essential    = true,
+      healthCheck  = local.shared_container_healthcheck,
+      environment  = local.shared_container_environment,
+      secrets      = local.shared_container_secrets
+    }
+  ]
+}
+
 resource "aws_ecs_cluster" "this" {
   name = var.app_identifier
 
@@ -34,73 +142,62 @@ resource "aws_ecs_cluster_capacity_providers" "this" {
   ]
 }
 
-data "template_file" "webserver_container_definitions" {
-  template = file("${path.module}/templates/webserver_container_definitions.json.tpl")
-
-  vars = {
-    name                             = var.app_identifier
-    app_port                         = var.app_port
-    app_image                        = var.app_image
-    nginx_image                      = var.nginx_image
-    webserver_container_name         = var.webserver_container_name
-    webserver_container_port         = var.webserver_container_port
-    region                           = var.aws_region
-    rails_master_key_arn             = aws_ssm_parameter.rails_master_key.arn
-    aws_sqs_high_priority_queue_name = aws_sqs_queue.high_priority.name
-    aws_sqs_default_queue_name       = aws_sqs_queue.default.name
-    aws_sqs_low_priority_queue_name  = aws_sqs_queue.low_priority.name
-    aws_sqs_scheduler_queue_name     = aws_sqs_queue.scheduler.name
-    nginx_logs_group                 = aws_cloudwatch_log_group.nginx.name
-    app_logs_group                   = aws_cloudwatch_log_group.app.name
-    logs_group_region                = var.aws_region
-    app_environment                  = var.app_environment
-    rails_master_key_parameter_arn   = aws_ssm_parameter.rails_master_key.arn
-    database_password_parameter_arn  = aws_ssm_parameter.db_master_password.arn
-    database_name                    = var.db_name
-    database_username                = aws_rds_cluster.db.master_username
-    database_host                    = aws_rds_cluster.db.endpoint
-    database_port                    = aws_rds_cluster.db.port
-    db_pool                          = var.db_pool
-    uploads_bucket                   = aws_s3_bucket.uploads.id
-    audio_bucket                     = aws_s3_bucket.audio.id
-  }
-}
-
-data "template_file" "worker_container_definitions" {
-  template = file("${path.module}/templates/worker_container_definitions.json.tpl")
-
-  vars = {
-    name                             = var.app_identifier
-    app_image                        = var.app_image
-    rails_master_key_arn             = aws_ssm_parameter.rails_master_key.arn
-    region                           = var.aws_region
-    aws_sqs_high_priority_queue_name = aws_sqs_queue.high_priority.name
-    aws_sqs_default_queue_name       = aws_sqs_queue.default.name
-    aws_sqs_low_priority_queue_name  = aws_sqs_queue.low_priority.name
-    aws_sqs_scheduler_queue_name     = aws_sqs_queue.scheduler.name
-    worker_logs_group                = aws_cloudwatch_log_group.worker.name
-    logs_group_region                = var.aws_region
-    app_environment                  = var.app_environment
-    rails_master_key_parameter_arn   = aws_ssm_parameter.rails_master_key.arn
-    database_password_parameter_arn  = aws_ssm_parameter.db_master_password.arn
-    database_name                    = var.db_name
-    database_username                = aws_rds_cluster.db.master_username
-    database_host                    = aws_rds_cluster.db.endpoint
-    database_port                    = aws_rds_cluster.db.port
-    db_pool                          = var.db_pool
-    uploads_bucket                   = aws_s3_bucket.uploads.id
-    audio_bucket                     = aws_s3_bucket.audio.id
-  }
-}
-
 resource "aws_ecs_task_definition" "webserver" {
   family                   = "${var.app_identifier}-webserver"
   network_mode             = "awsvpc"
   requires_compatibilities = ["EC2"]
-  container_definitions    = data.template_file.webserver_container_definitions.rendered
-  task_role_arn            = aws_iam_role.ecs_task_role.arn
-  execution_role_arn       = aws_iam_role.task_execution_role.arn
-  memory                   = module.container_instances.ec2_instance_type.memory_size - 512
+  container_definitions = jsonencode([
+    {
+      name  = "nginx"
+      image = "${var.nginx_image}:latest"
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.nginx.name,
+          awslogs-region        = var.region.aws_region,
+          awslogs-stream-prefix = var.app_environment
+        }
+      },
+      essential = true,
+      portMappings = [
+        {
+          containerPort = 80
+        }
+      ],
+      dependsOn = [
+        {
+          containerName = "app",
+          condition     = "HEALTHY"
+        }
+      ]
+    },
+    {
+      name  = "app",
+      image = "${var.app_image}:latest",
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.app.name,
+          awslogs-region        = var.region.aws_region,
+          awslogs-stream-prefix = var.app_environment
+        }
+      },
+      startTimeout = 120,
+      healthCheck  = local.shared_container_healthcheck,
+      essential    = true,
+      portMappings = [
+        {
+          containerPort = 3000
+        }
+      ],
+      secrets     = local.shared_container_secrets,
+      environment = local.shared_container_environment
+    }
+  ])
+
+  task_role_arn      = aws_iam_role.ecs_task_role.arn
+  execution_role_arn = aws_iam_role.task_execution_role.arn
+  memory             = module.container_instances.ec2_instance_type.memory_size - 512
 }
 
 resource "aws_ecs_service" "webserver" {
@@ -156,7 +253,7 @@ resource "aws_ecs_task_definition" "worker" {
   family                   = "${var.app_identifier}-worker"
   network_mode             = "awsvpc"
   requires_compatibilities = ["EC2"]
-  container_definitions    = data.template_file.worker_container_definitions.rendered
+  container_definitions    = jsonencode(local.worker_container_definitions)
   task_role_arn            = aws_iam_role.ecs_task_role.arn
   execution_role_arn       = aws_iam_role.task_execution_role.arn
   memory                   = module.container_instances.ec2_instance_type.memory_size - 512
@@ -166,7 +263,7 @@ resource "aws_ecs_task_definition" "worker_fargate" {
   family                   = "${var.app_identifier}-worker-fargate"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  container_definitions    = data.template_file.worker_container_definitions.rendered
+  container_definitions    = jsonencode(local.worker_container_definitions)
   task_role_arn            = aws_iam_role.ecs_task_role.arn
   execution_role_arn       = aws_iam_role.task_execution_role.arn
   memory                   = 1024
