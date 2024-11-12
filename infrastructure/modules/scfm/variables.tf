@@ -14,9 +14,6 @@ variable "cdn_certificate" {}
 variable "region" {}
 variable "global_accelerator" {}
 
-variable "webserver_container_name" {
-  default = "nginx"
-}
 variable "webserver_container_port" {
   default = 80
 }
