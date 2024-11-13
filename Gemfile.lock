@@ -26,8 +26,9 @@ GIT
       actionview (>= 5)
 
 GIT
-  remote: https://github.com/zipmark/rspec_api_documentation.git
-  revision: d32bf17932a379052e8bb7540fc29ce7e72712ae
+  remote: https://github.com/samnang/rspec_api_documentation.git
+  revision: f5d5ab73ae25b14fde4ca96cacab8a5030237940
+  branch: fix-supporting-rack-3
   specs:
     rspec_api_documentation (6.1.0)
       activesupport (>= 3.0.0)
@@ -452,12 +453,12 @@ GEM
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
       rspec-mocks (~> 3.13.0)
-    rspec-core (3.13.0)
+    rspec-core (3.13.2)
       rspec-support (~> 3.13.0)
-    rspec-expectations (3.13.0)
+    rspec-expectations (3.13.3)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
-    rspec-mocks (3.13.0)
+    rspec-mocks (3.13.2)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-rails (6.1.2)
