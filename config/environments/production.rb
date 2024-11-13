@@ -67,7 +67,11 @@ Rails.application.configure do
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "somleng_scfm_production"
   config.active_job.queue_adapter = ActiveJob::QueueAdapters::ShoryukenConcurrentSendAdapter.new
+  # Explicitly set this value as otherwise ActiveJob will call queue_adapter.enqueue_after_transaction_commit?
+  # which Shoruken doesn't define
+  config.active_job.enqueue_after_transaction_commit = :never
 
+  # Disable caching for Action Mailer templates even if Action Controller caching is enabled.
   config.action_mailer.perform_caching = false
 
   config.active_storage.queue = config.active_job.default_queue_name
@@ -98,6 +102,9 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # Only use :id for inspections in production.
+  config.active_record.attributes_for_inspect = [ :id ]
 
   Rails.application.routes.default_url_options[:host] =
     Rails.configuration.app_settings.fetch(:default_url_host)

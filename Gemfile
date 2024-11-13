@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-gem "rails", "~> 7.1.3"
+gem "rails", "~> 7.2.2"
 
 gem "administrate"
 gem "administrate-field-active_storage"
@@ -51,6 +51,7 @@ gem "twilio-ruby"
 gem "tzinfo-data"
 
 group :development, :test do
+  gem "brakeman", require: false
   gem "i18n-tasks"
   gem "pry"
   gem "rspec_api_documentation", github: "zipmark/rspec_api_documentation"
