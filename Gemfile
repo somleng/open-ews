@@ -1,7 +1,21 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-gem "rails", "~> 7.2.2"
+gem "rails", "~> 8.0.0"
+
+# The modern asset pipeline for Rails
+gem "propshaft"
+
+# Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
+# gem "solid_cache"
+# gem "solid_queue"
+# gem "solid_cable"
+
+# Deploy this application anywhere as a Docker container [https://kamal-deploy.org]
+# gem "kamal", require: false
+
+# Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
+gem "thruster", require: false
 
 gem "administrate"
 gem "administrate-field-active_storage"
@@ -16,7 +30,6 @@ gem "aws-sdk-sqs"
 gem "bitmask_attributes", github: "numerex/bitmask_attributes"
 gem "bootsnap", require: false
 gem "cocoon"
-gem "cssbundling-rails"
 gem "devise"
 gem "devise-async"
 gem "devise_invitable"
@@ -25,7 +38,6 @@ gem "dry-validation"
 gem "faraday"
 gem "file_validators"
 gem "haml-rails"
-gem "jsbundling-rails"
 gem "kaminari"
 gem "lograge"
 gem "okcomputer"

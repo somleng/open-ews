@@ -1,3 +1,2 @@
-web: unset PORT && env RUBY_DEBUG_OPEN=true bin/rails server
-js: yarn build --watch
-css: yarn watch:css
+#!/usr/bin/env ruby
+exec "./bin/rails", "server", *ARGV
