@@ -5,7 +5,7 @@ The world's first Open Source Emergency Warning System Dissemination Dashboard
 ![Build](https://github.com/somleng/open-ews/workflows/Build/badge.svg)
 [![View performance data on Skylight](https://badges.skylight.io/status/YxPzpqwXsqPx.svg)](https://oss.skylight.io/app/applications/YxPzpqwXsqPx)
 
-![image](public/assets/images/somleng-ews-dissemination-dashboard-drawing.png)
+![somleng-ews-dissemination-dashboard-drawing](https://github.com/user-attachments/assets/cfcb0480-dbaa-48b4-91c1-3b24af3ca985)
 
 The [EWS4All](https://www.un.org/en/climatechange/early-warnings-for-all) initiative calls for:
 
