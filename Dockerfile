@@ -1,43 +1,70 @@
-FROM public.ecr.aws/docker/library/ruby:3.2-alpine AS build-env
+# syntax = docker/dockerfile:1
 
-ARG APP_ROOT="/app"
-ENV BUNDLE_APP_CONFIG="/app/.bundle"
+# Make sure RUBY_VERSION matches the Ruby version in .tool-versions
+ARG RUBY_VERSION=3.3
+FROM public.ecr.aws/docker/library/ruby:$RUBY_VERSION-alpine AS base
 
-RUN apk update && \
-    apk upgrade && \
-    apk add --update --no-cache build-base gcompat git postgresql-dev nodejs yarn && \
-    gem install bundler
+# Rails app lives here
+WORKDIR /rails
 
-RUN mkdir -p $APP_ROOT
-WORKDIR $APP_ROOT
+# Set production environment
+ENV RAILS_ENV="production" \
+    BUNDLE_DEPLOYMENT="1" \
+    BUNDLE_PATH="/usr/local/bundle" \
+    BUNDLE_WITHOUT="development test" \
+    BUNDLE_FORCE_RUBY_PLATFORM="1"
 
-COPY Gemfile Gemfile.lock package.json yarn.lock $APP_ROOT/
+# Throw-away build stage to reduce size of final image
+FROM base as build
 
-RUN bundle config --local deployment true && \
-    bundle config --local force_ruby_platform true \
-    bundle config --local path "vendor/bundle" && \
-    bundle config --local without 'development test'
+# Install packages needed to build gems
+RUN apk update --no-cache && \
+    apk upgrade --no-cache && \
+    apk add --update --no-cache build-base git gcompat postgresql-dev nodejs yarn
 
-RUN bundle install --jobs 20 --retry 5
+# Install application gems
+COPY Gemfile Gemfile.lock ./
+
+RUN bundle install && \
+    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
+    find "${BUNDLE_PATH}" -name "*.o" -delete && find "${BUNDLE_PATH}" -name "*.c" -delete && \
+    mkdir -p tmp/pids && \
+    mkdir -p storage && \
+    bundle exec bootsnap precompile --gemfile
+
+COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
+
+# Copy application code
 COPY . .
-RUN bundle exec rails assets:precompile
-RUN mkdir -p tmp/pids
-RUN rm -rf vendor/bundle/ruby/*/cache/ && find vendor/ -name "*.o" -delete && find vendor/ -name "*.c"
 
-FROM public.ecr.aws/docker/library/ruby:3.2-alpine
+# Precompile bootsnap code for faster boot times
+RUN bundle exec bootsnap precompile app/ lib/
 
-ARG APP_ROOT="/app"
-ENV BUNDLE_APP_CONFIG="/app/.bundle"
+# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
+RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
-WORKDIR $APP_ROOT
+# Final stage for app image
+FROM base
 
-RUN apk update && \
-    apk upgrade && \
-    apk add --update --no-cache build-base gcompat postgresql-dev && \
-    gem install bundler
+# Install packages needed for deployment
+RUN apk update --no-cache && \
+    apk upgrade --no-cache && \
+    apk add --update --no-cache build-base gcompat postgresql-dev vips-dev ffmpeg
 
-COPY --from=build-env $APP_ROOT $APP_ROOT
+# Copy built artifacts: gems, application
+COPY --from=build --link /usr/local/bundle /usr/local/bundle
+COPY --from=build --link /rails /rails
+COPY --from=binaries --link /usr/local/bin/grpc-health-probe /usr/local/bin
 
+# Run and own only the runtime files as a non-root user for security
+RUN addgroup -S -g 1000 rails && \
+    adduser -u 1000 -D -G rails rails && \
+    chown -R rails:rails db storage log tmp
+
+USER 1000:1000
+ENV RUBY_YJIT_ENABLE=true
+
+# Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
+CMD ["./bin/rails", "server"]

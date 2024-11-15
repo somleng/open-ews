@@ -56,13 +56,3 @@ terraform.tfstate.*
 !/app/assets/builds/.keep
 
 .DS_Store
-
-# Ignore CI service files.
-/.github
-
-# Ignore development files
-/.devcontainer
-
-# Ignore Docker-related files
-/.dockerignore
-/Dockerfile*
