@@ -3,8 +3,18 @@ resource "aws_s3_bucket" "uploads" {
 }
 
 resource "aws_s3_bucket_acl" "uploads" {
+  depends_on = [aws_s3_bucket_ownership_controls.uploads]
+
   bucket = aws_s3_bucket.uploads.id
   acl    = "private"
+}
+
+resource "aws_s3_bucket_ownership_controls" "uploads" {
+  bucket = aws_s3_bucket.uploads.id
+
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
 }
 
 resource "aws_s3_bucket_cors_configuration" "uploads" {
@@ -30,7 +40,29 @@ resource "aws_s3_bucket_website_configuration" "audio" {
   }
 }
 
+resource "aws_s3_bucket_ownership_controls" "audio" {
+  bucket = aws_s3_bucket.audio.id
+
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "audio" {
+  bucket = aws_s3_bucket.audio.id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
 resource "aws_s3_bucket_acl" "audio" {
+  depends_on = [
+    aws_s3_bucket_ownership_controls.audio,
+    aws_s3_bucket_public_access_block.audio,
+  ]
+
   bucket = aws_s3_bucket.audio.id
   acl    = "public-read"
 }

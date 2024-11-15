@@ -31,7 +31,7 @@ resource "aws_lb_target_group" "internal_webserver" {
 }
 
 resource "aws_lb_listener_rule" "webserver" {
-  priority = 10
+  priority = var.app_environment == "production" ? 10 : 110
 
   listener_arn = var.region.public_load_balancer.https_listener.arn
 
@@ -52,7 +52,7 @@ resource "aws_lb_listener_rule" "webserver" {
 }
 
 resource "aws_lb_listener_rule" "webserver_internal" {
-  priority = 40
+  priority = var.app_environment == "production" ? 40 : 140
 
   listener_arn = var.region.internal_load_balancer.https_listener.arn
 

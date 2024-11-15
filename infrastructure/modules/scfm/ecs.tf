@@ -6,7 +6,7 @@ locals {
     },
     {
       name      = "DATABASE_PASSWORD"
-      valueFrom = aws_ssm_parameter.db_master_password.arn
+      valueFrom = var.rds_cluster.db_master_password_parameter.arn
     }
   ]
 
@@ -52,15 +52,15 @@ locals {
     },
     {
       name  = "DATABASE_USERNAME",
-      value = aws_rds_cluster.db.master_username
+      value = var.rds_cluster.this.master_username
     },
     {
       name  = "DATABASE_HOST",
-      value = aws_rds_cluster.db.endpoint
+      value = var.rds_cluster.this.endpoint
     },
     {
       name  = "DATABASE_PORT",
-      value = tostring(aws_rds_cluster.db.port)
+      value = tostring(var.rds_cluster.this.port)
     },
     {
       name  = "DB_POOL",
@@ -210,7 +210,7 @@ resource "aws_ecs_service" "webserver" {
     subnets = var.region.vpc.private_subnets
     security_groups = [
       aws_security_group.webserver.id,
-      aws_security_group.db.id
+      var.rds_cluster.security_group.id
     ]
   }
 
@@ -290,7 +290,7 @@ resource "aws_ecs_service" "worker" {
     subnets = var.region.vpc.private_subnets
     security_groups = [
       aws_security_group.worker.id,
-      aws_security_group.db.id
+      var.rds_cluster.security_group.id
     ]
   }
 
