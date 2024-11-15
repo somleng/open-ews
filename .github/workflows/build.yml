@@ -232,7 +232,7 @@ jobs:
           declare -a components=("${{ env.APP_REPOSITORY_NAME }}" "${{ env.WEBSERVER_REPOSITORY_NAME }}")
           for component in "${components[@]}"
           do
-            source_images=$(printf "${{ secrets.ECR_REGISTRY }}/$component:${{ matrix.friendly_image_tag }}-%s " "${platforms[@]}" }}-%s " "${platforms[@]}")
+            source_images=$(printf "${{ secrets.ECR_REGISTRY }}/$component:${{ matrix.friendly_image_tag }}-%s " "${platforms[@]}")
             docker buildx imagetools create -t ${{ secrets.ECR_REGISTRY }}/$component:${{ matrix.friendly_image_tag }} -t ${{ secrets.ECR_REGISTRY }}/$component:${{ matrix.image_tag }} $source_images
           done
 
