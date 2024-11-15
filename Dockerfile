@@ -9,31 +9,31 @@ WORKDIR /rails
 
 # Set production environment
 ENV RAILS_ENV="production" \
-    BUNDLE_DEPLOYMENT="1" \
-    BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development test" \
-    BUNDLE_FORCE_RUBY_PLATFORM="1"
+  BUNDLE_DEPLOYMENT="1" \
+  BUNDLE_PATH="/usr/local/bundle" \
+  BUNDLE_WITHOUT="development test" \
+  BUNDLE_FORCE_RUBY_PLATFORM="1"
 
 # Throw-away build stage to reduce size of final image
 FROM base as build
 
 # Install packages needed to build gems
 RUN apk update --no-cache && \
-    apk upgrade --no-cache && \
-    apk add --update --no-cache build-base git gcompat postgresql-dev nodejs yarn
+  apk upgrade --no-cache && \
+  apk add --update --no-cache build-base git gcompat postgresql-dev nodejs yarn
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
 
 RUN bundle install && \
-    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
-    find "${BUNDLE_PATH}" -name "*.o" -delete && find "${BUNDLE_PATH}" -name "*.c" -delete && \
-    mkdir -p tmp/pids && \
-    mkdir -p storage && \
-    bundle exec bootsnap precompile --gemfile
+  rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
+  find "${BUNDLE_PATH}" -name "*.o" -delete && find "${BUNDLE_PATH}" -name "*.c" -delete && \
+  mkdir -p tmp/pids && \
+  mkdir -p storage && \
+  bundle exec bootsnap precompile --gemfile
 
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+RUN yarn install
 
 # Copy application code
 COPY . .
@@ -49,8 +49,8 @@ FROM base
 
 # Install packages needed for deployment
 RUN apk update --no-cache && \
-    apk upgrade --no-cache && \
-    apk add --update --no-cache build-base gcompat postgresql-dev vips-dev ffmpeg
+  apk upgrade --no-cache && \
+  apk add --update --no-cache build-base gcompat postgresql-dev vips-dev ffmpeg
 
 # Copy built artifacts: gems, application
 COPY --from=build --link /usr/local/bundle /usr/local/bundle
@@ -58,8 +58,8 @@ COPY --from=build --link /rails /rails
 
 # Run and own only the runtime files as a non-root user for security
 RUN addgroup -S -g 1000 rails && \
-    adduser -u 1000 -D -G rails rails && \
-    chown -R rails:rails db storage log tmp
+  adduser -u 1000 -D -G rails rails && \
+  chown -R rails:rails db storage log tmp
 
 USER 1000:1000
 ENV RUBY_YJIT_ENABLE=true
