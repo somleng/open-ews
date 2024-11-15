@@ -55,7 +55,6 @@ RUN apk update --no-cache && \
 # Copy built artifacts: gems, application
 COPY --from=build --link /usr/local/bundle /usr/local/bundle
 COPY --from=build --link /rails /rails
-COPY --from=binaries --link /usr/local/bin/grpc-health-probe /usr/local/bin
 
 # Run and own only the runtime files as a non-root user for security
 RUN addgroup -S -g 1000 rails && \
