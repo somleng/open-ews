@@ -18,6 +18,10 @@ production: &production
   sentry_dsn: "<%= Rails.application.credentials.sentry_dsn %>"
   admin_password: "<%= ENV.fetch("ADMIN_PASSWORD") { Rails.application.credentials.admin_password } %>"
 
+staging:
+  <<: *production
+  default_url_host: "https://scfm-staging.somleng.org"
+
 development: &development
   <<: *default
   default_url_host: "http://localhost:3000"
