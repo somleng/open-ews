@@ -387,3 +387,12 @@ jobs:
           service: ${{ matrix.identifier }}-worker
           cluster: ${{ matrix.ecs_cluster }}
           wait-for-service-stability: true
+
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: somleng
+          SENTRY_PROJECT: open-ews
+        with:
+          environment: ${{ matrix.environment }}
