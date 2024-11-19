@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 gem "rails", "~> 8.0.0"
 
 # The modern asset pipeline for Rails
-# gem "propshaft"
+gem "propshaft"
 
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
 # gem "solid_cache"
@@ -49,7 +49,6 @@ gem "puma"
 gem "pumi"
 gem "record_tag_helper", github: "rails/record_tag_helper"
 gem "responders"
-gem "sassc-rails"
 gem "sentry-rails"
 gem "shoryuken"
 gem "show_for"
@@ -71,7 +70,7 @@ group :development, :test do
 end
 
 group :development do
-  gem "foreman", require: false
+  gem 'listen'
   gem "rubocop-performance"
   gem "rubocop-rails-omakase", require: false
   gem "rubocop-rspec", require: false
