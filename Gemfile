@@ -17,9 +17,6 @@ gem "rails", "~> 8.0.0"
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
 gem "thruster", require: false
 
-gem "administrate"
-gem "administrate-field-active_storage"
-
 gem "aasm", github: "aasm/aasm"
 gem "after_commit_everywhere"
 gem "api-pagination", github: "davidcelis/api-pagination"
