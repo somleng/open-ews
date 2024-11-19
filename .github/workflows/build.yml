@@ -5,6 +5,10 @@ env:
   APP_REPOSITORY_NAME: scfm
   WEBSERVER_REPOSITORY_NAME: scfm-webserver
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     name: Build
