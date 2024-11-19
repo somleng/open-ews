@@ -62,7 +62,7 @@ resource "aws_cloudfront_distribution" "audio" {
     }
   }
 
-  aliases = ["audio.somleng.org"]
+  aliases = [var.audio_bucket_cname]
 
   enabled         = true
   is_ipv6_enabled = false

@@ -8,8 +8,8 @@ require "action_controller/railtie"
 require "action_view/railtie"
 require "action_mailer/railtie"
 require "active_job/railtie"
-require "sprockets/railtie"
 require "action_cable/engine"
+# require "sprockets/railtie"
 # require "action_mailbox/engine"
 # require "action_text/engine"
 # require "rails/test_unit/railtie"
@@ -26,9 +26,13 @@ module SomlengScfm
     config.app_generators.scaffold_controller :responders_controller
 
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.0
+    config.load_defaults 8.0
 
-    config.eager_load_paths << Rails.root.join("lib")
+     # Please, add to the `ignore` list any other `lib` subdirectories that do
+     # not contain `.rb` files, or that should not be reloaded or eager loaded.
+     # Common ones are `templates`, `generators`, or `middleware`, for example.
+     config.autoload_lib(ignore: %w[assets tasks templates])
+
 
     # Configuration for the application, engines, and railties goes here.
     #
@@ -58,5 +62,4 @@ module SomlengScfm
   end
 end
 
-require "administrate_extensions"
 require "api_pagination_with_preloaded_total_count"

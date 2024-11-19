@@ -1,10 +1,21 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-gem "rails", "~> 7.1.3"
+gem "rails", "~> 8.0.0"
 
-gem "administrate"
-gem "administrate-field-active_storage"
+# The modern asset pipeline for Rails
+gem "propshaft"
+
+# Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
+# gem "solid_cache"
+# gem "solid_queue"
+# gem "solid_cable"
+
+# Deploy this application anywhere as a Docker container [https://kamal-deploy.org]
+# gem "kamal", require: false
+
+# Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
+gem "thruster", require: false
 
 gem "aasm", github: "aasm/aasm"
 gem "after_commit_everywhere"
@@ -38,7 +49,6 @@ gem "puma"
 gem "pumi"
 gem "record_tag_helper", github: "rails/record_tag_helper"
 gem "responders"
-gem "sassc-rails"
 gem "sentry-rails"
 gem "shoryuken"
 gem "show_for"
@@ -51,14 +61,16 @@ gem "twilio-ruby"
 gem "tzinfo-data"
 
 group :development, :test do
+  gem "brakeman", require: false
   gem "i18n-tasks"
   gem "pry"
-  gem "rspec_api_documentation", github: "zipmark/rspec_api_documentation"
+  # Support Rack 3.1 https://github.com/zipmark/rspec_api_documentation/issues/548
+  gem "rspec_api_documentation", github: "samnang/rspec_api_documentation", branch: "fix-supporting-rack-3"
   gem "rspec-rails"
 end
 
 group :development do
-  gem "foreman", require: false
+  gem 'listen'
   gem "rubocop-performance"
   gem "rubocop-rails-omakase", require: false
   gem "rubocop-rspec", require: false

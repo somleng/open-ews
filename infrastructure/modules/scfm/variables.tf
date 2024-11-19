@@ -5,6 +5,7 @@ variable "nginx_image" {}
 variable "aws_region" {}
 variable "uploads_bucket" {}
 variable "audio_bucket" {}
+variable "audio_bucket_cname" {}
 variable "subdomain" {}
 variable "audio_subdomain" {}
 variable "cdn_subdomain" {}
@@ -13,6 +14,7 @@ variable "internal_route53_zone" {}
 variable "cdn_certificate" {}
 variable "region" {}
 variable "global_accelerator" {}
+variable "rds_cluster" {}
 
 variable "webserver_container_port" {
   default = 80

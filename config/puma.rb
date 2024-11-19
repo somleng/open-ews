@@ -34,5 +34,8 @@ workers ENV.fetch("WEB_CONCURRENCY") { `grep -c processor /proc/cpuinfo` || 1 }
 #
 # preload_app!
 
+# Run the Solid Queue supervisor inside of Puma for single-server deployments
+plugin :solid_queue if ENV["SOLID_QUEUE_IN_PUMA"]
+
 # Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart

@@ -2,17 +2,21 @@ on: push
 name: Build
 
 env:
-  IMAGE_TAG: prod-${{ github.sha }}
-  IMAGE_ALIAS: latest
-  APP_IDENTIFIER: scfm
-  ECS_CLUSTER: scfm
   APP_REPOSITORY_NAME: scfm
   WEBSERVER_REPOSITORY_NAME: scfm-webserver
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-deployment-matrix.outputs.matrix }}
+      matrixLength: ${{ steps.set-deployment-matrix.outputs.matrixLength }}
+      packageMatrix: ${{ steps.set-deployment-matrix.outputs.packageMatrix }}
 
     env:
       PGHOST: localhost
@@ -33,6 +37,38 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
+      - name: Set Deployment Matrix
+        id: set-deployment-matrix
+        run: |
+          branchName=$(echo '${{ github.ref }}' | sed 's,refs/heads/,,g')
+          matrixSource=$(cat << EOF
+          [
+            {
+              "identifier": "open-ews-staging",
+              "branch": "develop",
+              "environment": "staging",
+              "friendly_image_tag": "beta",
+              "image_tag": "stag-${{ github.sha }}",
+              "ecs_cluster": "open-ews-staging",
+              "docs_path": "staging/docs/open-ews"
+            },
+            {
+              "identifier": "scfm",
+              "branch": "master",
+              "environment": "production",
+              "friendly_image_tag": "latest",
+              "image_tag": "prod-${{ github.sha }}",
+              "ecs_cluster": "scfm",
+              "docs_path":  "docs/scfm"
+            }
+          ]
+          EOF
+          )
+          matrix=$(echo $matrixSource | jq --arg branchName "$branchName" 'map(. | select((.branch==$branchName)) )')
+          echo "matrix={\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
+          echo "matrixLength=$(echo $matrix | jq length)" >> $GITHUB_OUTPUT
+          echo "packageMatrix={\"platform\":[\"amd64\",\"arm64\"],\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -45,7 +81,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: ".tool-versions"
-          cache: 'yarn'
+          cache: "yarn"
 
       - name: Setup DB
         run: bundle exec rails db:create db:schema:load
@@ -56,13 +92,13 @@ jobs:
           bundle exec rspec --format RspecApiDocumentation::ApiFormatter
 
       - name: Prepare Documentation Source
-        if: github.ref == 'refs/heads/master'
+        if: steps.set-deployment-matrix.outputs.matrixLength > 0
         run: |
           cp -R doc/slate/source/* doc/api
           cp app/assets/images/scfm_logo.png doc/api/logo.png
 
       - name: Upload Documentation Source
-        if: github.ref == 'refs/heads/master'
+        if: steps.set-deployment-matrix.outputs.matrixLength > 0
         uses: actions/upload-artifact@v4
         with:
           name: documentation_source
@@ -72,7 +108,10 @@ jobs:
     name: Build Documentation
     runs-on: ubuntu-latest
     needs: build
-    if: github.ref == 'refs/heads/master'
+    if: needs.build.outputs.matrixLength > 0
+
+    strategy:
+      matrix: ${{fromJSON(needs.build.outputs.matrix)}}
 
     steps:
       - name: Checkout Slate
@@ -85,7 +124,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-          ruby-version: '3'
+          ruby-version: "3"
 
       - name: Download Documentation Source
         uses: actions/download-artifact@v4
@@ -117,7 +156,7 @@ jobs:
           aws-region: ap-southeast-1
 
       - name: Deploy API Documentation
-        run: aws s3 sync --acl public-read --delete build s3://www.somleng.org/docs/scfm
+        run: aws s3 sync --delete --acl public-read build s3://www.somleng.org/${{ matrix.docs_path }}
 
       - name: Invalidate Cache
         run: aws cloudfront create-invalidation --distribution-id E3962XCJFZ0KB1 --paths /docs/scfm/\*
@@ -125,12 +164,11 @@ jobs:
   build-packages:
     name: Build Packages
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    if: needs.build.outputs.matrixLength > 0
 
     strategy:
+      matrix: ${{fromJSON(needs.build.outputs.packageMatrix)}}
       fail-fast: false
-      matrix:
-        platform: ["amd64", "arm64"]
 
     needs:
       - build
@@ -150,7 +188,7 @@ jobs:
         uses: aws-actions/aws-codebuild-run-build@v1
         with:
           project-name: scfm-${{ matrix.platform }}
-          buildspec-override:   |
+          buildspec-override: |
             version: 0.2
             phases:
               build:
@@ -159,44 +197,48 @@ jobs:
                     run: |
                       aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
                       export DOCKER_BUILDKIT=1
-                      docker build --cache-from ${{ secrets.ECR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ env.IMAGE_ALIAS }}-${{ matrix.platform }} --tag ${{ secrets.ECR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ env.IMAGE_ALIAS }}-${{ matrix.platform }} --push .
-                      docker build --cache-from ${{ secrets.ECR_REGISTRY }}/${{ env.WEBSERVER_REPOSITORY_NAME }}:${{ env.IMAGE_ALIAS }}-${{ matrix.platform }} --tag ${{ secrets.ECR_REGISTRY }}/${{ env.WEBSERVER_REPOSITORY_NAME }}:${{ env.IMAGE_ALIAS }}-${{ matrix.platform }} --push docker/nginx
+                      docker build --cache-from ${{ secrets.ECR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-${{ matrix.platform }} --tag ${{ secrets.ECR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-${{ matrix.platform }} --push .
+                      docker build --cache-from ${{ secrets.ECR_REGISTRY }}/${{ env.WEBSERVER_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-${{ matrix.platform }} --tag ${{ secrets.ECR_REGISTRY }}/${{ env.WEBSERVER_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-${{ matrix.platform }} --push docker/nginx
 
   build-manifest:
     name: Build Manifest
     runs-on: ubuntu-latest
 
     needs:
+      - build
       - build-packages
 
+    strategy:
+      matrix: ${{fromJSON(needs.build.outputs.matrix)}}
+
     steps:
-        - name: Configure AWS credentials
-          uses: aws-actions/configure-aws-credentials@v4
-          with:
-            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-            role-skip-session-tagging: true
-            role-duration-seconds: 3600
-            aws-region: ap-southeast-1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-skip-session-tagging: true
+          role-duration-seconds: 3600
+          aws-region: ap-southeast-1
 
-        - name: Set up Docker Buildx
-          uses: docker/setup-buildx-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-        - name: Login to ECR
-          uses: docker/login-action@v3
-          with:
-            registry: ${{ secrets.ECR_REGISTRY }}
+      - name: Login to ECR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.ECR_REGISTRY }}
 
-        - name: Build Manifest
-          run: |
-            declare -a platforms=("amd64" "arm64")
-            declare -a components=("${{ env.APP_REPOSITORY_NAME }}" "${{ env.WEBSERVER_REPOSITORY_NAME }}")
-            for component in "${components[@]}"
-            do
-              source_images=$(printf "${{ secrets.ECR_REGISTRY }}/$component:${{ env.IMAGE_ALIAS }}-%s " "${platforms[@]}")
-              docker buildx imagetools create -t ${{ secrets.ECR_REGISTRY }}/$component:${{ env.IMAGE_ALIAS }} -t ${{ secrets.ECR_REGISTRY }}/$component:${{ env.IMAGE_TAG }} $source_images
-            done
+      - name: Build Manifest
+        run: |
+          declare -a platforms=("amd64" "arm64")
+          declare -a components=("${{ env.APP_REPOSITORY_NAME }}" "${{ env.WEBSERVER_REPOSITORY_NAME }}")
+          for component in "${components[@]}"
+          do
+            source_images=$(printf "${{ secrets.ECR_REGISTRY }}/$component:${{ matrix.friendly_image_tag }}-%s " "${platforms[@]}")
+            docker buildx imagetools create -t ${{ secrets.ECR_REGISTRY }}/$component:${{ matrix.friendly_image_tag }} -t ${{ secrets.ECR_REGISTRY }}/$component:${{ matrix.image_tag }} $source_images
+          done
 
   # Do this step in Github Actions because pushing to Github from AWS CodeBuild is slow
   publish_images:
@@ -204,7 +246,11 @@ jobs:
     runs-on: ubuntu-latest
 
     needs:
+      - build
       - build-packages
+
+    strategy:
+      matrix: ${{fromJSON(needs.build.outputs.matrix)}}
 
     steps:
       - name: Configure AWS credentials
@@ -241,16 +287,16 @@ jobs:
           do
             for component in "${components[@]}"
             do
-              docker image pull ${{ secrets.ECR_REGISTRY }}/$component:${{ env.IMAGE_ALIAS }}-$platform
-              docker tag ${{ secrets.ECR_REGISTRY }}/$component:${{ env.IMAGE_ALIAS }}-$platform ${{ secrets.GHCR_REGISTRY }}/$component:${{ env.IMAGE_ALIAS }}-$platform
-              docker push ${{ secrets.GHCR_REGISTRY }}/$component:${{ env.IMAGE_ALIAS }}-$platform
+              docker image pull ${{ secrets.ECR_REGISTRY }}/$component:${{ matrix.friendly_image_tag }}-$platform
+              docker tag ${{ secrets.ECR_REGISTRY }}/$component:${{ matrix.friendly_image_tag }}-$platform ${{ secrets.GHCR_REGISTRY }}/$component:${{ matrix.friendly_image_tag }}-$platform
+              docker push ${{ secrets.GHCR_REGISTRY }}/$component:${{ matrix.friendly_image_tag }}-$platform
             done
           done
 
           for component in "${components[@]}"
           do
-            source_images=$(printf "${{ secrets.GHCR_REGISTRY }}/$component:${{ env.IMAGE_ALIAS }}-%s " "${platforms[@]}")
-            docker buildx imagetools create -t ${{ secrets.GHCR_REGISTRY }}/$component:${{ env.IMAGE_ALIAS }} $source_images
+            source_images=$(printf "${{ secrets.GHCR_REGISTRY }}/$component:${{ matrix.friendly_image_tag }}-%s " "${platforms[@]}")
+            docker buildx imagetools create -t ${{ secrets.GHCR_REGISTRY }}/$component:${{ matrix.friendly_image_tag }} $source_images
           done
 
   deploy:
@@ -258,7 +304,11 @@ jobs:
     runs-on: ubuntu-latest
 
     needs:
+      - build
       - build-manifest
+
+    strategy:
+      matrix: ${{fromJSON(needs.build.outputs.matrix)}}
 
     steps:
       - name: Configure AWS credentials
@@ -273,7 +323,7 @@ jobs:
 
       - name: Get current webserver task definition
         run: |
-          aws ecs describe-task-definition --task-definition ${{ env.APP_IDENTIFIER }}-webserver --query 'taskDefinition' > task-definition.json
+          aws ecs describe-task-definition --task-definition ${{ matrix.identifier }}-webserver --query 'taskDefinition' > task-definition.json
 
       - name: Inject new NGINX image into webserver task definition
         id: render-nginx-task-def
@@ -281,7 +331,7 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name: nginx
-          image: ${{ secrets.ECR_REGISTRY }}/${{ env.WEBSERVER_REPOSITORY_NAME }}:${{ env.IMAGE_TAG }}
+          image: ${{ secrets.ECR_REGISTRY }}/${{ env.WEBSERVER_REPOSITORY_NAME }}:${{ matrix.image_tag }}
 
       - name: Inject new APP image into webserver task definition
         id: render-webserver-task-def
@@ -289,11 +339,11 @@ jobs:
         with:
           task-definition: ${{ steps.render-nginx-task-def.outputs.task-definition }}
           container-name: app
-          image: ${{ secrets.ECR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ env.IMAGE_TAG }}
+          image: ${{ secrets.ECR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ matrix.image_tag }}
 
       - name: Get current worker task definition
         run: |
-          aws ecs describe-task-definition --task-definition ${{ env.APP_IDENTIFIER }}-worker --query 'taskDefinition' > task-definition.json
+          aws ecs describe-task-definition --task-definition ${{ matrix.identifier }}-worker --query 'taskDefinition' > task-definition.json
 
       - name: Inject new APP image into worker task definition
         id: render-worker-task-def
@@ -301,11 +351,11 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name: worker
-          image: ${{ secrets.ECR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ env.IMAGE_TAG }}
+          image: ${{ secrets.ECR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ matrix.image_tag }}
 
       - name: Get current worker (Fargate) task definition
         run: |
-          aws ecs describe-task-definition --task-definition ${{ env.APP_IDENTIFIER }}-worker-fargate --query 'taskDefinition' > task-definition.json
+          aws ecs describe-task-definition --task-definition ${{ matrix.identifier }}-worker-fargate --query 'taskDefinition' > task-definition.json
 
       - name: Inject new APP image into Fargate worker task definition
         id: render-fargate-worker-task-def
@@ -313,7 +363,7 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name: worker
-          image: ${{ secrets.ECR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ env.IMAGE_TAG }}
+          image: ${{ secrets.ECR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ matrix.image_tag }}
 
       - name: Register Fargate task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
@@ -322,22 +372,31 @@ jobs:
 
       - name: Run DB Migrate using Fargate
         run: |
-          network_configuration=$(aws ecs describe-services --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.APP_IDENTIFIER }}-worker --query 'services[0]' | jq 'with_entries(select([.key] | inside(["networkConfiguration"])))')
-          run_task_params=$(echo $network_configuration | jq '.startedBy = "db_migrate_ci" | .cluster = "${{ env.ECS_CLUSTER }}" | .launchType = "FARGATE" | .taskDefinition = "${{ env.APP_IDENTIFIER }}-worker-fargate" | .overrides.containerOverrides[0].name = "worker" | .overrides.containerOverrides[0].command = ["bundle", "exec", "rails", "db:migrate"]' | jq -r tostring)
+          network_configuration=$(aws ecs describe-services --cluster ${{ matrix.ecs_cluster }} --service ${{ matrix.identifier }}-worker --query 'services[0]' | jq 'with_entries(select([.key] | inside(["networkConfiguration"])))')
+          run_task_params=$(echo $network_configuration | jq '.startedBy = "db_migrate_ci" | .cluster = "${{ matrix.ecs_cluster }}" | .launchType = "FARGATE" | .taskDefinition = "${{ matrix.identifier }}-worker-fargate" | .overrides.containerOverrides[0].name = "worker" | .overrides.containerOverrides[0].command = ["bundle", "exec", "rails", "db:migrate"]' | jq -r tostring)
           aws ecs run-task --cli-input-json $run_task_params
 
       - name: Deploy Webserver
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.render-webserver-task-def.outputs.task-definition }}
-          service: ${{ env.APP_IDENTIFIER }}-webserver
-          cluster: ${{ env.ECS_CLUSTER }}
+          service: ${{ matrix.identifier }}-webserver
+          cluster: ${{ matrix.ecs_cluster }}
           wait-for-service-stability: true
 
       - name: Deploy Worker
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.render-worker-task-def.outputs.task-definition }}
-          service: ${{ env.APP_IDENTIFIER }}-worker
-          cluster: ${{ env.ECS_CLUSTER }}
+          service: ${{ matrix.identifier }}-worker
+          cluster: ${{ matrix.ecs_cluster }}
           wait-for-service-stability: true
+
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: somleng
+          SENTRY_PROJECT: open-ews
+        with:
+          environment: ${{ matrix.environment }}
