@@ -45,7 +45,7 @@ jobs:
           [
             {
               "identifier": "open-ews-staging",
-              "branch": "develop",
+              "branch": "fix-ci-creating-sentry-release",
               "environment": "staging",
               "friendly_image_tag": "beta",
               "image_tag": "stag-${{ github.sha }}",
@@ -391,6 +391,10 @@ jobs:
           service: ${{ matrix.identifier }}-worker
           cluster: ${{ matrix.ecs_cluster }}
           wait-for-service-stability: true
+
+      # Need this step for creating Sentry release
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Create Sentry release
         uses: getsentry/action-release@v1
