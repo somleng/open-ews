@@ -392,6 +392,10 @@ jobs:
           cluster: ${{ matrix.ecs_cluster }}
           wait-for-service-stability: true
 
+      # Need this step for creating Sentry release
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Create Sentry release
         uses: getsentry/action-release@v1
         env:
