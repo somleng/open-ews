@@ -71,10 +71,6 @@ locals {
       value = "true"
     },
     {
-      name  = "RAILS_SERVE_STATIC_FILES",
-      value = "true"
-    },
-    {
       name  = "UPLOADS_BUCKET",
       value = aws_s3_bucket.uploads.id
     },
