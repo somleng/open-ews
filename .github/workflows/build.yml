@@ -198,7 +198,6 @@ jobs:
                       aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
                       export DOCKER_BUILDKIT=1
                       docker build --cache-from ${{ secrets.ECR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-${{ matrix.platform }} --tag ${{ secrets.ECR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-${{ matrix.platform }} --push .
-                      docker build --cache-from ${{ secrets.ECR_REGISTRY }}/${{ env.WEBSERVER_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-${{ matrix.platform }} --tag ${{ secrets.ECR_REGISTRY }}/${{ env.WEBSERVER_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-${{ matrix.platform }} --push docker/nginx
 
   build-manifest:
     name: Build Manifest
@@ -325,19 +324,11 @@ jobs:
         run: |
           aws ecs describe-task-definition --task-definition ${{ matrix.identifier }}-webserver --query 'taskDefinition' > task-definition.json
 
-      - name: Inject new NGINX image into webserver task definition
-        id: render-nginx-task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: task-definition.json
-          container-name: nginx
-          image: ${{ secrets.ECR_REGISTRY }}/${{ env.WEBSERVER_REPOSITORY_NAME }}:${{ matrix.image_tag }}
-
       - name: Inject new APP image into webserver task definition
         id: render-webserver-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ steps.render-nginx-task-def.outputs.task-definition }}
+          task-definition: task-definition.json
           container-name: app
           image: ${{ secrets.ECR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ matrix.image_tag }}
 
