@@ -11,11 +11,10 @@ WORKDIR /rails
 ENV RAILS_ENV="production" \
   BUNDLE_DEPLOYMENT="1" \
   BUNDLE_PATH="/usr/local/bundle" \
-  BUNDLE_WITHOUT="development test" \
-  BUNDLE_FORCE_RUBY_PLATFORM="1"
+  BUNDLE_WITHOUT="development test"
 
 # Throw-away build stage to reduce size of final image
-FROM base as build
+FROM base AS build
 
 # Install packages needed to build gems
 RUN apk update --no-cache && \
@@ -64,6 +63,6 @@ RUN addgroup -S -g 1000 rails && \
 USER 1000:1000
 ENV RUBY_YJIT_ENABLE=true
 
-# Start the server by default, this can be overwritten at runtime
-EXPOSE 3000
-CMD ["./bin/rails", "server"]
+# Start server via Thruster by default, this can be overwritten at runtime
+EXPOSE 80
+CMD ["./bin/thrust", "./bin/rails", "server"]

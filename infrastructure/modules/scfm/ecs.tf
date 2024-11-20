@@ -71,10 +71,6 @@ locals {
       value = "true"
     },
     {
-      name  = "RAILS_SERVE_STATIC_FILES",
-      value = "true"
-    },
-    {
       name  = "UPLOADS_BUCKET",
       value = aws_s3_bucket.uploads.id
     },
@@ -148,30 +144,6 @@ resource "aws_ecs_task_definition" "webserver" {
   requires_compatibilities = ["EC2"]
   container_definitions = jsonencode([
     {
-      name  = "nginx"
-      image = "${var.nginx_image}:latest"
-      logConfiguration = {
-        logDriver = "awslogs"
-        options = {
-          awslogs-group         = aws_cloudwatch_log_group.nginx.name,
-          awslogs-region        = var.region.aws_region,
-          awslogs-stream-prefix = var.app_environment
-        }
-      },
-      essential = true,
-      portMappings = [
-        {
-          containerPort = 80
-        }
-      ],
-      dependsOn = [
-        {
-          containerName = "app",
-          condition     = "HEALTHY"
-        }
-      ]
-    },
-    {
       name  = "app",
       image = "${var.app_image}:latest",
       logConfiguration = {
@@ -187,7 +159,7 @@ resource "aws_ecs_task_definition" "webserver" {
       essential    = true,
       portMappings = [
         {
-          containerPort = 3000
+          containerPort = 80
         }
       ],
       secrets     = local.shared_container_secrets,
@@ -225,13 +197,13 @@ resource "aws_ecs_service" "webserver" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.webserver.arn
-    container_name   = "nginx"
+    container_name   = "app"
     container_port   = 80
   }
 
   load_balancer {
     target_group_arn = aws_lb_target_group.internal_webserver.arn
-    container_name   = "nginx"
+    container_name   = "app"
     container_port   = 80
   }
 

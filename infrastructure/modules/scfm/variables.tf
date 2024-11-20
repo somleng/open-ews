@@ -1,7 +1,6 @@
 variable "app_identifier" {}
 variable "app_environment" {}
 variable "app_image" {}
-variable "nginx_image" {}
 variable "aws_region" {}
 variable "uploads_bucket" {}
 variable "audio_bucket" {}

@@ -12,10 +12,6 @@ Rails.application.configure do
   # Full error reports are disabled.
   config.consider_all_requests_local       = false
 
-  # Disable serving static files from the `/public` folder by default since
-  # Apache or NGINX already handles this.
-  config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
-
   # Turn on fragment caching in view templates.
   config.action_controller.perform_caching = true
 
@@ -42,8 +38,8 @@ Rails.application.configure do
   # information to avoid inadvertent exposure of personally identifiable information (PII).
   config.log_level = :info
   config.lograge.enabled = true
-  config.lograge.base_controller_class = ["ActionController::API", "ActionController::Base"]
-  config.lograge.ignore_actions = ["OkComputer::OkComputerController#show"]
+  config.lograge.base_controller_class = [ "ActionController::API", "ActionController::Base" ]
+  config.lograge.ignore_actions = [ "OkComputer::OkComputerController#show" ]
   config.lograge.custom_options = lambda do |event|
     exceptions = %w[controller action format id]
     {
@@ -52,7 +48,7 @@ Rails.application.configure do
   end
 
   # Prepend all log lines with the following tags.
-  config.log_tags = [:request_id]
+  config.log_tags = [ :request_id ]
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
