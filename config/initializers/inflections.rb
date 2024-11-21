@@ -17,4 +17,5 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym "API"
   inflect.acronym "EWS"
   inflect.acronym "URL"
+  inflect.acronym "JSONAPI"
 end
