@@ -184,6 +184,9 @@ FactoryBot.define do
   factory :access_token do
     association :resource_owner, factory: :account
     created_by { resource_owner }
+
+    # FIXME: We will get rid of concept of permissions on API level.
+    permissions { AccessToken::PERMISSIONS }
   end
 
   factory :active_storage_attachment, class: "ActiveStorage::Blob" do
