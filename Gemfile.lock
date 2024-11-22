@@ -7,9 +7,9 @@ GIT
 
 GIT
   remote: https://github.com/davidcelis/api-pagination.git
-  revision: d173212143f65915c5d1505b2aaa96cc7e93da34
+  revision: 277ac97db62d2461144fa03b4d1bea6c65c27b06
   specs:
-    api-pagination (5.0.0)
+    api-pagination (6.0.0)
 
 GIT
   remote: https://github.com/numerex/bitmask_attributes.git
