@@ -114,6 +114,9 @@ GEM
     after_commit_everywhere (1.4.0)
       activerecord (>= 4.2)
       activesupport
+    appsignal (4.2.0)
+      logger
+      rack
     ast (2.4.2)
     aws-actiondispatch-dynamodb (0.2.0)
       actionpack (>= 7.1.0)
@@ -603,6 +606,7 @@ DEPENDENCIES
   aasm!
   after_commit_everywhere
   api-pagination!
+  appsignal
   aws-sdk-cloudwatch
   aws-sdk-rails
   aws-sdk-s3
