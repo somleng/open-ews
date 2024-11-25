@@ -17,6 +17,7 @@ production: &production
   default_url_host: "https://scfm.somleng.org"
   sentry_dsn: "<%= Rails.application.credentials.sentry_dsn %>"
   admin_password: "<%= ENV.fetch("ADMIN_PASSWORD") { Rails.application.credentials.admin_password } %>"
+  appsignal_push_api_key: "<%= Rails.application.credentials.appsignal_push_api_key %>"
 
 staging:
   <<: *production

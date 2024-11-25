@@ -20,6 +20,7 @@ gem "thruster", require: false
 gem "aasm", github: "aasm/aasm"
 gem "after_commit_everywhere"
 gem "api-pagination", github: "davidcelis/api-pagination"
+gem "appsignal"
 gem "aws-sdk-cloudwatch"
 gem "aws-sdk-rails"
 gem "aws-sdk-s3", require: false
