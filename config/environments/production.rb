@@ -45,12 +45,11 @@ Rails.application.configure do
     {
       params: event.payload[:params].except(*exceptions)
     }
-
-    config.lograge.logger = Appsignal::Logger.new(
-      "rails",
-      format: Appsignal::Logger::LOGFMT
-    )
   end
+  config.lograge.logger = Appsignal::Logger.new(
+    "web",
+    format: Appsignal::Logger::LOGFMT
+  )
 
   # Prepend all log lines with the following tags.
   config.log_tags = [ :request_id ]
