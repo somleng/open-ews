@@ -45,6 +45,11 @@ Rails.application.configure do
     {
       params: event.payload[:params].except(*exceptions)
     }
+
+    config.lograge.logger = Appsignal::Logger.new(
+      "rails",
+      format: Appsignal::Logger::LOGFMT
+    )
   end
 
   # Prepend all log lines with the following tags.
