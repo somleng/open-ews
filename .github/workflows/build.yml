@@ -44,7 +44,7 @@ jobs:
           [
             {
               "identifier": "open-ews-staging",
-              "branch": "develop",
+              "branch": "setup_appsignal",
               "environment": "staging",
               "friendly_image_tag": "beta",
               "image_tag": "stag-${{ github.sha }}",
