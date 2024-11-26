@@ -14,6 +14,8 @@ variable "cdn_certificate" {}
 variable "region" {}
 variable "global_accelerator" {}
 variable "rds_cluster" {}
+variable "redis_security_group" {}
+variable "redis_url" {}
 
 variable "webserver_container_port" {
   default = 80
