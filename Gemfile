@@ -29,6 +29,7 @@ gem "bitmask_attributes", github: "numerex/bitmask_attributes"
 gem "bootsnap", require: false
 gem "cocoon"
 gem "cssbundling-rails"
+gem "coverband"
 gem "devise"
 gem "devise-async"
 gem "devise_invitable"
@@ -71,7 +72,7 @@ group :development, :test do
 end
 
 group :development do
-  gem 'listen'
+  gem "listen"
   gem "rubocop-performance"
   gem "rubocop-rails-omakase", require: false
   gem "rubocop-rspec", require: false
