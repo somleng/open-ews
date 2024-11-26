@@ -17,16 +17,6 @@ data "terraform_remote_state" "core_infrastructure" {
   }
 }
 
-data "terraform_remote_state" "somleng_core_infrastructure" {
-  backend = "s3"
-
-  config = {
-    bucket = "infrastructure.somleng.org"
-    key    = "twilreapi_core.tfstate"
-    region = var.aws_region
-  }
-}
-
 provider "aws" {
   region = var.aws_region
 }

@@ -12,9 +12,9 @@ output "rds_cluster" {
 }
 
 output "redis_security_group" {
-  value = data.terraform_remote_state.somleng_core_infrastructure.outputs.redis_security_group
+  value = data.aws_security_group.redis
 }
 
 output "elasticache_redis_endpoint" {
-  value = data.terraform_remote_state.somleng_core_infrastructure.outputs.elasticache_redis_endpoint
+  value = data.aws_elasticache_cluster.redis.cache_nodes.0.address
 }
