@@ -14,7 +14,7 @@ Appsignal.configure do |config|
   # Configure actions that should not be monitored by AppSignal.
   # For more information see our docs:
   # https://docs.appsignal.com/ruby/configuration/ignore-actions.html
-  # config.ignore_actions << "ApplicationController#isup"
+  config.ignore_actions << "OkComputer::OkComputerController#show"
 
   # Configure errors that should not be recorded by AppSignal.
   # For more information see our docs:
