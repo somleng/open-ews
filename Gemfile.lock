@@ -396,7 +396,7 @@ GEM
       google-protobuf (>= 3.22.3)
     pghero (3.6.1)
       activerecord (>= 6.1)
-    phony (2.20.12)
+    phony (2.20.15)
     phony_rails (0.15.0)
       activesupport (>= 3.0)
       phony (>= 2.18.12)
