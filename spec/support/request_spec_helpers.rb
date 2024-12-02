@@ -19,4 +19,12 @@ end
 
 RSpec.configure do |config|
   config.include(RequestSpecHelpers, type: :request)
+
+  config.define_derived_metadata(file_path: %r{spec/requests/scfm_api/}) do |metadata|
+    metadata[:document] = :scfm_api
+  end
+
+  config.define_derived_metadata(file_path: %r{spec/requests/open_ews_api/}) do |metadata|
+    metadata[:document] = :open_ews_api
+  end
 end
