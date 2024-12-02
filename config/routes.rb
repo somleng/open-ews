@@ -63,6 +63,10 @@ Rails.application.routes.draw do
     resource :locale, only: :update
   end
 
+  namespace :v1, module: "api/v1", as: "api_v1", defaults: { format: "json" } do
+    resources :contacts, only: [ :index ]
+  end
+
   namespace "api", defaults: { format: "json" } do
     resources :accounts, except: %i[new edit] do
       resources :users, only: :index

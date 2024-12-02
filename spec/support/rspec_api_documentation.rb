@@ -6,11 +6,10 @@ RspecApiDocumentation.configure do |config|
     This is the API Documentation for Somleng Simple Call Flow Manager (Somleng SCFM).
   HEREDOC
   config.format = :slate
-  config.curl_host = "https://scfm.somleng.org"
-  config.curl_headers_to_filter = ["Host", "Cookie", "Content-Type"]
+  config.curl_headers_to_filter = [ "Host", "Cookie", "Content-Type" ]
 
   config.request_headers_to_include = []
-  config.response_headers_to_include = ["Location", "Per-Page", "Total"]
+  config.response_headers_to_include = [ "Location", "Per-Page", "Total" ]
   config.request_body_formatter = proc do |params|
     JSON.pretty_generate(params) if params.present?
   end
@@ -24,5 +23,15 @@ RspecApiDocumentation.configure do |config|
     else
       response_body
     end
+  end
+
+  config.define_group :scfm_api do |conf|
+    conf.filter = :scfm_api
+    conf.docs_dir = Rails.root.join("doc/api")
+  end
+
+  config.define_group :open_ews_api do |conf|
+    conf.filter = :open_ews_api
+    conf.docs_dir = Rails.root.join("doc/open_ews_api")
   end
 end
