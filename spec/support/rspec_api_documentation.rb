@@ -5,7 +5,6 @@ RspecApiDocumentation.configure do |config|
   config.api_explanation = <<~HEREDOC
     This is the API Documentation for Somleng Simple Call Flow Manager (Somleng SCFM).
   HEREDOC
-  config.curl_host = ""
   config.format = :slate
   config.curl_headers_to_filter = [ "Host", "Cookie", "Content-Type" ]
 

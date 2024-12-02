@@ -111,7 +111,7 @@ RSpec.resource "Access Tokens" do
     end
   end
 
-  patch "api/access_tokens/:id" do
+  patch "/api/access_tokens/:id" do
     example "Update an Access Token" do
       access_token = create_access_token(
         metadata: {

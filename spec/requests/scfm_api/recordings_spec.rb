@@ -39,7 +39,7 @@ RSpec.resource "Recordings" do
     end
   end
 
-  get "api/recordings/:id.mp3" do
+  get "/api/recordings/:id.mp3" do
     example "Retrieve a recording as mp3" do
       recording = create(:recording)
       access_token = create_access_token(resource_owner: recording.account)
