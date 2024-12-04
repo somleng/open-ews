@@ -68,36 +68,11 @@ Rails.application.routes.draw do
   end
 
   namespace "api", defaults: { format: "json" } do
-    resources :accounts, except: %i[new edit] do
-      resources :users, only: :index
-      resources :access_tokens, only: :index
-    end
-
-    resource :account, only: %i[show update], as: :current_account
-
-    resources :access_tokens
-
-    resources :users, except: %i[new edit] do
-      resources :user_events, only: :create
-    end
-
-    resources :remote_phone_call_events, only: %i[index show update]
-
-    resources :contacts, except: %i[new edit] do
-      resources :callout_participations, only: :index
-      resources :callouts, only: :index
-      resources :phone_calls, only: :index
-      resources :remote_phone_call_events, only: :index
-    end
-
-    resource :contact_data, only: :create
-
     resources :callouts, except: %i[new edit] do
       resources :callout_events, only: :create
-      resources :callout_participations, only: %i[index create]
+      resources :callout_participations, only: %i[index]
       resources :contacts, only: :index
       resources :phone_calls, only: :index
-      resources :remote_phone_call_events, only: :index
       resources :batch_operations, only: %i[create index]
     end
 
@@ -105,15 +80,7 @@ Rails.application.routes.draw do
       resources :batch_operation_events, only: :create
     end
 
-    resources :callout_participations, except: %i[new edit create] do
-      resources :phone_calls, only: %i[index]
-      resources :remote_phone_call_events, only: :index
-    end
-
-    resources :phone_calls, only: %i[index show] do
-      resources :remote_phone_call_events, only: :index
-    end
-
+    resources :phone_calls, only: %i[index show]
     resources :recordings, only: %i[index show]
   end
 

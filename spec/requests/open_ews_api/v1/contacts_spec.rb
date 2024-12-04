@@ -1,8 +1,6 @@
 require "rails_helper"
 
 RSpec.resource "Contacts"  do
-  header "Host", "api.open-ews.org"
-
   get "/v1/contacts" do
     example "List all Contacts" do
       account = create(:account)
