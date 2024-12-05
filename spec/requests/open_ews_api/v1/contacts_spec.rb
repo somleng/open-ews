@@ -17,4 +17,26 @@ RSpec.resource "Contacts"  do
       )
     end
   end
+
+  post "/v1/contacts" do
+    example "Create a contact" do
+      account = create(:account)
+
+      set_authorization_header_for(account)
+      do_request(
+        data: {
+          type: :contact,
+          attributes: {
+            msisdn: "+85510999999",
+            language_code: "km",
+            gender: "m",
+            date_of_birth: "1990-01-01"
+          }
+        }
+      )
+
+      expect(response_status).to eq(201)
+      booooom
+    end
+  end
 end
