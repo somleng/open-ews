@@ -11,9 +11,9 @@ module V1
     end
 
     attribute_rule(:msisdn).validate(:phone_number_format)
-    # rule do
-    #   Rules.new(self).validate
-    # end
+    rule do
+      Rules.new(self).validate
+    end
 
     def output
       result = super
@@ -21,7 +21,7 @@ module V1
       result
     end
 
-    class Rules < SchemaRules::ApplicationSchemaRules
+    class Rules < SchemaRules::JSONAPISchemaRules
       def validate
         return true if resource&.persisted?
         return key(:msisdn).failure(text: "can't be blank") if values[:msisdn].blank?

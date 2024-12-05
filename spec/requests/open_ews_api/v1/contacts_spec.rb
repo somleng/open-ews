@@ -36,7 +36,23 @@ RSpec.resource "Contacts"  do
       )
 
       expect(response_status).to eq(201)
-      booooom
+    end
+
+    example "Fail to create a contact", document: false do
+      account = create(:account)
+      create(:contact, account:, msisdn: "+85510999999")
+
+      set_authorization_header_for(account)
+      do_request(
+        data: {
+          type: :contact,
+          attributes: {
+            msisdn: "+85510999999"
+          }
+        }
+      )
+
+      expect(response_status).to eq(422)
     end
   end
 end
