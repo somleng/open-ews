@@ -29,13 +29,20 @@ RSpec.resource "Contacts"  do
           attributes: {
             msisdn: "+85510999999",
             language_code: "km",
-            gender: "m",
+            gender: "M",
             date_of_birth: "1990-01-01"
           }
         }
       )
 
       expect(response_status).to eq(201)
+      expect(response_body).to match_jsonapi_resource_schema("contact")
+      expect(jsonapi_response_attributes).to include(
+        "msisdn" => "+85510999999",
+        "language_code" => "km",
+        "gender" => "M",
+        "date_of_birth" => "1990-01-01"
+      )
     end
 
     example "Fail to create a contact", document: false do
@@ -53,6 +60,11 @@ RSpec.resource "Contacts"  do
       )
 
       expect(response_status).to eq(422)
+      expect(response_body).to match_api_response_schema("jsonapi_error")
+      expect(json_response.dig("errors", 0)).to include(
+        "title" => "must be unique",
+        "source" => { "pointer" => "/data/attributes/msisdn" }
+      )
     end
   end
 end

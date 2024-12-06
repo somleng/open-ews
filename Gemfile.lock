@@ -273,6 +273,8 @@ GEM
       htmlentities (~> 4.3.3)
       launchy (>= 2.1, < 4.0)
       mail (~> 2.7)
+    enumerize (2.8.1)
+      activesupport (>= 3.2)
     erubi (1.13.0)
     factory_bot (6.5.0)
       activesupport (>= 5.0.0)
@@ -636,6 +638,7 @@ DEPENDENCIES
   doorkeeper
   dry-validation
   email_spec
+  enumerize
   factory_bot_rails
   faraday
   file_validators

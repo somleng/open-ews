@@ -5,6 +5,9 @@ module V1
         required(:type).filled(:str?, eql?: "contact")
         required(:attributes).value(:hash).schema do
           required(:msisdn).filled(:string)
+          optional(:language_code).maybe(:string)
+          optional(:date_of_birth).maybe(:date)
+          optional(:gender).maybe(:string, included_in?: Contact.gender.values)
           optional(:metadata).maybe(:hash?)
         end
       end

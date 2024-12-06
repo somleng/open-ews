@@ -1,6 +1,10 @@
 class Contact < ApplicationRecord
+  extend Enumerize
+
   include MsisdnHelpers
   include MetadataHelpers
+
+  enumerize :gender, in: { male: "M", female: "F" }, scope: true
 
   belongs_to :account
 
