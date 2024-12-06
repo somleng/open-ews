@@ -9,9 +9,8 @@ RSpec.resource "Recordings" do
       recording = create(:recording, account:)
       _old_recording = create(:recording, account:, created_at: 1.day.ago)
       _other_recording = create(:recording)
-      access_token = create_access_token(resource_owner: account)
-      set_authorization_header(access_token:)
 
+      set_authorization_header_for(account)
       do_request(
         q: {
           "created_at_or_after" => recording.created_at.iso8601
@@ -27,10 +26,10 @@ RSpec.resource "Recordings" do
 
   get "/api/recordings/:id" do
     example "Retrieve a Recording" do
-      recording = create(:recording)
-      access_token = create_access_token(resource_owner: recording.account)
-      set_authorization_header(access_token:)
+      account = create(:account)
+      recording = create(:recording, account:)
 
+      set_authorization_header_for(account)
       do_request(id: recording.id)
 
       expect(response_status).to eq(200)
@@ -41,22 +40,14 @@ RSpec.resource "Recordings" do
 
   get "/api/recordings/:id.mp3" do
     example "Retrieve a recording as mp3" do
-      recording = create(:recording)
-      access_token = create_access_token(resource_owner: recording.account)
-      set_authorization_header(access_token:)
+      account = create(:account)
+      recording = create(:recording, account:)
 
+      set_authorization_header_for(account)
       do_request(id: recording.id)
 
       expect(response_status).to eq(302)
       expect(response_headers["Location"]).to end_with(".mp3")
     end
-  end
-
-  def create_access_token(**params)
-    create(
-      :access_token,
-      permissions: %i[recordings_read],
-      **params
-    )
   end
 end
