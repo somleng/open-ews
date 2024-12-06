@@ -16,6 +16,8 @@ class AddMoreNativeColumnsToContacts < ActiveRecord::Migration[8.0]
       t.string :administrative_division_level_4_name
 
       t.index :metadata, using: :gin
+      t.index [:iso_country_code, :iso_region_code, :administrative_division_level_2_code, :administrative_division_level_3_code, :administrative_division_level_4_code]
+      t.index [:iso_country_code, :iso_region_code, :administrative_division_level_2_name, :administrative_division_level_3_name, :administrative_division_level_4_name]
     end
   end
 end
