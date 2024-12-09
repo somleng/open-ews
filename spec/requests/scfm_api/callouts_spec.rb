@@ -15,7 +15,7 @@ RSpec.resource "Callouts" do
       create(:callout, account: account)
       create(:callout)
 
-      set_authorization_header(access_token: access_token)
+      set_authorization_header_for(account)
       do_request(
         q: {
           "metadata" => { "foo" => "bar" }
@@ -26,27 +26,6 @@ RSpec.resource "Callouts" do
       parsed_body = JSON.parse(response_body)
       expect(parsed_body.size).to eq(1)
       expect(parsed_body.first.fetch("id")).to eq(filtered_callout.id)
-    end
-  end
-
-  get "/api/contacts/:contact_id/callouts" do
-    example "List all Callouts for a contact", document: false do
-      contact = create(:contact, account: account)
-      callout = create(:callout, account: account)
-      _callout_participation = create_callout_participation(
-        account: account,
-        contact: contact,
-        callout: callout
-      )
-      _other_callout = create(:callout, account: account)
-
-      set_authorization_header(access_token: access_token)
-      do_request(contact_id: contact.id)
-
-      expect(response_status).to eq(200)
-      parsed_body = JSON.parse(response_body)
-      expect(parsed_body.size).to eq(1)
-      expect(parsed_body.first.fetch("id")).to eq(callout.id)
     end
   end
 
@@ -80,7 +59,7 @@ RSpec.resource "Callouts" do
         }
       }
 
-      set_authorization_header(access_token: access_token)
+      set_authorization_header_for(account)
       do_request(request_body)
 
       expect(response_status).to eq(201)
@@ -97,7 +76,7 @@ RSpec.resource "Callouts" do
     example "Retrieve a Callout" do
       callout = create(:callout, account: account)
 
-      set_authorization_header(access_token: access_token)
+      set_authorization_header_for(account)
       do_request(id: callout.id)
 
       expect(response_status).to eq(200)
@@ -120,7 +99,7 @@ RSpec.resource "Callouts" do
 
       request_body = { metadata: { "bar" => "foo" }, metadata_merge_mode: "replace" }
 
-      set_authorization_header(access_token: access_token)
+      set_authorization_header_for(account)
       do_request(id: callout.id, **request_body)
 
       expect(response_status).to eq(204)
@@ -133,7 +112,7 @@ RSpec.resource "Callouts" do
     example "Delete a Callout" do
       callout = create(:callout, account: account)
 
-      set_authorization_header(access_token: access_token)
+      set_authorization_header_for(account)
       do_request(id: callout.id)
 
       expect(response_status).to eq(204)
@@ -146,7 +125,7 @@ RSpec.resource "Callouts" do
         account: account, callout: callout
       )
 
-      set_authorization_header(access_token: access_token)
+      set_authorization_header_for(account)
       do_request(id: callout.id)
 
       expect(response_status).to eq(422)
@@ -167,7 +146,7 @@ RSpec.resource "Callouts" do
         status: Callout::STATE_INITIALIZED
       )
 
-      set_authorization_header(access_token: access_token)
+      set_authorization_header_for(account)
       do_request(callout_id: callout.id, event: "start")
 
       expect(response_status).to eq(201)
@@ -184,7 +163,7 @@ RSpec.resource "Callouts" do
         status: Callout::STATE_RUNNING
       )
 
-      set_authorization_header(access_token: access_token)
+      set_authorization_header_for(account)
       do_request(callout_id: callout.id, event: "start")
 
       expect(response_status).to eq(422)
@@ -196,7 +175,7 @@ RSpec.resource "Callouts" do
       callout = create(:callout, account: account)
       callout_population = create(:callout_population, callout: callout, account: account)
 
-      set_authorization_header(access_token: access_token)
+      set_authorization_header_for(account)
       do_request(callout_id: callout.id)
 
       expect(response_status).to eq(200)
@@ -208,18 +187,4 @@ RSpec.resource "Callouts" do
   end
 
   let(:account) { create(:account) }
-  let(:access_token) { create_access_token(resource_owner: account) }
-
-  def create_access_token(**options)
-    create(
-      :access_token,
-      permissions: %i[
-        callouts_read
-        callouts_write
-        batch_operations_read
-        batch_operations_write
-      ],
-      **options
-    )
-  end
 end

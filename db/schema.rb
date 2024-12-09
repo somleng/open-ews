@@ -10,11 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_24_122954) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_05_142318) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
+  enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
-  enable_extension "plpgsql"
 
   create_table "accounts", force: :cascade do |t|
     t.jsonb "metadata", default: {}, null: false
@@ -117,7 +117,25 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_24_122954) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.bigint "account_id", null: false
+    t.string "status", default: "active", null: false
+    t.string "language_code"
+    t.string "gender"
+    t.date "date_of_birth"
+    t.string "iso_country_code"
+    t.string "iso_region_code"
+    t.string "administrative_division_level_2_code"
+    t.string "administrative_division_level_2_name"
+    t.string "administrative_division_level_3_code"
+    t.string "administrative_division_level_3_name"
+    t.string "administrative_division_level_4_code"
+    t.string "administrative_division_level_4_name"
+    t.index ["account_id", "date_of_birth"], name: "index_contacts_on_account_id_and_date_of_birth"
+    t.index ["account_id", "gender"], name: "index_contacts_on_account_id_and_gender"
+    t.index ["account_id", "iso_country_code", "iso_region_code", "administrative_division_level_2_code", "administrative_division_level_3_code", "administrative_division_level_4_code"], name: "idx_on_account_id_iso_country_code_iso_region_code__452bf4b37c"
+    t.index ["account_id", "iso_country_code", "iso_region_code", "administrative_division_level_2_name", "administrative_division_level_3_name", "administrative_division_level_4_name"], name: "idx_on_account_id_iso_country_code_iso_region_code__548db37445"
+    t.index ["account_id", "language_code"], name: "index_contacts_on_account_id_and_language_code"
     t.index ["account_id", "msisdn"], name: "index_contacts_on_account_id_and_msisdn", unique: true
+    t.index ["account_id", "status"], name: "index_contacts_on_account_id_and_status", where: "((status)::text = 'active'::text)"
     t.index ["account_id"], name: "index_contacts_on_account_id"
     t.index ["created_at"], name: "index_contacts_on_created_at"
     t.index ["updated_at"], name: "index_contacts_on_updated_at"
