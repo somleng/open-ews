@@ -111,7 +111,7 @@ GEM
       uri (>= 0.13.1)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
-    after_commit_everywhere (1.4.0)
+    after_commit_everywhere (1.5.0)
       activerecord (>= 4.2)
       activesupport
     appsignal (4.2.1)
