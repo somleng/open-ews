@@ -129,15 +129,15 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_05_142318) do
     t.string "administrative_division_level_3_name"
     t.string "administrative_division_level_4_code"
     t.string "administrative_division_level_4_name"
+    t.index ["account_id", "date_of_birth"], name: "index_contacts_on_account_id_and_date_of_birth"
+    t.index ["account_id", "gender"], name: "index_contacts_on_account_id_and_gender"
+    t.index ["account_id", "iso_country_code", "iso_region_code", "administrative_division_level_2_code", "administrative_division_level_3_code", "administrative_division_level_4_code"], name: "idx_on_account_id_iso_country_code_iso_region_code__452bf4b37c"
+    t.index ["account_id", "iso_country_code", "iso_region_code", "administrative_division_level_2_name", "administrative_division_level_3_name", "administrative_division_level_4_name"], name: "idx_on_account_id_iso_country_code_iso_region_code__548db37445"
+    t.index ["account_id", "language_code"], name: "index_contacts_on_account_id_and_language_code"
     t.index ["account_id", "msisdn"], name: "index_contacts_on_account_id_and_msisdn", unique: true
+    t.index ["account_id", "status"], name: "index_contacts_on_account_id_and_status", where: "((status)::text = 'active'::text)"
     t.index ["account_id"], name: "index_contacts_on_account_id"
     t.index ["created_at"], name: "index_contacts_on_created_at"
-    t.index ["date_of_birth"], name: "index_contacts_on_date_of_birth"
-    t.index ["iso_country_code", "iso_region_code", "administrative_division_level_2_code", "administrative_division_level_3_code", "administrative_division_level_4_code"], name: "idx_on_iso_country_code_iso_region_code_administrat_42027d9cba"
-    t.index ["iso_country_code", "iso_region_code", "administrative_division_level_2_name", "administrative_division_level_3_name", "administrative_division_level_4_name"], name: "idx_on_iso_country_code_iso_region_code_administrat_ed3cc8a95f"
-    t.index ["language_code"], name: "index_contacts_on_language_code"
-    t.index ["metadata"], name: "index_contacts_on_metadata", using: :gin
-    t.index ["status"], name: "index_contacts_on_status", where: "((status)::text = 'active'::text)"
     t.index ["updated_at"], name: "index_contacts_on_updated_at"
   end
 

@@ -2,9 +2,10 @@ module V1
   class ContactRequestSchema < BaseRequestSchema
     params do
       required(:data).value(:hash).schema do
+        optional(:id).filled(:integer)
         required(:type).filled(:str?, eql?: "contact")
         required(:attributes).value(:hash).schema do
-          required(:msisdn).filled(:string)
+          optional(:msisdn).filled(:string)
           optional(:language_code).maybe(:string)
           optional(:date_of_birth).maybe(:date)
           optional(:gender).maybe(:string, included_in?: Contact.gender.values)

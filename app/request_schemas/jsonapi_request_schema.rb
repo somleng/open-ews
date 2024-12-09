@@ -35,4 +35,3 @@ class JSONAPIRequestSchema < ApplicationRequestSchema
     result
   end
 end
-
