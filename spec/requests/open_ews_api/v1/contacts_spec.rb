@@ -31,7 +31,12 @@ RSpec.resource "Contacts"  do
             language_code: "km",
             gender: "M",
             date_of_birth: "1990-01-01",
-            metadata: { "foo" => "bar" }
+            metadata: { "foo" => "bar" },
+            iso_country_code: "kh",
+            address: {
+              iso_region_code: "01",
+              administrative_division_level_2_code: "01"
+            }
           }
         }
       )
@@ -43,7 +48,14 @@ RSpec.resource "Contacts"  do
         "language_code" => "km",
         "gender" => "M",
         "date_of_birth" => "1990-01-01",
-        "metadata" => { "foo" => "bar" }
+        "metadata" => { "foo" => "bar" },
+        "iso_country_code" => "kh",
+      )
+
+      expect(json_response.dig("included", 0).to_json).to match_api_response_schema("address")
+      expect(json_response.dig("included", 0, "attributes")).to include(
+        "iso_region_code" => "01",
+        "administrative_division_level_2_code" => "01"
       )
     end
 
@@ -56,7 +68,8 @@ RSpec.resource "Contacts"  do
         data: {
           type: :contact,
           attributes: {
-            msisdn: "+85510999999"
+            msisdn: "+85510999999",
+            iso_country_code: "kh"
           }
         }
       )

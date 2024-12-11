@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_05_142318) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_11_092117) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -78,6 +78,24 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_05_142318) do
     t.index ["updated_at"], name: "index_batch_operations_on_updated_at"
   end
 
+  create_table "beneficiary_addresses", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "beneficiary_id", null: false
+    t.citext "iso_region_code"
+    t.string "administrative_division_level_2_code"
+    t.string "administrative_division_level_2_name"
+    t.string "administrative_division_level_3_code"
+    t.string "administrative_division_level_3_name"
+    t.string "administrative_division_level_4_code"
+    t.string "administrative_division_level_4_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "iso_region_code", "administrative_division_level_2_code", "administrative_division_level_3_code", "administrative_division_level_4_code"], name: "idx_on_account_id_iso_region_code_administrative_di_55499a5014"
+    t.index ["account_id", "iso_region_code", "administrative_division_level_2_name", "administrative_division_level_3_name", "administrative_division_level_4_name"], name: "idx_on_account_id_iso_region_code_administrative_di_68ddc101fb"
+    t.index ["account_id"], name: "index_beneficiary_addresses_on_account_id"
+    t.index ["beneficiary_id"], name: "index_beneficiary_addresses_on_beneficiary_id"
+  end
+
   create_table "callout_participations", force: :cascade do |t|
     t.bigint "callout_id", null: false
     t.bigint "contact_id", null: false
@@ -121,18 +139,10 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_05_142318) do
     t.string "language_code"
     t.string "gender"
     t.date "date_of_birth"
-    t.string "iso_country_code"
-    t.string "iso_region_code"
-    t.string "administrative_division_level_2_code"
-    t.string "administrative_division_level_2_name"
-    t.string "administrative_division_level_3_code"
-    t.string "administrative_division_level_3_name"
-    t.string "administrative_division_level_4_code"
-    t.string "administrative_division_level_4_name"
+    t.citext "iso_country_code"
     t.index ["account_id", "date_of_birth"], name: "index_contacts_on_account_id_and_date_of_birth"
     t.index ["account_id", "gender"], name: "index_contacts_on_account_id_and_gender"
-    t.index ["account_id", "iso_country_code", "iso_region_code", "administrative_division_level_2_code", "administrative_division_level_3_code", "administrative_division_level_4_code"], name: "idx_on_account_id_iso_country_code_iso_region_code__452bf4b37c"
-    t.index ["account_id", "iso_country_code", "iso_region_code", "administrative_division_level_2_name", "administrative_division_level_3_name", "administrative_division_level_4_name"], name: "idx_on_account_id_iso_country_code_iso_region_code__548db37445"
+    t.index ["account_id", "iso_country_code"], name: "index_contacts_on_account_id_and_iso_country_code"
     t.index ["account_id", "language_code"], name: "index_contacts_on_account_id_and_language_code"
     t.index ["account_id", "msisdn"], name: "index_contacts_on_account_id_and_msisdn", unique: true
     t.index ["account_id", "status"], name: "index_contacts_on_account_id_and_status", where: "((status)::text = 'active'::text)"
@@ -304,6 +314,8 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_05_142318) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "batch_operations", "accounts"
   add_foreign_key "batch_operations", "callouts"
+  add_foreign_key "beneficiary_addresses", "accounts"
+  add_foreign_key "beneficiary_addresses", "contacts", column: "beneficiary_id", on_delete: :cascade
   add_foreign_key "callout_participations", "batch_operations", column: "callout_population_id"
   add_foreign_key "callout_participations", "callouts"
   add_foreign_key "callout_participations", "contacts"

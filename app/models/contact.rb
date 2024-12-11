@@ -1,12 +1,17 @@
 class Contact < ApplicationRecord
   extend Enumerize
 
+  COUNTRY_CODES = ISO3166::Country.codes.map(&:downcase).freeze
+
   include MsisdnHelpers
   include MetadataHelpers
 
   enumerize :gender, in: { male: "M", female: "F" }, scope: true
+  enumerize :iso_country_code, in: COUNTRY_CODES, scope: true
 
   belongs_to :account
+
+  has_many :addresses, class_name: "BeneficiaryAddress", foreign_key: :beneficiary_id
 
   has_many :callout_participations,
            dependent: :restrict_with_error

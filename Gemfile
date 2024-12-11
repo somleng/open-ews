@@ -30,6 +30,7 @@ gem "bootsnap", require: false
 gem "cocoon"
 gem "cssbundling-rails"
 gem "coverband"
+gem "countries"
 gem "cursor_paginator"
 gem "devise"
 gem "devise-async"

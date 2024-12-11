@@ -12,9 +12,10 @@ module API
 
       def create
         validate_request_schema(
-          with: ::V1::ContactRequestSchema
+          with: ::V1::ContactRequestSchema,
+          serializer_options: { include: [ :addresses ] }
         ) do |permitted_params|
-            contacts_scope.create!(permitted_params)
+            CreateBeneficiaryWithAddress.new(permitted_params).call
           end
       end
 
@@ -22,7 +23,7 @@ module API
         contact = contacts_scope.find(params[:id])
 
         validate_request_schema(
-          with: ::V1::ContactRequestSchema,
+          with: ::V1::UpdateContactRequestSchema,
           schema_options: { resource: contact }
         ) do |permitted_params|
             contact.update!(permitted_params)

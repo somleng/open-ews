@@ -2,14 +2,24 @@ module V1
   class ContactRequestSchema < BaseRequestSchema
     params do
       required(:data).value(:hash).schema do
-        optional(:id).filled(:integer)
         required(:type).filled(:str?, eql?: "contact")
         required(:attributes).value(:hash).schema do
-          optional(:msisdn).filled(:string)
+          required(:msisdn).filled(:string)
+          required(:iso_country_code).filled(:string, included_in?: Contact.iso_country_code.values)
           optional(:language_code).maybe(:string)
           optional(:date_of_birth).maybe(:date)
           optional(:gender).maybe(:string, included_in?: Contact.gender.values)
           optional(:metadata).maybe(:hash?)
+
+          optional(:address).filled(:hash).schema do
+            optional(:iso_region_code).maybe(:string)
+            optional(:administrative_division_level_2_code).maybe(:string)
+            optional(:administrative_division_level_2_name).maybe(:string)
+            optional(:administrative_division_level_3_code).maybe(:string)
+            optional(:administrative_division_level_3_name).maybe(:string)
+            optional(:administrative_division_level_4_code).maybe(:string)
+            optional(:administrative_division_level_4_name).maybe(:string)
+          end
         end
       end
     end
