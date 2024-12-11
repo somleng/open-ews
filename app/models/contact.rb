@@ -6,6 +6,7 @@ class Contact < ApplicationRecord
   include MsisdnHelpers
   include MetadataHelpers
 
+  enumerize :status, in: [ :active, :disabled ], scope: true
   enumerize :gender, in: { male: "M", female: "F" }, scope: true
   enumerize :iso_country_code, in: COUNTRY_CODES, scope: true
 

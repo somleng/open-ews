@@ -2,9 +2,10 @@ require "rails_helper"
 
 RSpec.resource "Contacts"  do
   get "/v1/contacts" do
-    example "List all Contacts" do
+    example "List all active contacts" do
       account = create(:account)
       account_contact = create(:contact, account:)
+      _account_disabled_contact = create(:contact, :disabled, account:)
       _other_account_contact = create(:contact)
 
       set_authorization_header_for(account)
@@ -14,6 +15,21 @@ RSpec.resource "Contacts"  do
       expect(response_body).to match_jsonapi_resource_collection_schema("contact")
       expect(json_response.fetch("data").pluck("id")).to contain_exactly(
         account_contact.id.to_s
+      )
+    end
+
+    example "List all disabled contacts", document: false do
+      account = create(:account)
+      active_contact = create(:contact, account:)
+      disabled_contact = create(:contact, :disabled, account:, status: "disabled")
+
+      set_authorization_header_for(account)
+      do_request(filter: { status: "disabled" })
+
+      expect(response_status).to eq(200)
+      expect(response_body).to match_jsonapi_resource_collection_schema("contact")
+      expect(json_response.fetch("data").pluck("id")).to contain_exactly(
+        disabled_contact.id.to_s
       )
     end
   end

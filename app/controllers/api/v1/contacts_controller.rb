@@ -2,7 +2,8 @@ module API
   module V1
     class ContactsController < BaseController
       def index
-        respond_with_resource(contacts_scope)
+        contacts = apply_filters(contacts_scope, with: BeneficiaryFilter)
+        respond_with_resource(contacts)
       end
 
       def show
