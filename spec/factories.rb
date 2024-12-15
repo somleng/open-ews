@@ -76,7 +76,7 @@ FactoryBot.define do
     end
   end
 
-  factory :contact do
+  factory :contact, aliases: [ :beneficiary ] do
     account
     msisdn { generate(:somali_msisdn) }
 

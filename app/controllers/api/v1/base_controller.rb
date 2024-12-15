@@ -28,7 +28,14 @@ module API
 
         if schema.success?
           resource = yield(schema.output)
-          respond_with_resource(resource, options)
+
+          location = options[:location]
+          if location.respond_to?(:call) && location.arity == 1
+            options[:location] = location.call(resource)
+            respond_with_resource(resource, options)
+          else
+            respond_with_resource(resource, options)
+          end
         else
           on_error = options.delete(:on_error)
           on_error&.call(schema)

@@ -1,7 +1,7 @@
 module APIResponseSchema
-  ContactSchema = Dry::Schema.JSON do
+  BeneficiarySchema = Dry::Schema.JSON do
     required(:id).filled(:str?)
-    required(:type).filled(eql?: "contact")
+    required(:type).filled(eql?: "beneficiary")
 
     required(:attributes).schema do
       required(:msisdn).filled(:str?)

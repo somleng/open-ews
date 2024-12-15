@@ -1,8 +1,8 @@
 module V1
-  class ContactRequestSchema < BaseRequestSchema
+  class BeneficiaryRequestSchema < BaseRequestSchema
     params do
       required(:data).value(:hash).schema do
-        required(:type).filled(:str?, eql?: "contact")
+        required(:type).filled(:str?, eql?: "beneficiary")
         required(:attributes).value(:hash).schema do
           required(:msisdn).filled(:string)
           required(:iso_country_code).filled(:string, included_in?: Contact.iso_country_code.values)

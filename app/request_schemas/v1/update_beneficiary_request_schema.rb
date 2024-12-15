@@ -1,9 +1,9 @@
 module V1
-  class UpdateContactRequestSchema < BaseRequestSchema
+  class UpdateBeneficiaryRequestSchema < BaseRequestSchema
     params do
       required(:data).value(:hash).schema do
         required(:id).filled(:integer)
-        required(:type).filled(:str?, eql?: "contact")
+        required(:type).filled(:str?, eql?: "beneficiary")
         required(:attributes).value(:hash).schema do
           optional(:msisdn).filled(:string)
           optional(:language_code).maybe(:string)
@@ -17,7 +17,7 @@ module V1
 
     attribute_rule(:msisdn).validate(:phone_number_format)
     rule do
-      ContactRequestSchema::Rules.new(self).validate
+      BeneficiaryRequestSchema::Rules.new(self).validate
     end
 
     def output

@@ -1,47 +1,47 @@
 require "rails_helper"
 
-RSpec.resource "Contacts"  do
-  get "/v1/contacts" do
-    example "List all active contacts" do
+RSpec.resource "Beneficiaries"  do
+  get "/v1/beneficiaries" do
+    example "List all active beneficiaries" do
       account = create(:account)
-      account_contact = create(:contact, account:)
-      _account_disabled_contact = create(:contact, :disabled, account:)
-      _other_account_contact = create(:contact)
+      account_beneficiary = create(:beneficiary, account:)
+      _account_disabled_beneficiary = create(:beneficiary, :disabled, account:)
+      _other_account_beneficiary = create(:beneficiary)
 
       set_authorization_header_for(account)
       do_request
 
       expect(response_status).to eq(200)
-      expect(response_body).to match_jsonapi_resource_collection_schema("contact")
+      expect(response_body).to match_jsonapi_resource_collection_schema("beneficiary")
       expect(json_response.fetch("data").pluck("id")).to contain_exactly(
-        account_contact.id.to_s
+        account_beneficiary.id.to_s
       )
     end
 
-    example "List all disabled contacts", document: false do
+    example "List all disabled beneficiaries", document: false do
       account = create(:account)
-      active_contact = create(:contact, account:)
-      disabled_contact = create(:contact, :disabled, account:, status: "disabled")
+      _active_beneficiary = create(:beneficiary, account:)
+      disabled_beneficiary = create(:beneficiary, :disabled, account:, status: "disabled")
 
       set_authorization_header_for(account)
       do_request(filter: { status: "disabled" })
 
       expect(response_status).to eq(200)
-      expect(response_body).to match_jsonapi_resource_collection_schema("contact")
+      expect(response_body).to match_jsonapi_resource_collection_schema("beneficiary")
       expect(json_response.fetch("data").pluck("id")).to contain_exactly(
-        disabled_contact.id.to_s
+        disabled_beneficiary.id.to_s
       )
     end
   end
 
-  post "/v1/contacts" do
-    example "Create a contact" do
+  post "/v1/beneficiaries" do
+    example "Create a beneficiary" do
       account = create(:account)
 
       set_authorization_header_for(account)
       do_request(
         data: {
-          type: :contact,
+          type: :beneficiary,
           attributes: {
             msisdn: "+85510999999",
             language_code: "km",
@@ -58,7 +58,7 @@ RSpec.resource "Contacts"  do
       )
 
       expect(response_status).to eq(201)
-      expect(response_body).to match_jsonapi_resource_schema("contact")
+      expect(response_body).to match_jsonapi_resource_schema("beneficiary")
       expect(jsonapi_response_attributes).to include(
         "msisdn" => "+85510999999",
         "language_code" => "km",
@@ -75,14 +75,14 @@ RSpec.resource "Contacts"  do
       )
     end
 
-    example "Fail to create a contact", document: false do
+    example "Fail to create a beneficiary", document: false do
       account = create(:account)
-      create(:contact, account:, msisdn: "+85510999999")
+      create(:beneficiary, account:, msisdn: "+85510999999")
 
       set_authorization_header_for(account)
       do_request(
         data: {
-          type: :contact,
+          type: :beneficiary,
           attributes: {
             msisdn: "+85510999999",
             iso_country_code: "kh"
@@ -99,35 +99,35 @@ RSpec.resource "Contacts"  do
     end
   end
 
-  get "/v1/contacts/:id" do
-    example "Get a contact" do
-      contact = create(:contact)
+  get "/v1/beneficiaries/:id" do
+    example "Get a beneficiary" do
+      beneficiary = create(:beneficiary)
 
-      set_authorization_header_for(contact.account)
-      do_request(id: contact.id)
+      set_authorization_header_for(beneficiary.account)
+      do_request(id: beneficiary.id)
 
       expect(response_status).to eq(200)
-      expect(response_body).to match_jsonapi_resource_schema("contact")
-      expect(json_response.dig("data", "id")).to eq(contact.id.to_s)
+      expect(response_body).to match_jsonapi_resource_schema("beneficiary")
+      expect(json_response.dig("data", "id")).to eq(beneficiary.id.to_s)
     end
   end
 
-  patch "/v1/contacts/:id" do
-    example "Update a contact" do
-      contact = create(
-        :contact,
+  patch "/v1/beneficiaries/:id" do
+    example "Update a beneficiary" do
+      beneficiary = create(
+        :beneficiary,
         gender: nil,
         language_code: nil,
         date_of_birth: nil,
         metadata: {}
       )
 
-      set_authorization_header_for(contact.account)
+      set_authorization_header_for(beneficiary.account)
       do_request(
-        id: contact.id,
+        id: beneficiary.id,
         data: {
-          id: contact.id,
-          type: :contact,
+          id: beneficiary.id,
+          type: :beneficiary,
           attributes: {
             gender: "F",
             status: "disabled",
@@ -141,7 +141,7 @@ RSpec.resource "Contacts"  do
       )
 
       expect(response_status).to eq(200)
-      expect(response_body).to match_jsonapi_resource_schema("contact")
+      expect(response_body).to match_jsonapi_resource_schema("beneficiary")
       expect(jsonapi_response_attributes).to include(
         "language_code" => "en",
         "gender" => "F",
