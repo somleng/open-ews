@@ -79,7 +79,6 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_11_092117) do
   end
 
   create_table "beneficiary_addresses", force: :cascade do |t|
-    t.bigint "account_id", null: false
     t.bigint "beneficiary_id", null: false
     t.citext "iso_region_code"
     t.string "administrative_division_level_2_code"
@@ -90,10 +89,9 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_11_092117) do
     t.string "administrative_division_level_4_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["account_id", "iso_region_code", "administrative_division_level_2_code", "administrative_division_level_3_code", "administrative_division_level_4_code"], name: "idx_on_account_id_iso_region_code_administrative_di_55499a5014"
-    t.index ["account_id", "iso_region_code", "administrative_division_level_2_name", "administrative_division_level_3_name", "administrative_division_level_4_name"], name: "idx_on_account_id_iso_region_code_administrative_di_68ddc101fb"
-    t.index ["account_id"], name: "index_beneficiary_addresses_on_account_id"
     t.index ["beneficiary_id"], name: "index_beneficiary_addresses_on_beneficiary_id"
+    t.index ["iso_region_code", "administrative_division_level_2_code", "administrative_division_level_3_code", "administrative_division_level_4_code"], name: "idx_on_iso_region_code_administrative_division_leve_a5183cd2b4"
+    t.index ["iso_region_code", "administrative_division_level_2_name", "administrative_division_level_3_name", "administrative_division_level_4_name"], name: "idx_on_iso_region_code_administrative_division_leve_c76774f7b0"
   end
 
   create_table "callout_participations", force: :cascade do |t|
@@ -314,7 +312,6 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_11_092117) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "batch_operations", "accounts"
   add_foreign_key "batch_operations", "callouts"
-  add_foreign_key "beneficiary_addresses", "accounts"
   add_foreign_key "beneficiary_addresses", "contacts", column: "beneficiary_id", on_delete: :cascade
   add_foreign_key "callout_participations", "batch_operations", column: "callout_population_id"
   add_foreign_key "callout_participations", "callouts"

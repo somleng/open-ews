@@ -310,7 +310,7 @@ RSpec.describe CallFlowLogic::EWSRegistration do
       metadata: {
         name: "John Doe",
         language_code: "khm",
-        commune_ids: ["120101"]
+        commune_ids: [ "120101" ]
       }
     )
     phone_call = create(
@@ -336,6 +336,7 @@ RSpec.describe CallFlowLogic::EWSRegistration do
     response = parse_response(call_flow_logic.to_xml)
     expect(phone_call.metadata.fetch("commune_code")).to eq("010505") # Samraong
     expect(phone_call.metadata.fetch("status")).to eq("playing_conclusion")
+    expect(contact.language_code).to eq("krr")
     expect(contact.metadata).to eq(
       "commune_ids" => %w[120101 010505],
       "name" => "John Doe",
@@ -343,6 +344,11 @@ RSpec.describe CallFlowLogic::EWSRegistration do
       "latest_commune_id" => "010505",
       "latest_address_km" => "ឃុំសំរោង ស្រុកអូរជ្រៅ ខេត្តបន្ទាយមានជ័យ",
       "latest_address_en" => "Samraong Commune, Ou Chrov District, Banteay Meanchey Province"
+    )
+    expect(contact.addresses.last).to have_attributes(
+      iso_region_code: "01",
+      administrative_division_level_2_code: "0105",
+      administrative_division_level_3_code: "010505"
     )
     assert_play("registration_successful-krr.wav", response)
   end

@@ -9,7 +9,7 @@ class CreateBeneficiaryWithAddress < ApplicationWorkflow
   def call
     ApplicationRecord.transaction do
       contact = Contact.create!(contact_params)
-      contact.addresses.create!(account: contact.account, **address_params) if address_params.present?
+      contact.addresses.create!(address_params) if address_params.present?
       contact
     end
   end
