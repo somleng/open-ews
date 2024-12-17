@@ -8,7 +8,10 @@ RSpec.describe HandlePhoneCallEvent do
   it "handles new phone calls" do
     account = create_account(call_flow_logic: MyCallFlowLogic)
     event_details = generate_event_details(
-      account: account, direction: "inbound", call_status: "in-progress"
+      account: account,
+      direction: "inbound",
+      call_status: "in-progress",
+      from: "85510900123"
     )
 
     result = HandlePhoneCallEvent.call(url, event_details)
@@ -23,12 +26,20 @@ RSpec.describe HandlePhoneCallEvent do
     expect(event.remote_direction).to eq("inbound")
     expect(event.call_flow_logic).to eq(MyCallFlowLogic.to_s)
 
-    expect(event.phone_call).to be_persisted
-    expect(event.phone_call).to be_in_progress
-    expect(event.phone_call.remote_call_id).to eq(event.remote_call_id)
-    expect(event.phone_call.remote_direction).to eq("inbound")
-    expect(event.phone_call.msisdn).to match(event_details.fetch(:From))
-    expect(event.phone_call.remote_status).to eq("in-progress")
+    phone_call = event.phone_call
+    expect(phone_call).to be_persisted
+    expect(phone_call).to be_in_progress
+    expect(phone_call.remote_call_id).to eq(event.remote_call_id)
+    expect(phone_call.remote_direction).to eq("inbound")
+    expect(phone_call.msisdn).to match(event_details.fetch(:From))
+    expect(phone_call.remote_status).to eq("in-progress")
+
+    expect(phone_call.contact).to have_attributes(
+      persisted?: true,
+      account: account,
+      msisdn: "+85510900123",
+      iso_country_code: "KH"
+    )
   end
 
   it "handles existing phone calls" do

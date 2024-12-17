@@ -1,7 +1,7 @@
 class Contact < ApplicationRecord
   extend Enumerize
 
-  COUNTRY_CODES = ISO3166::Country.codes.map(&:downcase).freeze
+  COUNTRY_CODES = ISO3166::Country.codes.freeze
 
   include MsisdnHelpers
   include MetadataHelpers
@@ -30,7 +30,15 @@ class Contact < ApplicationRecord
            to: :account,
            allow_nil: true
 
+  before_create :assign_iso_country_code, unless: :iso_country_code?
+
   def self.jsonapi_serializer_class
     BeneficiarySerializer
+  end
+
+  private
+
+  def assign_iso_country_code
+    self.iso_country_code = PhonyRails.country_from_number(msisdn)
   end
 end

@@ -5,10 +5,10 @@ module V1
         required(:type).filled(:str?, eql?: "beneficiary")
         required(:attributes).value(:hash).schema do
           required(:msisdn).filled(:string)
-          required(:iso_country_code).filled(:string, included_in?: Contact.iso_country_code.values)
+          required(:iso_country_code).filled(Types::UpcaseString, included_in?: Contact.iso_country_code.values)
           optional(:language_code).maybe(:string)
           optional(:date_of_birth).maybe(:date)
-          optional(:gender).maybe(:string, included_in?: Contact.gender.values)
+          optional(:gender).maybe(Types::UpcaseString, included_in?: Contact.gender.values)
           optional(:metadata).maybe(:hash?)
 
           optional(:address).filled(:hash).schema do
@@ -37,16 +37,21 @@ module V1
 
     class Rules < SchemaRules::JSONAPISchemaRules
       def validate
-        return true if resource&.persisted?
-        return key(:msisdn).failure(text: "can't be blank") if values[:msisdn].blank?
+        if resource.blank?
+          return key(:msisdn).failure(text: "can't be blank") if values[:msisdn].blank?
 
-        key(:msisdn).failure(text: "must be unique") if contact_exists?
+          key(:msisdn).failure(text: "must be unique") if contact_exists?
+        elsif values[:msisdn].present?
+          key(:msisdn).failure(text: "must be unique") if contact_exists?
+        end
       end
 
       private
 
       def contact_exists?
-        account.contacts.where_msisdn(values.fetch(:msisdn)).exists?
+        relation = account.contacts.where_msisdn(values.fetch(:msisdn))
+        relation = relation.where.not(id: resource.id) if resource.present?
+        relation.exists?
       end
     end
   end

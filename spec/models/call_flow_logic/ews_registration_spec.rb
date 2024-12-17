@@ -346,7 +346,7 @@ RSpec.describe CallFlowLogic::EWSRegistration do
       "latest_address_en" => "Samraong Commune, Ou Chrov District, Banteay Meanchey Province"
     )
     expect(contact.addresses.last).to have_attributes(
-      iso_region_code: "01",
+      iso_region_code: "KH-1",
       administrative_division_level_2_code: "0105",
       administrative_division_level_3_code: "010505"
     )

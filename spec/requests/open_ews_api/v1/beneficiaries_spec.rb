@@ -48,9 +48,9 @@ RSpec.resource "Beneficiaries"  do
             gender: "M",
             date_of_birth: "1990-01-01",
             metadata: { "foo" => "bar" },
-            iso_country_code: "kh",
+            iso_country_code: "KH",
             address: {
-              iso_region_code: "01",
+              iso_region_code: "KH-1",
               administrative_division_level_2_code: "01"
             }
           }
@@ -65,12 +65,12 @@ RSpec.resource "Beneficiaries"  do
         "gender" => "M",
         "date_of_birth" => "1990-01-01",
         "metadata" => { "foo" => "bar" },
-        "iso_country_code" => "kh",
+        "iso_country_code" => "KH",
       )
 
       expect(json_response.dig("included", 0).to_json).to match_api_response_schema("address")
       expect(json_response.dig("included", 0, "attributes")).to include(
-        "iso_region_code" => "01",
+        "iso_region_code" => "KH-1",
         "administrative_division_level_2_code" => "01"
       )
     end
@@ -116,6 +116,7 @@ RSpec.resource "Beneficiaries"  do
     example "Update a beneficiary" do
       beneficiary = create(
         :beneficiary,
+        msisdn: "+85510999001",
         gender: nil,
         language_code: nil,
         date_of_birth: nil,
@@ -129,6 +130,7 @@ RSpec.resource "Beneficiaries"  do
           id: beneficiary.id,
           type: :beneficiary,
           attributes: {
+            msisdn: "+85510999002",
             gender: "F",
             status: "disabled",
             language_code: "en",
@@ -143,6 +145,7 @@ RSpec.resource "Beneficiaries"  do
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_schema("beneficiary")
       expect(jsonapi_response_attributes).to include(
+        "msisdn" => "+85510999002",
         "language_code" => "en",
         "gender" => "F",
         "date_of_birth" => "1990-01-01",
