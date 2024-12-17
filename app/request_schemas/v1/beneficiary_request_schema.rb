@@ -9,7 +9,7 @@ module V1
           optional(:language_code).maybe(:string)
           optional(:date_of_birth).maybe(:date)
           optional(:gender).maybe(Types::UpcaseString, included_in?: Contact.gender.values)
-          optional(:metadata).maybe(:hash?)
+          optional(:metadata).value(:hash)
 
           optional(:address).filled(:hash).schema do
             optional(:iso_region_code).maybe(:string)
@@ -25,7 +25,7 @@ module V1
     end
 
     attribute_rule(:msisdn).validate(:phone_number_format)
-    rule do
+    rule(data: :attributes) do
       Rules.new(self).validate
     end
 

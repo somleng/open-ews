@@ -11,7 +11,7 @@ RSpec.describe CreateBeneficiaryWithAddress do
       gender: "M",
       date_of_birth: "1990-01-01",
       metadata: { "foo" => "bar" },
-      iso_country_code: "kh",
+      iso_country_code: "KH",
       address: {
         iso_region_code: "01",
         administrative_division_level_2_code: "01"
@@ -24,7 +24,7 @@ RSpec.describe CreateBeneficiaryWithAddress do
       gender: "male",
       date_of_birth: Date.parse("1990-01-01"),
       metadata: { "foo" => "bar" },
-      iso_country_code: "kh"
+      iso_country_code: "KH"
     )
     expect(contact.addresses.first).to have_attributes(
       iso_region_code: "01",
@@ -38,12 +38,12 @@ RSpec.describe CreateBeneficiaryWithAddress do
     contact = CreateBeneficiaryWithAddress.new(
       account:,
       msisdn: "+85510999999",
-      iso_country_code: "kh",
+      iso_country_code: "KH",
     ).call
 
     expect(contact).to have_attributes(
       msisdn: "+85510999999",
-      iso_country_code: "kh"
+      iso_country_code: "KH"
     )
   end
 end
