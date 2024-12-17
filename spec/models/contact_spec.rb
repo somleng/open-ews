@@ -12,12 +12,17 @@ RSpec.describe Contact do
     it { is_expected.to allow_value("+252 66-(2)-345-678").for(:msisdn) }
   end
 
-  describe "associations" do
-    it { is_expected.to have_many(:callout_participations).dependent(:restrict_with_error) }
-    it { is_expected.to have_many(:phone_calls).dependent(:restrict_with_error) }
-  end
+  describe "#assign_iso_country_code" do
+    it "assigns iso country code" do
+      beneficiary = create(:beneficiary, msisdn: "+85510999999", iso_country_code: nil)
 
-  describe "delegations" do
-    it { is_expected.to delegate_method(:call_flow_logic).to(:account) }
+      expect(beneficiary.iso_country_code).to eq("KH")
+    end
+
+    it "preserves iso country code" do
+      beneficiary = create(:beneficiary, msisdn: "+85510999999", iso_country_code: "TH")
+
+      expect(beneficiary.iso_country_code).to eq("TH")
+    end
   end
 end
