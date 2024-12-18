@@ -1,5 +1,6 @@
 = page_title(title: title) do
-  = render("shared/new_resource_page_action", path: new_dashboard_contact_path)
+  -# TODO: Re-enable this once after data migration to native columns
+  -# = render("shared/new_resource_page_action", path: new_dashboard_contact_path)
 
 .card-body
   = render("shared/resources_table", resource_class: Contact, columns: [:msisdn, :created_at])

@@ -3,11 +3,7 @@ module API
     private
 
     def find_resources_association_chain
-      if params[:contact_id]
-        contact.callouts
-      else
-        association_chain
-      end
+      association_chain
     end
 
     def association_chain
@@ -26,10 +22,6 @@ module API
         metadata: {},
         settings: {}
       )
-    end
-
-    def contact
-      @contact ||= current_account.contacts.find(params[:contact_id])
     end
   end
 end

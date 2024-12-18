@@ -11,9 +11,10 @@ RSpec.describe "Contacts", :aggregate_failures do
 
     expect(page).to have_title("Contacts")
 
-    within("#page_actions") do
-      expect(page).to have_link("New", href: new_dashboard_contact_path)
-    end
+    # TODO: Re-enable this once after data migration to native columns
+    # within("#page_actions") do
+    #   expect(page).to have_link("New", href: new_dashboard_contact_path)
+    # end
 
     within("#resources") do
       expect(page).to have_content_tag_for(contact)
@@ -26,7 +27,7 @@ RSpec.describe "Contacts", :aggregate_failures do
     end
   end
 
-  it "can create a new contact" do
+  xit "can create a new contact" do
     user = create(:user)
     phone_number = generate(:somali_msisdn)
 
@@ -48,7 +49,7 @@ RSpec.describe "Contacts", :aggregate_failures do
     expect(page).to have_content("Bob Chann")
   end
 
-  it "can update a contact", :js do
+  xit "can update a contact", :js do
     user = create(:user)
     contact = create(
       :contact,
@@ -104,9 +105,10 @@ RSpec.describe "Contacts", :aggregate_failures do
 
     expect(page).to have_title("Contact #{contact.id}")
 
-    within("#page_actions") do
-      expect(page).to have_link("Edit", href: edit_dashboard_contact_path(contact))
-    end
+    # TODO: Re-enable this once after data migration to native columns
+    # within("#page_actions") do
+    #   expect(page).to have_link("Edit", href: edit_dashboard_contact_path(contact))
+    # end
 
     within("#related_links") do
       expect(page).to have_link(

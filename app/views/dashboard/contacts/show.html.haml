@@ -1,5 +1,6 @@
 = page_title(title: title) do
-  = render("shared/edit_resource_page_action", path: edit_dashboard_contact_path(resource))
+  -# TODO: Re-enable this once after data migration to native columns
+  -# = render("shared/edit_resource_page_action", path: edit_dashboard_contact_path(resource))
   = render("shared/destroy_resource_page_action", path: dashboard_contact_path(resource))
 
   = render "shared/resource_related_links" do

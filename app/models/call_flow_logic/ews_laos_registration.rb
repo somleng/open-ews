@@ -12,11 +12,11 @@ module CallFlowLogic
 
     District = Struct.new(:code, :province, :name_en, :name_lo, keyword_init: true) do
       def address_en
-        [full_name_en, province.full_name_en].join(", ")
+        [ full_name_en, province.full_name_en ].join(", ")
       end
 
       def address_lo
-        [full_name_lo, province.full_name_lo].join(" ")
+        [ full_name_lo, province.full_name_lo ].join(" ")
       end
 
       def full_name_en
@@ -33,7 +33,7 @@ module CallFlowLogic
     CHAMPASAK = Province.new(code: "16", iso3166: "LA-CH", name_en: "Champasak", name_lo: "ຈຳປາສັກ")
     ATTAPEU = Province.new(code: "17", iso3166: "LA-AT", name_en: "Attapeu", name_lo: "ອັດຕະປື")
 
-    PROVINCE_MENU = [SALAVAN, CHAMPASAK, ATTAPEU].freeze
+    PROVINCE_MENU = [ SALAVAN, CHAMPASAK, ATTAPEU ].freeze
 
     # https://en.wikipedia.org/wiki/Districts_of_Laos
     DISTRICTS = [
@@ -181,7 +181,7 @@ module CallFlowLogic
     end
 
     def play(filename, response, language_code: "lao")
-      key = ["ews_laos_registration/#{filename}", language_code].compact.join("-")
+      key = [ "ews_laos_registration/#{filename}", language_code ].compact.join("-")
       response.play(url: AudioURL.new(key: "#{key}.mp3").url)
     end
 
@@ -238,6 +238,12 @@ module CallFlowLogic
     def update_contact
       contact = phone_call.contact
       district = DISTRICTS.find { |d| d.code == phone_call_metadata(:district_code) }
+
+      contact.addresses.find_or_create_by!(
+        iso_region_code: district.province.iso3166,
+        administrative_division_level_2_code: district.code,
+      )
+
       registered_districts = contact.metadata.fetch("registered_districts", [])
       registered_districts << district.code
       registered_districts.uniq!

@@ -149,6 +149,10 @@ module CallFlowLogic
         "latest_address_en" => "Paksong District, Champasak Province",
         "latest_address_lo" => "ເມືອງປາກຊ່ອງ ແຂວງຈຳປາສັກ"
       )
+      expect(contact.addresses.last).to have_attributes(
+        iso_region_code: "LA-CH",
+        administrative_division_level_2_code: "1604",
+      )
       assert_play("registration_successful-lao.mp3", response)
     end
 

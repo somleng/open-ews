@@ -29,4 +29,8 @@ end
 
 RSpec.configure do |config|
   config.prepend(APIDocumentationHelpers, api_doc_dsl: :resource)
+
+  config.before(:each, document: :open_ews_api) do
+    header("Content-Type", "application/vnd.api+json")
+  end
 end

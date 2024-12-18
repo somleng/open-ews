@@ -208,6 +208,8 @@ GEM
     coderay (1.1.3)
     concurrent-ruby (1.3.4)
     connection_pool (2.4.1)
+    countries (7.0.0)
+      unaccent (~> 0.3)
     coverband (6.1.4)
       redis (>= 3.0)
     crack (1.0.0)
@@ -273,6 +275,8 @@ GEM
       htmlentities (~> 4.3.3)
       launchy (>= 2.1, < 4.0)
       mail (~> 2.7)
+    enumerize (2.8.1)
+      activesupport (>= 3.2)
     erubi (1.13.0)
     factory_bot (6.5.0)
       activesupport (>= 5.0.0)
@@ -594,6 +598,7 @@ GEM
       concurrent-ruby (~> 1.0)
     tzinfo-data (1.2024.2)
       tzinfo (>= 1.0.0)
+    unaccent (0.4.0)
     unicode-display_width (2.6.0)
     uri (1.0.2)
     useragent (0.16.11)
@@ -628,6 +633,7 @@ DEPENDENCIES
   brakeman
   capybara
   cocoon
+  countries
   coverband
   cssbundling-rails
   cursor_paginator
@@ -637,6 +643,7 @@ DEPENDENCIES
   doorkeeper
   dry-validation
   email_spec
+  enumerize
   factory_bot_rails
   faraday
   file_validators

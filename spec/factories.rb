@@ -76,9 +76,13 @@ FactoryBot.define do
     end
   end
 
-  factory :contact do
+  factory :contact, aliases: [ :beneficiary ] do
     account
     msisdn { generate(:somali_msisdn) }
+
+    trait :disabled do
+      status { "disabled" }
+    end
   end
 
   factory :batch_operation_base, class: "BatchOperation::Base" do

@@ -367,8 +367,16 @@ module CallFlowLogic
     def update_contact
       contact = phone_call.contact
       commune = Pumi::Commune.find_by_id(phone_call_metadata(:commune_code))
+
+      contact.addresses.find_or_create_by!(
+        iso_region_code: commune.province.iso3166_2,
+        administrative_division_level_2_code: commune.district_id,
+        administrative_division_level_3_code: commune.id
+      )
+
       commune_ids = contact.metadata.fetch("commune_ids", [])
       commune_ids << commune.id
+      contact.language_code = phone_call_metadata(:language_code)
       contact.metadata = {
         "commune_ids" => commune_ids.uniq,
         "language_code" => phone_call_metadata(:language_code),
@@ -376,6 +384,7 @@ module CallFlowLogic
         "latest_address_km" => commune.address_km,
         "latest_address_en" => commune.address_en
       }
+
       contact.save!
     end
 
