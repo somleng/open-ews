@@ -114,7 +114,7 @@ GEM
     after_commit_everywhere (1.5.0)
       activerecord (>= 4.2)
       activesupport
-    appsignal (4.2.1)
+    appsignal (4.3.1)
       logger
       rack
     ast (2.4.2)
@@ -353,7 +353,7 @@ GEM
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    logger (1.6.3)
+    logger (1.6.4)
     lograge (0.14.0)
       actionpack (>= 4)
       activesupport (>= 4)
