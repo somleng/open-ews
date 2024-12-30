@@ -2,7 +2,7 @@ class Account < ApplicationRecord
   DEFAULT_PERMISSIONS_BITMASK = 0
   TWILIO_ACCOUNT_SID_PREFIX = "AC".freeze
   DEFAULT_PLATFORM_PROVIDER = "twilio".freeze
-  PLATFORM_PROVIDERS = [DEFAULT_PLATFORM_PROVIDER, "somleng"].freeze
+  PLATFORM_PROVIDERS = [ DEFAULT_PLATFORM_PROVIDER, "somleng" ].freeze
   DEFAULT_CALL_FLOW_LOGIC = "CallFlowLogic::HelloWorld".freeze
 
   include MetadataHelpers
@@ -26,6 +26,8 @@ class Account < ApplicationRecord
            dependent: :restrict_with_error
 
   has_many :contacts,
+           dependent: :restrict_with_error
+  has_many :beneficiaries, class_name: "Contact",
            dependent: :restrict_with_error
 
   has_many :callouts,
@@ -93,7 +95,7 @@ class Account < ApplicationRecord
   end
 
   def phone_call_queue_limit
-    [settings.fetch("phone_call_queue_limit").to_i, 1000].max
+    [ settings.fetch("phone_call_queue_limit").to_i, 1000 ].max
   end
 
   def from_phone_number

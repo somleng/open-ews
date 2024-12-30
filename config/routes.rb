@@ -64,7 +64,9 @@ Rails.application.routes.draw do
   end
 
   namespace :v1, module: "api/v1", as: "api_v1", defaults: { format: "json" } do
-    resources :beneficiaries, only: [ :index, :create, :show, :update ]
+    resources :beneficiaries, only: [ :index, :create, :show, :update ] do
+      resources :addresses, only: [ :index, :create, :show, :destroy ]
+    end
   end
 
   namespace "api", defaults: { format: "json" } do

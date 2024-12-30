@@ -12,7 +12,7 @@ module V1
           optional(:metadata).value(:hash)
 
           optional(:address).filled(:hash).schema do
-            optional(:iso_region_code).maybe(:string)
+            required(:iso_region_code).maybe(:string)
             optional(:administrative_division_level_2_code).maybe(:string)
             optional(:administrative_division_level_2_name).maybe(:string)
             optional(:administrative_division_level_3_code).maybe(:string)
