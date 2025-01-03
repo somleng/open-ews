@@ -434,4 +434,16 @@ RSpec.resource "Beneficiaries"  do
       expect(response_status).to eq(400)
     end
   end
+
+  delete "/v1/beneficiaries/:id" do
+    example "Delete a beneficiary" do
+      beneficiary = create(:beneficiary)
+      create(:address, beneficiary:)
+
+      set_authorization_header_for(beneficiary.account)
+      do_request(id: beneficiary.id)
+
+      expect(response_status).to eq(204)
+    end
+  end
 end

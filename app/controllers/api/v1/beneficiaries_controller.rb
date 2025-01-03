@@ -37,6 +37,13 @@ module API
           end
       end
 
+      def destroy
+        beneficiary = beneficiaries_scope.find(params[:id])
+        beneficiary.destroy!
+
+        head :no_content
+      end
+
       private
 
       def beneficiaries_scope

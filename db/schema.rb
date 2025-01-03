@@ -96,7 +96,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_15_084759) do
 
   create_table "callout_participations", force: :cascade do |t|
     t.bigint "callout_id", null: false
-    t.bigint "contact_id", null: false
+    t.bigint "contact_id"
     t.bigint "callout_population_id"
     t.string "msisdn", null: false
     t.string "call_flow_logic", null: false
@@ -105,6 +105,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_15_084759) do
     t.datetime "updated_at", precision: nil, null: false
     t.boolean "answered", default: false, null: false
     t.integer "phone_calls_count", default: 0, null: false
+    t.string "beneficiary_phone_number", null: false
     t.index ["callout_id", "contact_id"], name: "index_callout_participations_on_callout_id_and_contact_id", unique: true
     t.index ["callout_id", "msisdn"], name: "index_callout_participations_on_callout_id_and_msisdn", unique: true
     t.index ["callout_id"], name: "index_callout_participations_on_callout_id"
@@ -212,7 +213,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_15_084759) do
 
   create_table "phone_calls", force: :cascade do |t|
     t.bigint "callout_participation_id"
-    t.bigint "contact_id", null: false
+    t.bigint "contact_id"
     t.string "status", null: false
     t.string "msisdn", null: false
     t.string "remote_call_id"
@@ -317,7 +318,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_15_084759) do
   add_foreign_key "beneficiary_addresses", "contacts", column: "beneficiary_id", on_delete: :cascade
   add_foreign_key "callout_participations", "batch_operations", column: "callout_population_id"
   add_foreign_key "callout_participations", "callouts"
-  add_foreign_key "callout_participations", "contacts"
+  add_foreign_key "callout_participations", "contacts", on_delete: :nullify
   add_foreign_key "callouts", "accounts"
   add_foreign_key "callouts", "users", column: "created_by_id"
   add_foreign_key "contacts", "accounts"
@@ -330,7 +331,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_15_084759) do
   add_foreign_key "phone_calls", "accounts"
   add_foreign_key "phone_calls", "callout_participations"
   add_foreign_key "phone_calls", "callouts"
-  add_foreign_key "phone_calls", "contacts"
+  add_foreign_key "phone_calls", "contacts", on_delete: :nullify
   add_foreign_key "recordings", "accounts"
   add_foreign_key "recordings", "contacts"
   add_foreign_key "recordings", "phone_calls"
