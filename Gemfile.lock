@@ -583,7 +583,7 @@ GEM
     terminal-table (3.0.2)
       unicode-display_width (>= 1.1.1, < 3)
     thor (1.3.2)
-    thruster (0.1.9)
+    thruster (0.1.10)
     tilt (2.3.0)
     timeout (0.4.2)
     turbo-rails (2.0.5)
