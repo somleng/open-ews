@@ -37,6 +37,8 @@ class Callout < ApplicationRecord
 
   has_many :callout_populations,
            class_name: "BatchOperation::CalloutPopulation"
+  has_many :populations,
+           class_name: "BatchOperation::CalloutPopulation"
 
   has_many :phone_calls
 
@@ -100,6 +102,10 @@ class Callout < ApplicationRecord
         to: :stopped
       )
     end
+  end
+
+  def self.jsonapi_serializer_class
+    BroadcastSerializer
   end
 
   private
