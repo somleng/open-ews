@@ -1,14 +1,12 @@
 class Contact < ApplicationRecord
   extend Enumerize
 
-  COUNTRY_CODES = ISO3166::Country.codes.freeze
-
   include MsisdnHelpers
   include MetadataHelpers
 
   enumerize :status, in: [ :active, :disabled ], scope: :shallow
   enumerize :gender, in: { male: "M", female: "F" }
-  enumerize :iso_country_code, in: COUNTRY_CODES
+  enumerize :iso_country_code, in: ISO3166::Country.codes.freeze
 
   belongs_to :account
 

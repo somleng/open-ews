@@ -1,5 +1,5 @@
 module V1
-  class UpdateBeneficiaryRequestSchema < BaseRequestSchema
+  class UpdateBeneficiaryRequestSchema < JSONAPIRequestSchema
     params do
       required(:data).value(:hash).schema do
         required(:id).filled(:integer)

@@ -216,4 +216,10 @@ FactoryBot.define do
 
     association :audio_file, factory: :active_storage_attachment, filename: "test.mp3"
   end
+
+  factory :beneficiary_address do
+    beneficiary
+    iso_country_code { "KH" }
+    iso_region_code { "KH-1" }
+  end
 end
