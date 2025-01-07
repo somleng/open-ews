@@ -13,21 +13,23 @@ module Subdivisions
     Province.new(code: "ZM-07", iso3166: "ZM-07", name_en: "Southern"),
     Province.new(code: "ZM-01", iso3166: "ZM-01", name_en: "Western")
   ]
-
-  ACCOUNT_COUNTRY_CODES = {
-    2 => "SO",
-    3 => "KH",
-    4 => "KH",
-    7 => "SL",
-    8 => "TH",
-    11 => "US",
-    45 => "MX",
-    77 => "EG",
-    110 => "ZM",
-    143 => "KH",
-    209 => "LA"
-  }
 end
+
+ACCOUNT_COUNTRY_CODES = {
+  2 => "SO",
+  3 => "KH",
+  4 => "KH",
+  7 => "SL",
+  8 => "TH",
+  11 => "US",
+  45 => "MX",
+  77 => "EG",
+  110 => "ZM",
+  143 => "KH",
+  209 => "LA"
+}
+
+cache = {}
 
 namespace :data_migrations do
   task migrate_contact_metadata_to_native_fields: :environment do
@@ -43,24 +45,25 @@ namespace :data_migrations do
           )
 
           # EWS Cambodia
-          contact.metadata.fetch("commune_ids", []).each do | commune_id |
-            commune = Pumi::Commune.find_by_id(phone_call_metadata(:commune_code))
+          Array(contact.metadata["commune_ids"]).each do | commune_id |
+            cache[commune_id] ||= Pumi::Commune.find_by_id(commune_id)
+            commune = cache[commune_id]
             next if commune.blank?
 
             contact.addresses.find_or_create_by!(
               iso_country_code: "KH",
               iso_region_code: commune.province.iso3166_2,
               administrative_division_level_2_code: commune.district_id,
-              administrative_division_level_2_code: commune.district.name_en,
+              administrative_division_level_2_name: commune.district.name_en,
               administrative_division_level_3_code: commune.id,
-              administrative_division_level_3_code: commune.name_en,
+              administrative_division_level_3_name: commune.name_en,
               created_at: contact.updated_at,
               updated_at: contact.updated_at
             )
           end
 
           # EWS Laos
-          contact.metadata.fetch("registered_districts", []).each do | district_code |
+          Array(contact.metadata["registered_districts"]).each do | district_code |
             district = CallFlowLogic::EWSLaosRegistration::DISTRICTS.find { |d| d.code ==  district_code }
             next if district.blank?
 
@@ -76,7 +79,7 @@ namespace :data_migrations do
 
           # PIN Zambia
           if account.id == 110
-            province = ZAMBIA_PROVINCES.find { |d| d.name_en ==  contact.metadata["province"] }
+            province = Subdivisions::ZAMBIA_PROVINCES.find { |d| d.name_en ==  contact.metadata["province"] }
             next if province.blank?
 
             contact.addresses.find_or_create_by!(
