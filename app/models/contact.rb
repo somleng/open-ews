@@ -6,9 +6,9 @@ class Contact < ApplicationRecord
   include MsisdnHelpers
   include MetadataHelpers
 
-  enumerize :status, in: [ :active, :disabled ], scope: true
-  enumerize :gender, in: { male: "M", female: "F" }, scope: true
-  enumerize :iso_country_code, in: COUNTRY_CODES, scope: true
+  enumerize :status, in: [ :active, :disabled ], scope: :shallow
+  enumerize :gender, in: { male: "M", female: "F" }
+  enumerize :iso_country_code, in: COUNTRY_CODES
 
   belongs_to :account
 
@@ -30,15 +30,7 @@ class Contact < ApplicationRecord
            to: :account,
            allow_nil: true
 
-  before_create :assign_iso_country_code, unless: :iso_country_code?
-
   def self.jsonapi_serializer_class
     BeneficiarySerializer
-  end
-
-  private
-
-  def assign_iso_country_code
-    self.iso_country_code = PhonyRails.country_from_number(msisdn)
   end
 end

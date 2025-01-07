@@ -13,6 +13,20 @@ module Subdivisions
     Province.new(code: "ZM-07", iso3166: "ZM-07", name_en: "Southern"),
     Province.new(code: "ZM-01", iso3166: "ZM-01", name_en: "Western")
   ]
+
+  ACCOUNT_COUNTRY_CODES = {
+    2 => "SO",
+    3 => "KH",
+    4 => "KH",
+    7 => "SL",
+    8 => "TH",
+    11 => "US",
+    45 => "MX",
+    77 => "EG",
+    110 => "ZM",
+    143 => "KH",
+    209 => "LA"
+  }
 end
 
 namespace :data_migrations do
@@ -23,9 +37,10 @@ namespace :data_migrations do
       contacts = account.contacts.where(iso_country_code: nil)
       contacts.find_each do |contact|
         ApplicationRecord.transaction do
-          contact.iso_country_code = PhonyRails.country_from_number(contact.msisdn)
-          contact.language_code = contact.metadata["language_code"]
-          contact.save!
+          contact.update_columns(
+            iso_country_code: ACCOUNT_COUNTRY_CODES.fetch(account.id),
+            language_code: contact.metadata["language_code"]
+          )
 
           # EWS Cambodia
           contact.metadata.fetch("commune_ids", []).each do | commune_id |
@@ -33,9 +48,14 @@ namespace :data_migrations do
             next if commune.blank?
 
             contact.addresses.find_or_create_by!(
+              iso_country_code: "KH",
               iso_region_code: commune.province.iso3166_2,
               administrative_division_level_2_code: commune.district_id,
-              administrative_division_level_3_code: commune.id
+              administrative_division_level_2_code: commune.district.name_en,
+              administrative_division_level_3_code: commune.id,
+              administrative_division_level_3_code: commune.name_en,
+              created_at: contact.updated_at,
+              updated_at: contact.updated_at
             )
           end
 
@@ -45,8 +65,12 @@ namespace :data_migrations do
             next if district.blank?
 
             contact.addresses.find_or_create_by!(
+              iso_country_code: "LA",
               iso_region_code: district.province.iso3166,
               administrative_division_level_2_code: district.code,
+              administrative_division_level_2_name: district.name_en,
+              created_at: contact.updated_at,
+              updated_at: contact.updated_at
             )
           end
 
@@ -56,15 +80,12 @@ namespace :data_migrations do
             next if province.blank?
 
             contact.addresses.find_or_create_by!(
+              iso_country_code: "ZM",
               iso_region_code: province.iso3166,
               administrative_division_level_2_name: contact.metadata["district"],
               administrative_division_level_3_name: contact.metadata["facility"]
             )
           end
-
-          # Africa's Voices (Somalia)
-          # metadata: {"group"=>"Wajid_2", "location"=>"Wajid Town", "householdname"=>"BAKWAJ0010233"}
-          # metadata: {"dec10"=>"True", "district"=>"Wajid", "location"=>"Wajid", "retailer"=>"World Vision Topup Kabasa IDP", "scope_id"=>"BAKWAJ0001996"}
         end
       end
     end

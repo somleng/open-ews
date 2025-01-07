@@ -348,7 +348,9 @@ RSpec.describe CallFlowLogic::EWSRegistration do
     expect(contact.addresses.last).to have_attributes(
       iso_region_code: "KH-1",
       administrative_division_level_2_code: "0105",
-      administrative_division_level_3_code: "010505"
+      administrative_division_level_2_name: "Ou Chrov",
+      administrative_division_level_3_code: "010505",
+      administrative_division_level_3_name: "Samraong"
     )
     assert_play("registration_successful-krr.wav", response)
   end
