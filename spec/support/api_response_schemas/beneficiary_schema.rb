@@ -4,7 +4,7 @@ module APIResponseSchema
     required(:type).filled(eql?: "beneficiary")
 
     required(:attributes).schema do
-      required(:msisdn).filled(:str?)
+      required(:phone_number).filled(:str?)
       required(:language_code).maybe(:str?)
       required(:gender).maybe(:str?)
       required(:date_of_birth).maybe(:str?)

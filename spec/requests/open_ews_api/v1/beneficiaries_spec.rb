@@ -44,7 +44,7 @@ RSpec.resource "Beneficiaries"  do
   post "/v1/beneficiaries" do
     with_options scope: %i[data attributes] do
       parameter(
-        :msisdn, "Phone number in E.164 format or shortcode.",
+        :phone_number, "Phone number in E.164 format or shortcode.",
         required: true
       )
       parameter(
@@ -60,7 +60,7 @@ RSpec.resource "Beneficiaries"  do
         required: false
       )
       parameter(
-        :iso_country_code, "The ISO 3166-1 alpha-2 country code of the phone number. It must be matched with the country of `msisdn` parameter.",
+        :iso_country_code, "The ISO 3166-1 alpha-2 country code of the phone number. It must be matched with the country of `phone_number` parameter.",
         required: false
       )
       parameter(
@@ -107,7 +107,7 @@ RSpec.resource "Beneficiaries"  do
         data: {
           type: :beneficiary,
           attributes: {
-            msisdn: "+85510999999",
+            phone_number: "+85510999999",
             language_code: "km",
             gender: "M",
             date_of_birth: "1990-01-01",
@@ -125,7 +125,7 @@ RSpec.resource "Beneficiaries"  do
       expect(response_status).to eq(201)
       expect(response_body).to match_jsonapi_resource_schema("beneficiary")
       expect(jsonapi_response_attributes).to include(
-        "msisdn" => "+85510999999",
+        "phone_number" => "+85510999999",
         "language_code" => "km",
         "gender" => "M",
         "date_of_birth" => "1990-01-01",
@@ -149,7 +149,7 @@ RSpec.resource "Beneficiaries"  do
         data: {
           type: :beneficiary,
           attributes: {
-            msisdn: "+85510999999",
+            phone_number: "+85510999999",
             iso_country_code: "kh"
           }
         }
@@ -159,13 +159,13 @@ RSpec.resource "Beneficiaries"  do
       expect(response_body).to match_api_response_schema("jsonapi_error")
       expect(json_response.dig("errors", 0)).to include(
         "title" => "must be unique",
-        "source" => { "pointer" => "/data/attributes/msisdn" }
+        "source" => { "pointer" => "/data/attributes/phone_number" }
       )
     end
   end
 
   get "/v1/beneficiaries/:id" do
-    example "Get a beneficiary" do
+    example "Fetch a beneficiary" do
       beneficiary = create(:beneficiary)
 
       set_authorization_header_for(beneficiary.account)
@@ -195,7 +195,7 @@ RSpec.resource "Beneficiaries"  do
           id: beneficiary.id,
           type: :beneficiary,
           attributes: {
-            msisdn: "+85510999002",
+            phone_number: "+85510999002",
             gender: "F",
             status: "disabled",
             language_code: "en",
@@ -210,7 +210,7 @@ RSpec.resource "Beneficiaries"  do
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_schema("beneficiary")
       expect(jsonapi_response_attributes).to include(
-        "msisdn" => "+85510999002",
+        "phone_number" => "+85510999002",
         "language_code" => "en",
         "gender" => "F",
         "date_of_birth" => "1990-01-01",
