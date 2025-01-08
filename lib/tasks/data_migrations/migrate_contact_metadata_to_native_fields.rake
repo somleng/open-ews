@@ -41,7 +41,9 @@ namespace :data_migrations do
         ApplicationRecord.transaction do
           contact.update_columns(
             iso_country_code: ACCOUNT_COUNTRY_CODES.fetch(account.id),
-            language_code: contact.metadata["language_code"]
+            language_code: contact.metadata["language_code"],
+            date_of_birth: contact.metadata["date_of_birth"],
+            status: contact.metadata["deregistered_at"].present? ? :disabled : :active
           )
 
           # EWS Cambodia
