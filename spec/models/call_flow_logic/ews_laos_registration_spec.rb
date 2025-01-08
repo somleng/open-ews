@@ -152,6 +152,7 @@ module CallFlowLogic
       expect(contact.addresses.last).to have_attributes(
         iso_region_code: "LA-CH",
         administrative_division_level_2_code: "1604",
+        administrative_division_level_2_name: "Paksong",
       )
       assert_play("registration_successful-lao.mp3", response)
     end

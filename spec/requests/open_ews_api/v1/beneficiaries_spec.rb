@@ -114,6 +114,7 @@ RSpec.resource "Beneficiaries"  do
             metadata: { "foo" => "bar" },
             iso_country_code: "KH",
             address: {
+              iso_country_code: "KH",
               iso_region_code: "KH-1",
               administrative_division_level_2_code: "01"
             }

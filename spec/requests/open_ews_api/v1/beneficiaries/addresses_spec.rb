@@ -5,10 +5,10 @@ RSpec.resource "Beneficiary's Addresses"  do
     example "List all a beneficiary's addresses" do
       account = create(:account)
       beneficiary = create(:beneficiary, account:)
-      address1 = create(:address, beneficiary:)
-      address2 = create(:address, beneficiary:)
+      address1 = create(:beneficiary_address, beneficiary:)
+      address2 = create(:beneficiary_address, beneficiary:)
       other_beneficiary = create(:beneficiary)
-      _other_address = create(:address, beneficiary: other_beneficiary)
+      _other_address = create(:beneficiary_address, beneficiary: other_beneficiary)
 
       set_authorization_header_for(account)
       do_request(beneficiary_id: beneficiary.id)
@@ -33,6 +33,7 @@ RSpec.resource "Beneficiary's Addresses"  do
         data: {
           type: :address,
           attributes: {
+            iso_country_code: "KH",
             iso_region_code: "KH-1",
             administrative_division_level_2_code: "01"
           }
@@ -42,6 +43,7 @@ RSpec.resource "Beneficiary's Addresses"  do
       expect(response_status).to eq(201)
       expect(response_body).to match_jsonapi_resource_schema("address")
       expect(jsonapi_response_attributes).to include(
+        "iso_country_code" => "KH",
         "iso_region_code" => "KH-1",
         "administrative_division_level_2_code" => "01"
       )
@@ -52,7 +54,7 @@ RSpec.resource "Beneficiary's Addresses"  do
     example "Get an address for a beneficiary" do
       account = create(:account)
       beneficiary = create(:beneficiary, account:)
-      address = create(:address, beneficiary:)
+      address = create(:beneficiary_address, beneficiary:)
 
       set_authorization_header_for(account)
       do_request(
@@ -70,7 +72,7 @@ RSpec.resource "Beneficiary's Addresses"  do
     example "Delete an address for a beneficiary" do
       account = create(:account)
       beneficiary = create(:beneficiary, account:)
-      address = create(:address, beneficiary:)
+      address = create(:beneficiary_address, beneficiary:)
 
       set_authorization_header_for(account)
       do_request(

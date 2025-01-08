@@ -8,6 +8,7 @@ module API
       def create
         validate_request_schema(
           with: ::V1::BeneficiaryAddressRequestSchema,
+          schema_options: { beneficiary: },
           location: ->(resource) { api_v1_beneficiary_address_path(beneficiary, resource) }
         ) do |permitted_params|
             beneficiary.addresses.create!(permitted_params)

@@ -37,8 +37,7 @@ RSpec.describe HandlePhoneCallEvent do
     expect(phone_call.contact).to have_attributes(
       persisted?: true,
       account: account,
-      msisdn: "+85510900123",
-      iso_country_code: "KH"
+      msisdn: "+85510900123"
     )
   end
 
