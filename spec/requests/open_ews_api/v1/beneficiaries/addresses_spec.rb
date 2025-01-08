@@ -5,8 +5,8 @@ RSpec.resource "Addresses"  do
     example "List all addresses for a beneficiary" do
       account = create(:account)
       beneficiary = create(:beneficiary, account:)
-      address1 = create(:beneficiary_address, beneficiary:)
-      address2 = create(:beneficiary_address, beneficiary:)
+      address1 = create(:beneficiary_address, :full, beneficiary:)
+      address2 = create(:beneficiary_address, :full, beneficiary:, administrative_division_level_4_code: "01020102", administrative_division_level_4_name: "Phnum")
       other_beneficiary = create(:beneficiary)
       _other_address = create(:beneficiary_address, beneficiary: other_beneficiary)
 
@@ -105,7 +105,7 @@ RSpec.resource "Addresses"  do
     example "Fetch an address for a beneficiary" do
       account = create(:account)
       beneficiary = create(:beneficiary, account:)
-      address = create(:beneficiary_address, beneficiary:)
+      address = create(:beneficiary_address, :full, beneficiary:)
 
       set_authorization_header_for(account)
       do_request(
