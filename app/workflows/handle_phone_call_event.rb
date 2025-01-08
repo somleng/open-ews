@@ -78,7 +78,8 @@ class HandlePhoneCallEvent < ApplicationWorkflow
     Contact.find_or_create_by!(
       account: account,
       msisdn: PhonyRails.normalize_number(msisdn),
-      iso_country_code: ACCOUNT_COUNTRY_CODES.fetch(account.id, "KH")
-    )
+    ) do |record|
+        record.iso_country_code = ACCOUNT_COUNTRY_CODES.fetch(account.id, "KH")
+    end
   end
 end
