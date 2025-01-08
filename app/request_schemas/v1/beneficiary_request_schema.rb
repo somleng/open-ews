@@ -4,7 +4,7 @@ module V1
       required(:data).value(:hash).schema do
         required(:type).filled(:str?, eql?: "beneficiary")
         required(:attributes).value(:hash).schema do
-          required(:msisdn).filled(:string)
+          required(:phone_number).filled(:string)
           required(:iso_country_code).filled(Types::UpcaseString, included_in?: Contact.iso_country_code.values)
           optional(:language_code).maybe(:string)
           optional(:date_of_birth).maybe(:date)
@@ -25,32 +25,32 @@ module V1
       end
     end
 
-    attribute_rule(:msisdn).validate(:phone_number_format)
+    attribute_rule(:phone_number).validate(:phone_number_format)
     rule(data: :attributes) do
       Rules.new(self).validate
     end
 
     def output
       result = super
-      result[:msisdn] = PhonyRails.normalize_number(result.fetch(:msisdn)) if result.key?(:msisdn)
+      result[:msisdn] = PhonyRails.normalize_number(result.delete(:phone_number))
       result
     end
 
     class Rules < SchemaRules::JSONAPISchemaRules
       def validate
         if resource.blank?
-          return key(:msisdn).failure(text: "can't be blank") if values[:msisdn].blank?
+          return key(:phone_number).failure(text: "can't be blank") if values[:phone_number].blank?
 
-          key(:msisdn).failure(text: "must be unique") if contact_exists?
-        elsif values[:msisdn].present?
-          key(:msisdn).failure(text: "must be unique") if contact_exists?
+          key(:phone_number).failure(text: "must be unique") if contact_exists?
+        elsif values[:phone_number].present?
+          key(:phone_number).failure(text: "must be unique") if contact_exists?
         end
       end
 
       private
 
       def contact_exists?
-        relation = account.contacts.where_msisdn(values.fetch(:msisdn))
+        relation = account.contacts.where_msisdn(values.fetch(:phone_number))
         relation = relation.where.not(id: resource.id) if resource.present?
         relation.exists?
       end
