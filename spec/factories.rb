@@ -78,6 +78,7 @@ FactoryBot.define do
 
   factory :contact, aliases: [ :beneficiary ] do
     account
+    iso_country_code { "SO" }
     msisdn { generate(:somali_msisdn) }
 
     trait :disabled do
@@ -219,7 +220,7 @@ FactoryBot.define do
 
   factory :beneficiary_address do
     beneficiary
-    iso_country_code { "KH" }
-    iso_region_code { "KH-1" }
+    iso_country_code { beneficiary.iso_country_code }
+    iso_region_code { "SO-AW" }
   end
 end
