@@ -29,7 +29,18 @@ module V1
     attribute_rule(:phone_number) do |attributes|
       next unless account.contacts.where_msisdn(attributes.fetch(:phone_number)).exists?
 
-      key([:data, :attributes, :phone_number]).failure(text: "must be unique")
+      key([ :data, :attributes, :phone_number ]).failure(text: "must be unique")
+    end
+
+    attribute_rule(:address) do |attributes|
+      next if attributes[:address].blank?
+
+      validator = BeneficiaryAddressValidator.new(attributes[:address])
+      next if validator.valid?
+
+      validator.errors.each do |error|
+        key([ :data, :attributes, :address, error.key ]).failure(text: error.message)
+      end
     end
 
     def output

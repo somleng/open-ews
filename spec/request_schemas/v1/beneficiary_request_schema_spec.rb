@@ -112,6 +112,14 @@ module V1
       expect(
         validate_schema(input_params: { data: { attributes: { address: { iso_region_code: "KH-1" } } } })
       ).to have_valid_field(:data, :attributes, :address, :iso_region_code)
+
+      expect(
+        validate_schema(input_params: { data: { attributes: { address: { iso_country_code: "KH", iso_region_code: "KH-1", administrative_division_level_2_code: "0101", administrative_division_level_3_code: "010101" } } } })
+      ).to have_valid_field(:data, :attributes, :address, :administrative_division_level_2_code)
+
+      expect(
+        validate_schema(input_params: { data: { attributes: { address: { iso_country_code: "KH", iso_region_code: "KH-1", administrative_division_level_3_code: "010101" } } } })
+      ).not_to have_valid_field(:data, :attributes, :address, :administrative_division_level_2_code)
     end
 
     it "validates the metadata fields attributes" do
