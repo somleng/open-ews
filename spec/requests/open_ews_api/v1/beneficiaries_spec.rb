@@ -77,11 +77,11 @@ RSpec.resource "Beneficiaries"  do
     with_options scope: %i[data attributes address] do
       parameter(
         :iso_country_code, "The [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the address",
-        required: true
+        required: false
       )
       parameter(
         :iso_region_code, "The [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) region code of the address",
-        required: true
+        required: false
       )
       parameter(
         :administrative_division_level_2_code, "The second-level administrative subdivision code of the address (e.g. district code)",
@@ -212,11 +212,11 @@ RSpec.resource "Beneficiaries"  do
     with_options scope: %i[data attributes] do
       parameter(
         :phone_number, "Phone number in E.164 format.",
-        required: true
+        required: false
       )
       parameter(
         :iso_country_code, "The [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the beneficiary.",
-        required: true
+        required: false
       )
       parameter(
         :language_code, "The [ISO ISO 639-2](https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes) alpha-3 language code of the beneficiary.",

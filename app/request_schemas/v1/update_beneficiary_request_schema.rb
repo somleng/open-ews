@@ -16,9 +16,12 @@ module V1
     end
 
     attribute_rule(:phone_number).validate(:phone_number_format)
-    rule do
-      BeneficiaryRequestSchema::Rules.new(self).validate
+    attribute_rule(:phone_number) do |attributes|
+      next unless account.contacts.where_msisdn(attributes.fetch(:phone_number)).where.not(id: resource.id).exists?
+
+      key([:data, :attributes, :phone_number]).failure(text: "must be unique")
     end
+
 
     def output
       result = super

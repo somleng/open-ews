@@ -15,5 +15,14 @@ module V1
         end
       end
     end
+
+    attribute_rule do |attributes|
+      validator = BeneficiaryAddressValidator.new(attributes)
+      next if validator.valid?
+
+      validator.errors.each do |error|
+        key([ :data, :attributes, error.key ]).failure(text: error.message)
+      end
+    end
   end
 end

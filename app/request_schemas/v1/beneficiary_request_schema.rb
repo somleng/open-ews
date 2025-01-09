@@ -26,34 +26,27 @@ module V1
     end
 
     attribute_rule(:phone_number).validate(:phone_number_format)
-    rule(data: :attributes) do
-      Rules.new(self).validate
+    attribute_rule(:phone_number) do |attributes|
+      next unless account.contacts.where_msisdn(attributes.fetch(:phone_number)).exists?
+
+      key([ :data, :attributes, :phone_number ]).failure(text: "must be unique")
+    end
+
+    attribute_rule(:address) do |attributes|
+      next if attributes[:address].blank?
+
+      validator = BeneficiaryAddressValidator.new(attributes[:address])
+      next if validator.valid?
+
+      validator.errors.each do |error|
+        key([ :data, :attributes, :address, error.key ]).failure(text: error.message)
+      end
     end
 
     def output
       result = super
       result[:msisdn] = PhonyRails.normalize_number(result.delete(:phone_number))
       result
-    end
-
-    class Rules < SchemaRules::JSONAPISchemaRules
-      def validate
-        if resource.blank?
-          return key(:phone_number).failure(text: "can't be blank") if values[:phone_number].blank?
-
-          key(:phone_number).failure(text: "must be unique") if contact_exists?
-        elsif values[:phone_number].present?
-          key(:phone_number).failure(text: "must be unique") if contact_exists?
-        end
-      end
-
-      private
-
-      def contact_exists?
-        relation = account.contacts.where_msisdn(values.fetch(:phone_number))
-        relation = relation.where.not(id: resource.id) if resource.present?
-        relation.exists?
-      end
     end
   end
 end
