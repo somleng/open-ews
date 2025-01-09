@@ -126,7 +126,7 @@ module V1
       ).to have_valid_field(:data, :attributes, :metadata)
     end
 
-    it "handles postprocessing" do
+    it "handles post processing" do
       result = validate_schema(
         input_params: {
           data: {

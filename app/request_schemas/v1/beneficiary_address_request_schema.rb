@@ -1,5 +1,7 @@
 module V1
   class BeneficiaryAddressRequestSchema < JSONAPIRequestSchema
+    option :beneficiary_address_rules, default -> { BeneficiaryAddressRules.new }
+
     params do
       required(:data).value(:hash).schema do
         required(:type).filled(:str?, eql?: "address")
@@ -13,6 +15,25 @@ module V1
           optional(:administrative_division_level_4_code).maybe(:string)
           optional(:administrative_division_level_4_name).maybe(:string)
         end
+      end
+    end
+  end
+
+  attribute_rule do |attributes|
+    (4..3).each do |level|
+      division_attributes = [:code, :name].map { |type| :"administrative_division_level_#{level}_#{type}" }
+
+      next if division_attributes.all? { |division_attribute| attributes[division_attribute].blank? }
+
+      (3..2).each do |parent_level|
+        next if level == parent_level
+
+        parent_division_attributes = [:code, :name].map { |type| :"administrative_division_level_#{parent_level}_#{type}" }
+
+        next if parent_division_attributes.any? { |parent_division_attribute| attributes[parent_division_attribute].present? }
+
+        key([:data, :attributes, parent_division_attributes.first]).failure("must be present")
+        break
       end
     end
   end
