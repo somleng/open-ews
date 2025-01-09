@@ -10,11 +10,3 @@ output "rds_cluster" {
   value     = module.rds_cluster
   sensitive = true
 }
-
-output "elasticache_redis_endpoint" {
-  value = aws_elasticache_cluster.redis.cache_nodes.0.address
-}
-
-output "redis_security_group" {
-  value = aws_security_group.redis
-}

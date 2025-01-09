@@ -22,7 +22,4 @@ module "scfm" {
   webserver_max_tasks   = 0
   worker_min_tasks      = 0
   worker_max_tasks      = 0
-
-  redis_security_group = data.terraform_remote_state.core.outputs.redis_security_group.id
-  redis_url            = "redis://${data.terraform_remote_state.core.outputs.elasticache_redis_endpoint}/1"
 }

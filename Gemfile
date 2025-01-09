@@ -29,7 +29,6 @@ gem "bitmask_attributes", github: "numerex/bitmask_attributes"
 gem "bootsnap", require: false
 gem "cocoon"
 gem "cssbundling-rails"
-gem "coverband"
 gem "countries"
 gem "cursor_paginator"
 gem "devise"

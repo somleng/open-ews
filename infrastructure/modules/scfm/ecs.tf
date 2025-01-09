@@ -77,10 +77,6 @@ locals {
     {
       name  = "AUDIO_BUCKET",
       value = aws_s3_bucket.audio.id
-    },
-    {
-      name  = "COVERBAND_REDIS_URL",
-      value = var.redis_url
     }
   ]
 
@@ -187,7 +183,6 @@ resource "aws_ecs_service" "webserver" {
     security_groups = [
       aws_security_group.webserver.id,
       var.rds_cluster.security_group.id,
-      var.redis_security_group
     ]
   }
 
@@ -268,7 +263,6 @@ resource "aws_ecs_service" "worker" {
     security_groups = [
       aws_security_group.worker.id,
       var.rds_cluster.security_group.id,
-      var.redis_security_group
     ]
   }
 
