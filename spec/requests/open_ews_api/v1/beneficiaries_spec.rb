@@ -291,6 +291,7 @@ RSpec.resource "Beneficiaries"  do
       required: true
     )
 
+
     example "Fetch beneficiaries stats" do
       account = create(:account)
       create_list(:beneficiary, 2, account:, gender: "M")
