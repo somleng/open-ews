@@ -276,4 +276,54 @@ RSpec.resource "Beneficiaries"  do
       )
     end
   end
+
+  get "/v1/beneficiaries/stats" do
+    with_options scope: :filter do
+      parameter(
+        :gender, "Must be either `M` or `F`",
+        required: false
+      )
+    end
+
+    parameter(
+      :group_by,
+      "An array of fields to group by.`",
+      required: true
+    )
+
+    example "Fetch beneficiaries stats" do
+      account = create(:account)
+      create_list(:beneficiary, 2, account:, gender: "M")
+      create(:beneficiary, account:, gender: "F")
+
+      set_authorization_header_for(account)
+      do_request(group_by: [ "gender" ])
+
+      expect(response_status).to eq(200)
+      expect(response_body).to match_jsonapi_resource_collection_schema("stat")
+      results = json_response.fetch("data").map { |data| data.dig("attributes", "result") }
+
+      expect(results).to eq(
+        [
+          {
+            "gender" => "M",
+            "value" => 2
+          },
+          {
+            "gender" => "F",
+            "value" => 1
+          }
+        ]
+      )
+    end
+
+    example "Handles invalid requests", document: false do
+      account = create(:account)
+
+      set_authorization_header_for(account)
+      do_request
+
+      expect(response_status).to eq(400)
+    end
+  end
 end
