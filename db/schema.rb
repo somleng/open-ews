@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_08_072200) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_09_073858) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -81,12 +81,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_08_072200) do
   create_table "beneficiary_addresses", force: :cascade do |t|
     t.bigint "beneficiary_id", null: false
     t.citext "iso_region_code", null: false
-    t.string "administrative_division_level_2_code"
-    t.string "administrative_division_level_2_name"
-    t.string "administrative_division_level_3_code"
-    t.string "administrative_division_level_3_name"
-    t.string "administrative_division_level_4_code"
-    t.string "administrative_division_level_4_name"
+    t.citext "administrative_division_level_2_code"
+    t.citext "administrative_division_level_2_name"
+    t.citext "administrative_division_level_3_code"
+    t.citext "administrative_division_level_3_name"
+    t.citext "administrative_division_level_4_code"
+    t.citext "administrative_division_level_4_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.citext "iso_country_code", null: false
