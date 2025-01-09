@@ -18,7 +18,6 @@ Rails.application.routes.draw do
 
   namespace :admin do
     mount(PgHero::Engine, at: "pghero")
-    mount Coverband::Reporters::Web.new, at: "coverage"
   end
 
   namespace "dashboard" do

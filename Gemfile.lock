@@ -210,8 +210,6 @@ GEM
     connection_pool (2.4.1)
     countries (7.1.0)
       unaccent (~> 0.3)
-    coverband (6.1.4)
-      redis (>= 3.0)
     crack (1.0.0)
       bigdecimal
       rexml
@@ -476,10 +474,6 @@ GEM
       ffi (~> 1.0)
     rdoc (6.9.1)
       psych (>= 4.0.0)
-    redis (5.3.0)
-      redis-client (>= 0.22.0)
-    redis-client (0.22.2)
-      connection_pool
     regexp_parser (2.10.0)
     reline (0.6.0)
       io-console (~> 0.5)
@@ -636,7 +630,6 @@ DEPENDENCIES
   capybara
   cocoon
   countries
-  coverband
   cssbundling-rails
   cursor_paginator
   devise
