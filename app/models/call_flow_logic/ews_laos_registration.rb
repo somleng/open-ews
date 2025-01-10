@@ -240,7 +240,6 @@ module CallFlowLogic
       district = DISTRICTS.find { |d| d.code == phone_call_metadata(:district_code) }
 
       contact.addresses.find_or_create_by!(
-        iso_country_code: "LA",
         iso_region_code: district.province.iso3166,
         administrative_division_level_2_code: district.code,
         administrative_division_level_2_name: district.name_en,

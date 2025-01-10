@@ -12,7 +12,6 @@ module V1
           optional(:metadata).value(:hash)
 
           optional(:address).filled(:hash).schema do
-            required(:iso_country_code).filled(Types::UpcaseString, included_in?: Contact.iso_country_code.values)
             required(:iso_region_code).filled(:string, max_size?: 255)
             optional(:administrative_division_level_2_code).maybe(:string, max_size?: 255)
             optional(:administrative_division_level_2_name).maybe(:string, max_size?: 255)

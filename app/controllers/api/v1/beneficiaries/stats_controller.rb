@@ -8,7 +8,11 @@ module API
             serializer_class: StatSerializer,
             **serializer_options
           ) do |permitted_params|
-            AggregateDataQuery.new(permitted_params).apply(beneficiaries_scope)
+              joins_with = permitted_params[:groups].pluck(:relation).compact
+              scope = beneficiaries_scope
+              scope = scope.joins(*joins_with) if joins_with.any?
+
+              AggregateDataQuery.new(permitted_params).apply(scope)
           end
         end
 

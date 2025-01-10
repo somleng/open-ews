@@ -32,10 +32,6 @@ RSpec.resource "Addresses"  do
 
     with_options scope: %i[data attributes] do
       parameter(
-        :iso_country_code, "The [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the address",
-        required: true
-      )
-      parameter(
         :iso_region_code, "The [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) region code of the address",
         required: true
       )
@@ -75,7 +71,6 @@ RSpec.resource "Addresses"  do
         data: {
           type: :address,
           attributes: {
-            iso_country_code: "KH",
             iso_region_code: "KH-1",
             administrative_division_level_2_code: "0102",
             administrative_division_level_2_name: "Mongkol Borei",

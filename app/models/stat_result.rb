@@ -6,6 +6,6 @@ end
 
 class StatResult::IDGenerator
   def self.generate_id(key)
-    Digest::SHA256.hexdigest(Array(key).reject(&:blank?).map(&:downcase).join(":"))
+    Digest::SHA256.hexdigest(key.compact_blank.join(":"))
   end
 end

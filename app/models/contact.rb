@@ -5,7 +5,7 @@ class Contact < ApplicationRecord
   include MetadataHelpers
 
   enumerize :status, in: [ :active, :disabled ], scope: :shallow
-  enumerize :gender, in: { male: "M", female: "F" }
+  enumerize :gender, in: [ "M", "F" ]
   enumerize :iso_country_code, in: ISO3166::Country.codes.freeze
 
   belongs_to :account

@@ -9,6 +9,10 @@ module API
       before_action :verify_requested_format!
       before_action :doorkeeper_authorize!
 
+      rescue_from AggregateDataQuery::TooManyResultsError do
+        render json: { "errors": [ { "title":  "Too many results" } ] }, status: :bad_request
+      end
+
       private
 
       def current_account

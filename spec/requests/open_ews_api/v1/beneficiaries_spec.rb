@@ -76,10 +76,6 @@ RSpec.resource "Beneficiaries"  do
     end
     with_options scope: %i[data attributes address] do
       parameter(
-        :iso_country_code, "The [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the address",
-        required: false
-      )
-      parameter(
         :iso_region_code, "The [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) region code of the address",
         required: false
       )
@@ -124,7 +120,6 @@ RSpec.resource "Beneficiaries"  do
             metadata: { "foo" => "bar" },
             iso_country_code: "KH",
             address: {
-              iso_country_code: "KH",
               iso_region_code: "KH-1",
               administrative_division_level_2_code: "0102",
               administrative_division_level_2_name: "Mongkol Borei",
@@ -293,6 +288,67 @@ RSpec.resource "Beneficiaries"  do
 
 
     example "Fetch beneficiaries stats" do
+      account = create(:account)
+      beneficiary = create(:beneficiary, account:)
+      create(
+        :beneficiary_address,
+        beneficiary:,
+        iso_region_code: "KH-12",
+        administrative_division_level_2_code: "1201"
+      )
+      create_list(
+        :beneficiary_address,
+        2,
+        beneficiary:,
+        iso_region_code: "KH-12",
+        administrative_division_level_2_code: "1202"
+      )
+      create_list(
+        :beneficiary_address,
+        2,
+        beneficiary:,
+        iso_region_code: "KH-1",
+        administrative_division_level_2_code: "0102"
+      )
+
+      set_authorization_header_for(account)
+      do_request(
+        group_by: [
+          "iso_country_code",
+          "address.iso_region_code",
+          "address.administrative_division_level_2_code"
+        ]
+      )
+
+      expect(response_status).to eq(200)
+      expect(response_body).to match_jsonapi_resource_collection_schema("stat")
+      results = json_response.fetch("data").map { |data| data.dig("attributes", "result") }
+
+      expect(results).to match_array(
+        [
+          {
+            "iso_country_code" => "KH",
+            "address.iso_region_code" => "KH-12",
+            "address.administrative_division_level_2_code" => "1201",
+            "value" => 1
+          },
+          {
+            "iso_country_code" => "KH",
+            "address.iso_region_code" => "KH-12",
+            "address.administrative_division_level_2_code" => "1202",
+            "value" => 2
+          },
+          {
+            "iso_country_code" => "KH",
+            "address.iso_region_code" => "KH-1",
+            "address.administrative_division_level_2_code" => "0102",
+            "value" => 2
+          }
+        ]
+      )
+    end
+
+    example "Fetch beneficiaries stats by address", document: false do
       account = create(:account)
       create_list(:beneficiary, 2, account:, gender: "M")
       create(:beneficiary, account:, gender: "F")

@@ -4,10 +4,9 @@ class BeneficiaryAddressValidator
   Error = Data.define(:key, :message)
 
   def initialize(attributes)
-    @attributes = attributes
+    @attributes = attributes.symbolize_keys
     @errors = []
   end
-
 
   def valid?
     4.downto(3) do |level|

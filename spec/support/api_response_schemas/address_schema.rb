@@ -4,7 +4,6 @@ module APIResponseSchema
     required(:type).filled(eql?: "address")
 
     required(:attributes).schema do
-      required(:iso_country_code).filled(:str?)
       required(:iso_region_code).filled(:str?)
       required(:administrative_division_level_2_name).maybe(:str?)
       required(:administrative_division_level_2_code).maybe(:str?)
