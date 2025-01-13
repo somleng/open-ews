@@ -3,7 +3,7 @@ class StatSerializer < JSONAPISerializer
     result = {}
 
     object.groups.each_with_index do |group, index|
-      result[group.name] = object.key[index]
+      result[group] = object.key[index]
     end
 
     result[:value] = object.value
