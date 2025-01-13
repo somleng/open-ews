@@ -313,6 +313,7 @@ RSpec.resource "Beneficiaries"  do
 
       set_authorization_header_for(account)
       do_request(
+        filter: { "address.iso_region_code": "KH-12" },
         group_by: [
           "iso_country_code",
           "address.iso_region_code",
@@ -336,12 +337,6 @@ RSpec.resource "Beneficiaries"  do
             "iso_country_code" => "KH",
             "address.iso_region_code" => "KH-12",
             "address.administrative_division_level_2_code" => "1202",
-            "value" => 2
-          },
-          {
-            "iso_country_code" => "KH",
-            "address.iso_region_code" => "KH-1",
-            "address.administrative_division_level_2_code" => "0102",
             "value" => 2
           }
         ]
