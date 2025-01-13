@@ -1,13 +1,13 @@
 require "rails_helper"
 
-RSpec.describe "AgreegateDataQuery", type: :model do
+RSpec.describe AggregateDataQuery, type: :model do
   it "return results with a simple group by field" do
     create_list(:beneficiary, 2, gender: "M")
     create_list(:beneficiary, 3, gender: "F")
 
     result = AggregateDataQuery.new(
       group_by_fields: [
-        V1::BeneficiaryStatsRequestSchema::FIELDS.fetch("gender")
+        BeneficiaryField.find("gender")
       ],
     ).apply(Contact.all)
 
@@ -35,9 +35,9 @@ RSpec.describe "AgreegateDataQuery", type: :model do
 
     result = AggregateDataQuery.new(
       group_by_fields: [
-        V1::BeneficiaryStatsRequestSchema::FIELDS.fetch("iso_country_code"),
-        V1::BeneficiaryStatsRequestSchema::FIELDS.fetch("address.iso_region_code"),
-        V1::BeneficiaryStatsRequestSchema::FIELDS.fetch("address.administrative_division_level_2_code")
+        BeneficiaryField.find("iso_country_code"),
+        BeneficiaryField.find("address.iso_region_code"),
+        BeneficiaryField.find("address.administrative_division_level_2_code")
       ],
     ).apply(Contact.all)
 
@@ -72,12 +72,12 @@ RSpec.describe "AgreegateDataQuery", type: :model do
 
     result = AggregateDataQuery.new(
       filter_fields: {
-        V1::BeneficiaryStatsRequestSchema::FIELDS.fetch("address.iso_region_code") => "KH-12"
+        BeneficiaryField.find("address.iso_region_code") => "KH-12"
       },
       group_by_fields: [
-        V1::BeneficiaryStatsRequestSchema::FIELDS.fetch("iso_country_code"),
-        V1::BeneficiaryStatsRequestSchema::FIELDS.fetch("address.iso_region_code"),
-        V1::BeneficiaryStatsRequestSchema::FIELDS.fetch("address.administrative_division_level_2_code")
+        BeneficiaryField.find("iso_country_code"),
+        BeneficiaryField.find("address.iso_region_code"),
+        BeneficiaryField.find("address.administrative_division_level_2_code")
       ],
     ).apply(Contact.all)
 
@@ -115,9 +115,9 @@ RSpec.describe "AgreegateDataQuery", type: :model do
     expect {
       AggregateDataQuery.new(
         group_by_fields: [
-          V1::BeneficiaryStatsRequestSchema::FIELDS.fetch("iso_country_code"),
-          V1::BeneficiaryStatsRequestSchema::FIELDS.fetch("address.iso_region_code"),
-          V1::BeneficiaryStatsRequestSchema::FIELDS.fetch("address.administrative_division_level_2_code")
+          BeneficiaryField.find("iso_country_code"),
+          BeneficiaryField.find("address.iso_region_code"),
+          BeneficiaryField.find("address.administrative_division_level_2_code")
         ],
       ).apply(Contact.all)
     }.to raise_error(AggregateDataQuery::TooManyResultsError)

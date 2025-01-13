@@ -28,13 +28,13 @@ module V1
       ).output
 
       expect(result[:filter_fields]).to include(
-        BeneficiaryStatsRequestSchema::FIELDS.fetch("gender") => "M",
-        BeneficiaryStatsRequestSchema::FIELDS.fetch("iso_country_code") => "KH"
+        BeneficiaryField.find("gender") => "M",
+        BeneficiaryField.find("iso_country_code") => "KH"
       )
       expect(result[:group_by_fields]).to contain_exactly(
-        BeneficiaryStatsRequestSchema::FIELDS.fetch("iso_country_code"),
-        BeneficiaryStatsRequestSchema::FIELDS.fetch("gender"),
-            BeneficiaryStatsRequestSchema::FIELDS.fetch("address.iso_region_code")
+        BeneficiaryField.find("iso_country_code"),
+        BeneficiaryField.find("gender"),
+        BeneficiaryField.find("address.iso_region_code")
       )
     end
 

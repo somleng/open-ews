@@ -1,21 +1,5 @@
 module V1
   class BeneficiaryStatsRequestSchema < ApplicationRequestSchema
-    Field = Struct.new(:name, :column, :relation, keyword_init: true)
-    FIELDS = {
-      "status" => Field.new(name: "status", column: "status"),
-      "gender" => Field.new(name: "gender", column: "gender"),
-      "date_of_birth" => Field.new(name: "date_of_birth", column: "date_of_birth"),
-      "language_code" => Field.new(name: "language_code", column: "language_code"),
-      "iso_country_code" => Field.new(name: "iso_country_code", column: "iso_country_code"),
-      "address.iso_region_code" => Field.new(name: "address.iso_region_code", column: "beneficiary_addresses.iso_region_code", relation: :addresses),
-      "address.administrative_division_level_2_code" => Field.new(name: "address.administrative_division_level_2_code", column: "beneficiary_addresses.administrative_division_level_2_code", relation: :addresses),
-      "address.administrative_division_level_2_name" => Field.new(name: "address.administrative_division_level_2_name", column: "beneficiary_addresses.administrative_division_level_2_name", relation: :addresses),
-      "address.administrative_division_level_3_code" => Field.new(name: "address.administrative_division_level_3_code", column: "beneficiary_addresses.administrative_division_level_3_code", relation: :addresses),
-      "address.administrative_division_level_3_name" => Field.new(name: "address.administrative_division_level_3_name", column: "beneficiary_addresses.administrative_division_level_3_name", relation: :addresses),
-      "address.administrative_division_level_4_code" => Field.new(name: "address.administrative_division_level_4_code", column: "beneficiary_addresses.administrative_division_level_4_code", relation: :addresses),
-      "address.administrative_division_level_4_name" => Field.new(name: "address.administrative_division_level_4_name", column: "beneficiary_addresses.administrative_division_level_4_name", relation: :addresses)
-    }.freeze
-
     GROUPS = [
       "gender",
       "language_code",
@@ -68,11 +52,11 @@ module V1
       result = super
 
       result[:filter_fields] = result.fetch(:filter, {}).each_with_object({}) do |(filter, value), filters|
-        filters[FIELDS.fetch(filter.to_s)] = value
+        filters[BeneficiaryField.find(filter.to_s)] = value
       end
 
       result[:group_by_fields] = result[:group_by].map do |group|
-        FIELDS.fetch(group)
+        BeneficiaryField.find(group)
       end
 
       result

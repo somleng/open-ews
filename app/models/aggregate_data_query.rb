@@ -28,7 +28,7 @@ class AggregateDataQuery
   private
 
   def query_scope(scope)
-    joins_with = group_by_fields.pluck(:relation) + filter_fields.keys.pluck(:relation)
+    joins_with = group_by_fields.map(&:relation) + filter_fields.map { |f, _| f.relation }
     joins_with = joins_with.compact_blank.uniq
     scope = scope.joins(*joins_with) if joins_with.any?
     scope
