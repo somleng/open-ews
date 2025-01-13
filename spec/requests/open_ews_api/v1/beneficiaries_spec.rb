@@ -289,31 +289,32 @@ RSpec.resource "Beneficiaries"  do
 
     example "Fetch beneficiaries stats" do
       account = create(:account)
-      beneficiary = create(:beneficiary, account:)
+      male_beneficiary = create(:beneficiary, account:, gender: "M")
+      female_beneficiary = create(:beneficiary, account:, gender: "F")
       create(
         :beneficiary_address,
-        beneficiary:,
+        beneficiary: male_beneficiary,
         iso_region_code: "KH-12",
         administrative_division_level_2_code: "1201"
       )
       create_list(
         :beneficiary_address,
         2,
-        beneficiary:,
+        beneficiary: male_beneficiary,
         iso_region_code: "KH-12",
         administrative_division_level_2_code: "1202"
       )
       create_list(
         :beneficiary_address,
         2,
-        beneficiary:,
+        beneficiary: female_beneficiary,
         iso_region_code: "KH-1",
         administrative_division_level_2_code: "0102"
       )
 
       set_authorization_header_for(account)
       do_request(
-        filter: { "address.iso_region_code": "KH-12" },
+        filter: { "gender": "M" },
         group_by: [
           "iso_country_code",
           "address.iso_region_code",
@@ -343,7 +344,7 @@ RSpec.resource "Beneficiaries"  do
       )
     end
 
-    example "Fetch beneficiaries stats by address", document: false do
+    example "Fetch beneficiaries stats by gender", document: false do
       account = create(:account)
       create_list(:beneficiary, 2, account:, gender: "M")
       create(:beneficiary, account:, gender: "F")
