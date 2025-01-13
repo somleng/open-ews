@@ -30,7 +30,7 @@ module V1
     ].freeze
 
     params do
-      optional(:filter).value(:hash)
+      optional(:filter).value(:hash) do
         optional(:status).filled(included_in?: Contact.status.values)
         optional(:gender).filled(Types::UpcaseString, included_in?: Contact.gender.values)
         optional(:date_of_birth).filled(:date)
@@ -43,6 +43,7 @@ module V1
         optional(:"address.administrative_division_level_3_name").filled(:string)
         optional(:"address.administrative_division_level_4_code").filled(:string)
         optional(:"address.administrative_division_level_4_name").filled(:string)
+      end
 
       required(:group_by).value(array[:string])
     end
@@ -67,7 +68,7 @@ module V1
       result = super
 
       result[:filter_fields] = result.fetch(:filter, {}).each_with_object({}) do |(filter, value), filters|
-        filters[FIELDS.fetch(filter)] = value
+        filters[FIELDS.fetch(filter.to_s)] = value
       end
 
       result[:group_by_fields] = result[:group_by].map do |group|
