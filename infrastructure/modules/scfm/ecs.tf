@@ -43,6 +43,10 @@ locals {
       value = aws_sqs_queue.scheduler.name
     },
     {
+      name  = "AWS_SES_REGION",
+      value = var.aws_ses_region
+    },
+    {
       name  = "AWS_DEFAULT_REGION",
       value = var.aws_region
     },

@@ -1,9 +1,14 @@
 module "scfm" {
   source = "../modules/scfm"
 
+  api_subdomain = "api"
+  app_subdomain = "app"
+  cdn_subdomain = "cdn"
+  route53_zone  = data.terraform_remote_state.core.outputs.route53_zone
+
   app_identifier        = "scfm"
   subdomain             = "scfm"
-  cdn_subdomain         = "cdn-scfm"
+  scfm_cdn_subdomain    = "cdn-scfm"
   audio_subdomain       = "audio"
   app_environment       = "production"
   global_accelerator    = data.terraform_remote_state.core_infrastructure.outputs.global_accelerator
@@ -11,7 +16,7 @@ module "scfm" {
   app_image             = data.terraform_remote_state.core.outputs.app_ecr_repository.this.repository_url
   rds_cluster           = data.terraform_remote_state.core.outputs.rds_cluster
   aws_region            = var.aws_region
-  route53_zone          = data.terraform_remote_state.core_infrastructure.outputs.route53_zone_somleng_org
+  scfm_route53_zone     = data.terraform_remote_state.core_infrastructure.outputs.route53_zone_somleng_org
   internal_route53_zone = data.terraform_remote_state.core_infrastructure.outputs.route53_zone_internal_somleng_org
   cdn_certificate       = data.terraform_remote_state.core_infrastructure.outputs.cdn_certificate
   uploads_bucket        = "uploads.somleng.org"

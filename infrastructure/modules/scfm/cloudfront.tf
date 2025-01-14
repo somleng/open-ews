@@ -8,8 +8,8 @@ data "aws_cloudfront_origin_request_policy" "user_agent_referer_headers" {
 
 resource "aws_cloudfront_distribution" "dashboard" {
   origin {
-    domain_name = aws_route53_record.app.fqdn
-    origin_id   = aws_route53_record.app.fqdn
+    domain_name = aws_route53_record.scfm_app.fqdn
+    origin_id   = aws_route53_record.scfm_app.fqdn
 
     custom_origin_config {
       http_port              = "80"
@@ -19,7 +19,7 @@ resource "aws_cloudfront_distribution" "dashboard" {
     }
   }
 
-  aliases = ["${var.cdn_subdomain}.${var.route53_zone.name}"]
+  aliases = ["${var.scfm_cdn_subdomain}.${var.scfm_route53_zone.name}"]
 
   enabled         = true
   is_ipv6_enabled = false
@@ -27,7 +27,7 @@ resource "aws_cloudfront_distribution" "dashboard" {
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = aws_route53_record.app.fqdn
+    target_origin_id = aws_route53_record.scfm_app.fqdn
 
     viewer_protocol_policy = "redirect-to-https"
     compress               = true
