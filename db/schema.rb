@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_10_094101) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_14_071442) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -89,6 +89,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_10_094101) do
     t.citext "administrative_division_level_4_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["beneficiary_id", "iso_region_code", "administrative_division_level_2_code", "administrative_division_level_3_code", "administrative_division_level_4_code"], name: "idx_on_beneficiary_id_iso_region_code_administrativ_c45be0885e"
+    t.index ["beneficiary_id", "iso_region_code", "administrative_division_level_2_name", "administrative_division_level_3_name", "administrative_division_level_4_name"], name: "idx_on_beneficiary_id_iso_region_code_administrativ_396f86096a"
     t.index ["beneficiary_id"], name: "index_beneficiary_addresses_on_beneficiary_id"
   end
 
