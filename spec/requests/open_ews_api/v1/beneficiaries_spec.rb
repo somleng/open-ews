@@ -286,11 +286,11 @@ RSpec.resource "Beneficiaries"  do
         :gender, "Must be one of `M` or `F`.",
         required: false
       )
-      # TODO: It seems to be a bug. It's always adding `status: nil` in the `filter` params.
-      # parameter(
-      #   :status, "Must be one of `active` or `disabled`.",
-      #   required: false
-      # )
+      parameter(
+        :status, "Must be one of `active` or `disabled`.",
+        required: false,
+        method: :_disabled # NOTE: It seems to be a bug. It's always adding `status: nil` in the `filter` params.
+      )
       parameter(
         :date_of_birth, "Date of birth in `YYYY-MM-DD` format.",
         required: false
