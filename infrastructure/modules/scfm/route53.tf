@@ -1,5 +1,29 @@
 resource "aws_route53_record" "app" {
   zone_id = var.route53_zone.zone_id
+  name    = var.app_subdomain
+  type    = "A"
+
+  alias {
+    name                   = var.global_accelerator.dns_name
+    zone_id                = var.global_accelerator.hosted_zone_id
+    evaluate_target_health = true
+  }
+}
+
+resource "aws_route53_record" "api" {
+  zone_id = var.route53_zone.zone_id
+  name    = var.api_subdomain
+  type    = "A"
+
+  alias {
+    name                   = var.global_accelerator.dns_name
+    zone_id                = var.global_accelerator.hosted_zone_id
+    evaluate_target_health = true
+  }
+}
+
+resource "aws_route53_record" "scfm_app" {
+  zone_id = var.scfm_route53_zone.zone_id
   name    = var.subdomain
   type    = "A"
 
@@ -22,9 +46,9 @@ resource "aws_route53_record" "app_internal" {
   }
 }
 
-resource "aws_route53_record" "cdn" {
-  zone_id = var.route53_zone.zone_id
-  name    = var.cdn_subdomain
+resource "aws_route53_record" "scfm_cdn" {
+  zone_id = var.scfm_route53_zone.zone_id
+  name    = var.scfm_cdn_subdomain
   type    = "A"
 
   alias {
@@ -35,7 +59,7 @@ resource "aws_route53_record" "cdn" {
 }
 
 resource "aws_route53_record" "audio" {
-  zone_id = var.route53_zone.zone_id
+  zone_id = var.scfm_route53_zone.zone_id
   name    = var.audio_subdomain
   type    = "A"
 
