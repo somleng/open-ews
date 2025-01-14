@@ -220,7 +220,6 @@ FactoryBot.define do
 
   factory :beneficiary_address do
     beneficiary
-    iso_country_code { beneficiary.iso_country_code }
     iso_region_code { "KH-1" }
 
     trait :full do

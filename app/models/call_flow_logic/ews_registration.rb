@@ -369,7 +369,6 @@ module CallFlowLogic
       commune = Pumi::Commune.find_by_id(phone_call_metadata(:commune_code))
 
       contact.addresses.find_or_create_by!(
-        iso_country_code: "KH",
         iso_region_code: commune.province.iso3166_2,
         administrative_division_level_2_code: commune.district_id,
         administrative_division_level_2_name: commune.district.name_en,
