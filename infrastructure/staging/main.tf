@@ -23,8 +23,8 @@ module "scfm" {
   audio_bucket          = "audio-staging.open-ews.org"
   audio_bucket_cname    = "audio-staging.somleng.org"
   db_name               = "open_ews_staging"
-  webserver_min_tasks   = 1
-  webserver_max_tasks   = 1
+  webserver_min_tasks   = 0
+  webserver_max_tasks   = 0
   worker_min_tasks      = 0
   worker_max_tasks      = 0
 }
