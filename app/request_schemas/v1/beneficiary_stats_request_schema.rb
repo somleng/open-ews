@@ -2,6 +2,7 @@ module V1
   class BeneficiaryStatsRequestSchema < ApplicationRequestSchema
     GROUPS = [
       "gender",
+      "disability_status",
       "language_code",
       "iso_country_code",
       "address.iso_region_code",
@@ -16,6 +17,7 @@ module V1
     params do
       optional(:filter).value(:hash) do
         optional(:status).filled(included_in?: Contact.status.values)
+        optional(:disability_status).maybe(included_in?: Contact.disability_status.values)
         optional(:gender).filled(Types::UpcaseString, included_in?: Contact.gender.values)
         optional(:date_of_birth).filled(:date)
         optional(:iso_country_code).filled(Types::UpcaseString, included_in?: Contact.iso_country_code.values)

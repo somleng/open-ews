@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_14_071442) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_15_084759) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -138,7 +138,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_14_071442) do
     t.string "gender"
     t.date "date_of_birth"
     t.citext "iso_country_code", null: false
+    t.string "disability_status"
     t.index ["account_id", "date_of_birth"], name: "index_contacts_on_account_id_and_date_of_birth"
+    t.index ["account_id", "disability_status"], name: "index_contacts_on_account_id_and_disability_status"
     t.index ["account_id", "gender"], name: "index_contacts_on_account_id_and_gender"
     t.index ["account_id", "iso_country_code"], name: "index_contacts_on_account_id_and_iso_country_code"
     t.index ["account_id", "language_code"], name: "index_contacts_on_account_id_and_language_code"

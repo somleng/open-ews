@@ -12,6 +12,7 @@ class BeneficiaryField
     @all ||= [
       self.new(name: "status", column: "status"),
       self.new(name: "gender", column: "gender"),
+      self.new(name: "disability_status", column: "disability_status"),
       self.new(name: "date_of_birth", column: "date_of_birth"),
       self.new(name: "language_code", column: "language_code"),
       self.new(name: "iso_country_code", column: "iso_country_code"),

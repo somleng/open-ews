@@ -5,6 +5,7 @@ module APIResponseSchema
 
     required(:attributes).schema do
       required(:phone_number).filled(:str?)
+      required(:disability_status).maybe(:str?)
       required(:language_code).maybe(:str?)
       required(:gender).maybe(:str?)
       required(:date_of_birth).maybe(:str?)
