@@ -1,8 +1,6 @@
 module API
   module V1
     class BaseController < ActionController::API
-      include Rails::Pagination
-
       self.responder = JSONAPIResponder
       respond_to :json
 
