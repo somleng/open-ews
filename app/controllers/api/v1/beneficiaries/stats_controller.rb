@@ -24,8 +24,8 @@ module API
           {
             input_params: request.query_parameters,
             decorator_class: nil,
-            pagination_options: {
-              sort_direction: :asc
+            serializer_options: {
+              pagination: false
             }
           }
         end

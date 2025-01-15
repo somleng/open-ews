@@ -11,10 +11,13 @@ class JSONAPIResponder < ApplicationResponder
     end
 
     if resource_is_collection?(resource)
-      pagination = JSONAPIPagination.new(resource, request.original_url, pagination_options:)
-      links = serializer_options.fetch(:links, {})
-      serializer_options[:links] = pagination.links.merge(links)
-      resource = pagination.paginated_collection
+      if serializer_options.fetch(:pagination, true) != false
+        pagination = JSONAPIPagination.new(resource, request.original_url, pagination_options:)
+        links = serializer_options.fetch(:links, {})
+        serializer_options[:links] = pagination.links.merge(links)
+        resource = pagination.paginated_collection
+      end
+
       resource = resource.map(&:decorated) if decorator_class.present?
     else
       resource = resource.decorated
