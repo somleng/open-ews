@@ -9,6 +9,7 @@ module V1
           optional(:language_code).maybe(:string)
           optional(:date_of_birth).maybe(:date)
           optional(:gender).maybe(Types::UpcaseString, included_in?: Contact.gender.values)
+          optional(:disability_status).maybe(:string, included_in?: Contact.disability_status.values)
           optional(:metadata).value(:hash)
 
           optional(:address).filled(:hash).schema do

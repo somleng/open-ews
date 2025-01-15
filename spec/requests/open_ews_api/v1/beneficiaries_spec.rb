@@ -66,6 +66,10 @@ RSpec.resource "Beneficiaries"  do
         required: false
       )
       parameter(
+        :disability_status, "If supplied, must be one of #{Contact.disability_status.values.map { |t| "`#{t}`" }.join(", ")}}.",
+        required: false
+      )
+      parameter(
         :date_of_birth, "Date of birth in `YYYY-MM-DD` format.",
         required: false
       )
@@ -119,6 +123,7 @@ RSpec.resource "Beneficiaries"  do
             date_of_birth: "1990-01-01",
             metadata: { "foo" => "bar" },
             iso_country_code: "KH",
+            disability_status: "normal",
             address: {
               iso_region_code: "KH-1",
               administrative_division_level_2_code: "0102",
@@ -141,6 +146,7 @@ RSpec.resource "Beneficiaries"  do
         "date_of_birth" => "1990-01-01",
         "metadata" => { "foo" => "bar" },
         "iso_country_code" => "KH",
+        "disability_status" => "normal",
       )
 
       expect(json_response.dig("included", 0).to_json).to match_api_response_schema("address")
@@ -219,6 +225,10 @@ RSpec.resource "Beneficiaries"  do
       )
       parameter(
         :gender, "Must be one of `M` or `F`.",
+        required: false
+      )
+      parameter(
+        :disability_status, "If supplied, must be one of #{Contact.disability_status.values.map { |t| "`#{t}`" }.join(", ")}}.",
         required: false
       )
       parameter(
