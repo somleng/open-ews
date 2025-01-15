@@ -115,6 +115,17 @@ class JSONAPIResourceSchemaValidator < APIResponseSchemaValidator
     validate_schema(define_resource_schema)
   end
 
+  def valid_collection?(**options)
+    return unless super
+
+    if options[:pagination] == false
+      json_response = JSON.parse(data)
+      raise "Collection have pagination links" if json_response["links"].present?
+    end
+
+    true
+  end
+
   private
 
   def define_resource_schema

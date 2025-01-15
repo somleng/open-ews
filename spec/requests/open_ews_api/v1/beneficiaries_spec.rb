@@ -401,7 +401,7 @@ RSpec.resource "Beneficiaries"  do
       expect(response_body).to match_jsonapi_resource_collection_schema("stat", pagination: false)
       results = json_response.fetch("data").map { |data| data.dig("attributes", "result") }
 
-      expect(results).to eq(
+      expect(results).to match_array(
         [
           {
             "gender" => "M",
