@@ -438,7 +438,7 @@ RSpec.resource "Beneficiaries"  do
   delete "/v1/beneficiaries/:id" do
     example "Delete a beneficiary" do
       beneficiary = create(:beneficiary)
-      create(:address, beneficiary:)
+      create(:beneficiary_address, beneficiary:)
 
       set_authorization_header_for(beneficiary.account)
       do_request(id: beneficiary.id)
