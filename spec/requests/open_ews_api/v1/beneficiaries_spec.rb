@@ -297,6 +297,10 @@ RSpec.resource "Beneficiaries"  do
         required: false
       )
       parameter(
+        :disability_status, "If supplied, must be one of #{Contact.disability_status.values.map { |t| "`#{t}`" }.join(", ")}}.",
+        required: false
+      )
+      parameter(
         :status, "Must be one of `active` or `disabled`.",
         required: false,
         method: :_disabled # NOTE: It seems to be a bug. It's always adding `status: nil` in the `filter` params.
