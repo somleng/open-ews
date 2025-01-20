@@ -1,5 +1,15 @@
 class AddBeneficiaryPhoneNumberToCalloutParticipations < ActiveRecord::Migration[8.0]
   def up
+    execute <<-SQL
+      UPDATE contacts
+      SET msisdn = REPLACE(msisdn, '+', '')
+      WHERE msisdn LIKE '+%';
+
+      UPDATE phone_calls
+      SET msisdn = REPLACE(msisdn, '+', '')
+      WHERE msisdn LIKE '+%';
+    SQL
+
     add_column :callout_participations, :beneficiary_phone_number, :string
     execute <<-SQL
       UPDATE callout_participations cp
