@@ -3,6 +3,6 @@ class BeneficiarySerializer < ResourceSerializer
   has_many :addresses, serializer: BeneficiaryAddressSerializer
 
   attribute :phone_number do |object|
-    object.msisdn
+    object.msisdn.value
   end
 end

@@ -77,7 +77,7 @@ class HandlePhoneCallEvent < ApplicationWorkflow
     account = Account.find_by_platform_account_sid(platform_account_sid)
     Contact.find_or_create_by!(
       account: account,
-      msisdn: PhonyRails.normalize_number(msisdn),
+      msisdn: msisdn,
     ) do |record|
         record.iso_country_code = ACCOUNT_COUNTRY_CODES.fetch(account.id, "KH")
     end

@@ -1,8 +1,9 @@
 class Contact < ApplicationRecord
   extend Enumerize
 
-  include MsisdnHelpers
   include MetadataHelpers
+
+  attribute :msisdn, :phone_number
 
   enumerize :status, in: [ :active, :disabled ], scope: :shallow
   enumerize :gender, in: [ "M", "F" ]
@@ -16,6 +17,8 @@ class Contact < ApplicationRecord
   has_many :callouts, through: :callout_participations
   has_many :phone_calls
   has_many :remote_phone_call_events, through: :phone_calls
+
+  validates :msisdn, presence: true
 
   delegate :call_flow_logic,
            to: :account,

@@ -2,7 +2,7 @@ module Filter
   module Attribute
     class Msisdn < Filter::Base
       def apply
-        association_chain.where(msisdn: PhonyRails.normalize_number(msisdn))
+        association_chain.where(msisdn: PhoneNumberType.new.cast(msisdn))
       end
 
       def apply?

@@ -17,6 +17,8 @@ class PhoneCall < ApplicationRecord
     inbound: "inbound"
   }.freeze
 
+  attribute :msisdn, :phone_number
+
   belongs_to :callout_participation, optional: true, counter_cache: true
   belongs_to :contact, validate: true
   belongs_to :account
@@ -24,7 +26,6 @@ class PhoneCall < ApplicationRecord
   has_many   :remote_phone_call_events, dependent: :restrict_with_error
 
   include MetadataHelpers
-  include MsisdnHelpers
   include HasCallFlowLogic
 
   delegate :call_flow_logic, to: :callout_participation, prefix: true, allow_nil: true
@@ -41,6 +42,7 @@ class PhoneCall < ApplicationRecord
 
   before_validation :set_defaults, on: :create
   before_destroy    :validate_destroy
+  validates :msisdn, presence: true
 
   accepts_nested_key_value_fields_for :remote_response
   accepts_nested_key_value_fields_for :remote_queue_response

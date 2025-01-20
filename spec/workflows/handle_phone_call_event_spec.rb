@@ -31,13 +31,13 @@ RSpec.describe HandlePhoneCallEvent do
     expect(phone_call).to be_in_progress
     expect(phone_call.remote_call_id).to eq(event.remote_call_id)
     expect(phone_call.remote_direction).to eq("inbound")
-    expect(phone_call.msisdn).to match(event_details.fetch(:From))
+    expect(phone_call.msisdn.value).to match(event_details.fetch(:From))
     expect(phone_call.remote_status).to eq("in-progress")
 
     expect(phone_call.contact).to have_attributes(
       persisted?: true,
       account: account,
-      msisdn: "+85510900123"
+      msisdn: PhoneNumberType.new.cast("85510900123")
     )
   end
 

@@ -377,9 +377,6 @@ GEM
     pghero (3.6.1)
       activerecord (>= 6.1)
     phony (2.21.1)
-    phony_rails (0.15.0)
-      activesupport (>= 3.0)
-      phony (>= 2.18.12)
     propshaft (1.1.0)
       actionpack (>= 7.0.0)
       activesupport (>= 7.0.0)
@@ -630,7 +627,6 @@ DEPENDENCIES
   pg_query
   pghero
   phony
-  phony_rails
   propshaft
   pry
   puma

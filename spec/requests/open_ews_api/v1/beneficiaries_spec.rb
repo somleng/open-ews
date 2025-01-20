@@ -140,7 +140,7 @@ RSpec.resource "Beneficiaries"  do
       expect(response_status).to eq(201)
       expect(response_body).to match_jsonapi_resource_schema("beneficiary")
       expect(jsonapi_response_attributes).to include(
-        "phone_number" => "+85510999999",
+        "phone_number" => "85510999999",
         "language_code" => "khm",
         "gender" => "M",
         "date_of_birth" => "1990-01-01",
@@ -273,7 +273,7 @@ RSpec.resource "Beneficiaries"  do
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_schema("beneficiary")
       expect(jsonapi_response_attributes).to include(
-        "phone_number" => "+85510999002",
+        "phone_number" => "85510999002",
         "language_code" => "eng",
         "gender" => "F",
         "date_of_birth" => "1990-01-01",

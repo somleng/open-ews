@@ -34,7 +34,7 @@ RSpec.describe QueueRemoteCallJob do
       ).with(
         body: {
           "From" => "1234",
-          "To" => "+855715100860",
+          "To" => "855715100860",
           "Url" => "https://scfm.somleng.org/twilio_webhooks/phone_call_events",
           "StatusCallback" => "https://scfm.somleng.org/twilio_webhooks/phone_call_events"
         }
