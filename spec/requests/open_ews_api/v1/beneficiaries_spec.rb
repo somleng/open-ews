@@ -228,7 +228,7 @@ RSpec.resource "Beneficiaries"  do
         required: false
       )
       parameter(
-        :disability_status, "If supplied, must be one of #{Contact.disability_status.values.map { |t| "`#{t}`" }.join(", ")}}.",
+        :disability_status, "If supplied, must be one of #{Contact.disability_status.values.map { |t| "`#{t}`" }.join(", ")}.",
         required: false
       )
       parameter(
@@ -294,6 +294,10 @@ RSpec.resource "Beneficiaries"  do
       )
       parameter(
         :gender, "Must be one of `M` or `F`.",
+        required: false
+      )
+      parameter(
+        :disability_status, "If supplied, must be one of #{Contact.disability_status.values.map { |t| "`#{t}`" }.join(", ")}.",
         required: false
       )
       parameter(
