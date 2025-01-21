@@ -105,7 +105,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_15_084759) do
     t.datetime "updated_at", precision: nil, null: false
     t.boolean "answered", default: false, null: false
     t.integer "phone_calls_count", default: 0, null: false
-    t.string "beneficiary_phone_number", null: false
+    t.string "beneficiary_phone_number"
     t.index ["callout_id", "contact_id"], name: "index_callout_participations_on_callout_id_and_contact_id", unique: true
     t.index ["callout_id", "msisdn"], name: "index_callout_participations_on_callout_id_and_msisdn", unique: true
     t.index ["callout_id"], name: "index_callout_participations_on_callout_id"

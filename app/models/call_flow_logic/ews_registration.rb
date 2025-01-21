@@ -286,7 +286,7 @@ module CallFlowLogic
     end
 
     def feedback_enabled?
-      FEEDBACK_FEATURE_FLAG_PHONE_NUMBERS.include?(phone_call.contact.msisdn.value)
+      FEEDBACK_FEATURE_FLAG_PHONE_NUMBERS.include?(phone_call.contact.msisdn)
     end
 
     def language_gathered?

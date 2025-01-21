@@ -31,7 +31,7 @@ RSpec.describe "Phone Call Events" do
         remote_status: request_body.fetch(:CallStatus),
         remote_direction: request_body.fetch(:Direction),
         contact: have_attributes(
-          msisdn: PhoneNumberType.new.cast("85510202101")
+          msisdn: "85510202101"
         )
       )
     )

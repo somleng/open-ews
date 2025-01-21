@@ -2,7 +2,7 @@ module Filter
   module Attribute
     class Msisdn < Filter::Base
       def apply
-        association_chain.where(msisdn: PhoneNumberType.new.cast(msisdn))
+        association_chain.where(msisdn: msisdn)
       end
 
       def apply?
