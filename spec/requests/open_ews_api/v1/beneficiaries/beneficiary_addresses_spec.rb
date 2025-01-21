@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.resource "Addresses"  do
+RSpec.resource "Beneficiary addresses"  do
   get "/v1/beneficiaries/:beneficiary_id/addresses" do
     example "List all addresses for a beneficiary" do
       account = create(:account)
