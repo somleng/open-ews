@@ -1,6 +1,21 @@
 class HandlePhoneCallEvent < ApplicationWorkflow
   attr_accessor :url, :params
 
+  ACCOUNT_COUNTRY_CODES = {
+    2 => "SO",
+    3 => "KH",
+    4 => "KH",
+    7 => "SL",
+    8 => "TH",
+    11 => "US",
+    45 => "MX",
+    77 => "EG",
+    110 => "ZM",
+    143 => "KH",
+    209 => "LA"
+  }
+
+
   def initialize(url, params = {})
     self.url = url
     self.params = params
@@ -60,6 +75,11 @@ class HandlePhoneCallEvent < ApplicationWorkflow
 
   def create_or_find_contact!(platform_account_sid, msisdn)
     account = Account.find_by_platform_account_sid(platform_account_sid)
-    Contact.find_or_create_by!(account: account, msisdn: PhonyRails.normalize_number(msisdn))
+    Contact.find_or_create_by!(
+      account: account,
+      msisdn: PhonyRails.normalize_number(msisdn),
+    ) do |record|
+        record.iso_country_code = ACCOUNT_COUNTRY_CODES.fetch(account.id, "KH")
+    end
   end
 end

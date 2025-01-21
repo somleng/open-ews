@@ -58,7 +58,7 @@ jobs:
               "friendly_image_tag": "latest",
               "image_tag": "prod-${{ github.sha }}",
               "ecs_cluster": "scfm",
-              "docs_path":  "docs/scfm"
+              "docs_path":  "docs/open-ews"
             }
           ]
           EOF
@@ -93,7 +93,7 @@ jobs:
       - name: Prepare Documentation Source
         if: steps.set-deployment-matrix.outputs.matrixLength > 0
         run: |
-          cp app/assets/images/scfm_logo.png doc/logo.png
+          cp app/assets/images/open-ews_landscape_logo.png doc/logo.png
 
       - name: Upload Documentation Source
         if: steps.set-deployment-matrix.outputs.matrixLength > 0
@@ -122,7 +122,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-          ruby-version: "3"
+          ruby-version: "3.3"
 
       - name: Download Documentation Source
         uses: actions/download-artifact@v4
@@ -141,9 +141,6 @@ jobs:
           cp -R api_docs/api/* source
           bundle exec middleman build --build-dir=build/api
 
-          cp -R api_docs/open_ews_api/* source
-          bundle exec middleman build --build-dir=build/open_ews_api
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -157,7 +154,6 @@ jobs:
       - name: Deploy API Documentation
         run: |
           aws s3 sync --delete --acl public-read build/api s3://www.somleng.org/${{ matrix.docs_path }}
-          aws s3 sync --delete --acl public-read build/open_ews_api s3://www.somleng.org/${{ matrix.docs_path }}/open_ews_api
 
       - name: Invalidate Cache
         run: aws cloudfront create-invalidation --distribution-id E3962XCJFZ0KB1 --paths /${{ matrix.docs_path }}/\*

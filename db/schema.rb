@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_11_092117) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_15_084759) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -80,18 +80,18 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_11_092117) do
 
   create_table "beneficiary_addresses", force: :cascade do |t|
     t.bigint "beneficiary_id", null: false
-    t.citext "iso_region_code"
-    t.string "administrative_division_level_2_code"
-    t.string "administrative_division_level_2_name"
-    t.string "administrative_division_level_3_code"
-    t.string "administrative_division_level_3_name"
-    t.string "administrative_division_level_4_code"
-    t.string "administrative_division_level_4_name"
+    t.citext "iso_region_code", null: false
+    t.citext "administrative_division_level_2_code"
+    t.citext "administrative_division_level_2_name"
+    t.citext "administrative_division_level_3_code"
+    t.citext "administrative_division_level_3_name"
+    t.citext "administrative_division_level_4_code"
+    t.citext "administrative_division_level_4_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["beneficiary_id", "iso_region_code", "administrative_division_level_2_code", "administrative_division_level_3_code", "administrative_division_level_4_code"], name: "idx_on_beneficiary_id_iso_region_code_administrativ_c45be0885e"
+    t.index ["beneficiary_id", "iso_region_code", "administrative_division_level_2_name", "administrative_division_level_3_name", "administrative_division_level_4_name"], name: "idx_on_beneficiary_id_iso_region_code_administrativ_396f86096a"
     t.index ["beneficiary_id"], name: "index_beneficiary_addresses_on_beneficiary_id"
-    t.index ["iso_region_code", "administrative_division_level_2_code", "administrative_division_level_3_code", "administrative_division_level_4_code"], name: "idx_on_iso_region_code_administrative_division_leve_a5183cd2b4"
-    t.index ["iso_region_code", "administrative_division_level_2_name", "administrative_division_level_3_name", "administrative_division_level_4_name"], name: "idx_on_iso_region_code_administrative_division_leve_c76774f7b0"
   end
 
   create_table "callout_participations", force: :cascade do |t|
@@ -137,8 +137,10 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_11_092117) do
     t.string "language_code"
     t.string "gender"
     t.date "date_of_birth"
-    t.citext "iso_country_code"
+    t.citext "iso_country_code", null: false
+    t.string "disability_status"
     t.index ["account_id", "date_of_birth"], name: "index_contacts_on_account_id_and_date_of_birth"
+    t.index ["account_id", "disability_status"], name: "index_contacts_on_account_id_and_disability_status"
     t.index ["account_id", "gender"], name: "index_contacts_on_account_id_and_gender"
     t.index ["account_id", "iso_country_code"], name: "index_contacts_on_account_id_and_iso_country_code"
     t.index ["account_id", "language_code"], name: "index_contacts_on_account_id_and_language_code"

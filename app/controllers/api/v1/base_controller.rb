@@ -1,13 +1,15 @@
 module API
   module V1
     class BaseController < ActionController::API
-      include Rails::Pagination
-
       self.responder = JSONAPIResponder
       respond_to :json
 
       before_action :verify_requested_format!
       before_action :doorkeeper_authorize!
+
+      rescue_from AggregateDataQuery::TooManyResultsError do
+        render json: { "errors": [ { "title":  "Too many results" } ] }, status: :bad_request
+      end
 
       private
 

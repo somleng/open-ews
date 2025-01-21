@@ -16,7 +16,7 @@ RSpec.resource "Beneficiaries"  do
       _other_account_beneficiary = create(:beneficiary)
 
       set_authorization_header_for(account)
-      do_request
+      do_request(filter: { status: "active" })
 
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_collection_schema("beneficiary")
@@ -42,13 +42,23 @@ RSpec.resource "Beneficiaries"  do
   end
 
   post "/v1/beneficiaries" do
+    with_options scope: %i[data] do
+      parameter(
+        :type, "Must be `beneficiary`",
+        required: true
+      )
+    end
     with_options scope: %i[data attributes] do
       parameter(
-        :msisdn, "Phone number in E.164 format or shortcode.",
+        :phone_number, "Phone number in E.164 format.",
         required: true
       )
       parameter(
-        :language_code, "Language code in ISO 639-1 format.",
+        :iso_country_code, "The [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the beneficiary.",
+        required: true
+      )
+      parameter(
+        :language_code, "The [ISO ISO 639-2](https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes) alpha-3 language code of the beneficiary.",
         required: false
       )
       parameter(
@@ -56,47 +66,47 @@ RSpec.resource "Beneficiaries"  do
         required: false
       )
       parameter(
+        :disability_status, "If supplied, must be one of #{Contact.disability_status.values.map { |t| "`#{t}`" }.join(", ")}}.",
+        required: false
+      )
+      parameter(
         :date_of_birth, "Date of birth in `YYYY-MM-DD` format.",
         required: false
       )
       parameter(
-        :iso_country_code, "The ISO 3166-1 alpha-2 country code of the phone number. It must be matched with the country of `msisdn` parameter.",
+        :metadata, "Set of key-value pairs that you can attach to the beneficiary. This can be useful for storing additional information about the beneficiary in a structured format.",
+        required: false
+      )
+    end
+    with_options scope: %i[data attributes address] do
+      parameter(
+        :iso_region_code, "The [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) region code of the address",
         required: false
       )
       parameter(
-        :metadata, "Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.",
+        :administrative_division_level_2_code, "The second-level administrative subdivision code of the address (e.g. district code)",
         required: false
       )
-      with_options scope: :address do
-        parameter(
-          :iso_region_code, "ISO 3166-2 of the country's subdivisions(e.g., provinces or states)",
-          required: false
-        )
-        parameter(
-          :administrative_division_level_2_code, "Code of administrative division level 2(e.g. district)",
-          required: false
-        )
-        parameter(
-          :administrative_division_level_2_name, "Name of administrative division level 2",
-          required: false
-        )
-        parameter(
-          :administrative_division_level_3_code, "Code of administrative division level 2(e.g. commune)",
-          required: false
-        )
-        parameter(
-          :administrative_division_level_3_name, "Name of administrative division level 3",
-          required: false
-        )
-        parameter(
-          :administrative_division_level_4_code, "Code of administrative division level 4(e.g. village)",
-          required: false
-        )
-        parameter(
-          :administrative_division_level_4_name, "Name of administrative division level 4",
-          required: false
-        )
-      end
+      parameter(
+        :administrative_division_level_2_name, "The second-level administrative subdivision name of the address (e.g. district name)",
+        required: false
+      )
+      parameter(
+        :administrative_division_level_3_code, "The third-level administrative subdivision code of the address (e.g. commune code)",
+        required: false
+      )
+      parameter(
+        :administrative_division_level_3_name, "The third-level administrative subdivision name of the address (e.g. commune name)",
+        required: false
+      )
+      parameter(
+        :administrative_division_level_4_code, "The forth-level administrative subdivision code of the address (e.g. village code)",
+        required: false
+      )
+      parameter(
+        :administrative_division_level_4_name, "The forth-level administrative subdivision name of the address (e.g. village name)",
+        required: false
+      )
     end
 
     example "Create a beneficiary" do
@@ -107,15 +117,21 @@ RSpec.resource "Beneficiaries"  do
         data: {
           type: :beneficiary,
           attributes: {
-            msisdn: "+85510999999",
-            language_code: "km",
+            phone_number: "+85510999999",
+            language_code: "khm",
             gender: "M",
             date_of_birth: "1990-01-01",
             metadata: { "foo" => "bar" },
             iso_country_code: "KH",
+            disability_status: "normal",
             address: {
               iso_region_code: "KH-1",
-              administrative_division_level_2_code: "01"
+              administrative_division_level_2_code: "0102",
+              administrative_division_level_2_name: "Mongkol Borei",
+              administrative_division_level_3_code: "010201",
+              administrative_division_level_3_name: "Banteay Neang",
+              administrative_division_level_4_code: "01020101",
+              administrative_division_level_4_name: "Ou Thum"
             }
           }
         }
@@ -124,18 +140,24 @@ RSpec.resource "Beneficiaries"  do
       expect(response_status).to eq(201)
       expect(response_body).to match_jsonapi_resource_schema("beneficiary")
       expect(jsonapi_response_attributes).to include(
-        "msisdn" => "+85510999999",
-        "language_code" => "km",
+        "phone_number" => "+85510999999",
+        "language_code" => "khm",
         "gender" => "M",
         "date_of_birth" => "1990-01-01",
         "metadata" => { "foo" => "bar" },
         "iso_country_code" => "KH",
+        "disability_status" => "normal",
       )
 
       expect(json_response.dig("included", 0).to_json).to match_api_response_schema("address")
       expect(json_response.dig("included", 0, "attributes")).to include(
         "iso_region_code" => "KH-1",
-        "administrative_division_level_2_code" => "01"
+        "administrative_division_level_2_code" => "0102",
+        "administrative_division_level_2_name" => "Mongkol Borei",
+        "administrative_division_level_3_code" => "010201",
+        "administrative_division_level_3_name" => "Banteay Neang",
+        "administrative_division_level_4_code" => "01020101",
+        "administrative_division_level_4_name" => "Ou Thum"
       )
     end
 
@@ -148,8 +170,8 @@ RSpec.resource "Beneficiaries"  do
         data: {
           type: :beneficiary,
           attributes: {
-            msisdn: "+85510999999",
-            iso_country_code: "kh"
+            phone_number: "+85510999999",
+            iso_country_code: "KH"
           }
         }
       )
@@ -158,13 +180,13 @@ RSpec.resource "Beneficiaries"  do
       expect(response_body).to match_api_response_schema("jsonapi_error")
       expect(json_response.dig("errors", 0)).to include(
         "title" => "must be unique",
-        "source" => { "pointer" => "/data/attributes/msisdn" }
+        "source" => { "pointer" => "/data/attributes/phone_number" }
       )
     end
   end
 
   get "/v1/beneficiaries/:id" do
-    example "Get a beneficiary" do
+    example "Fetch a beneficiary" do
       beneficiary = create(:beneficiary)
 
       set_authorization_header_for(beneficiary.account)
@@ -177,6 +199,48 @@ RSpec.resource "Beneficiaries"  do
   end
 
   patch "/v1/beneficiaries/:id" do
+    with_options scope: %i[data] do
+      parameter(
+        :id, "The unique identifier of the beneficiary.",
+        required: true
+      )
+      parameter(
+        :type, "Must be `beneficiary`",
+        required: true
+      )
+    end
+
+    with_options scope: %i[data attributes] do
+      parameter(
+        :phone_number, "Phone number in E.164 format.",
+        required: false
+      )
+      parameter(
+        :iso_country_code, "The [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the beneficiary.",
+        required: false
+      )
+      parameter(
+        :language_code, "The [ISO ISO 639-2](https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes) alpha-3 language code of the beneficiary.",
+        required: false
+      )
+      parameter(
+        :gender, "Must be one of `M` or `F`.",
+        required: false
+      )
+      parameter(
+        :disability_status, "If supplied, must be one of #{Contact.disability_status.values.map { |t| "`#{t}`" }.join(", ")}.",
+        required: false
+      )
+      parameter(
+        :date_of_birth, "Date of birth in `YYYY-MM-DD` format.",
+        required: false
+      )
+      parameter(
+        :metadata, "Set of key-value pairs that you can attach to the beneficiary. This can be useful for storing additional information about the beneficiary in a structured format.",
+        required: false
+      )
+    end
+
     example "Update a beneficiary" do
       beneficiary = create(
         :beneficiary,
@@ -194,10 +258,10 @@ RSpec.resource "Beneficiaries"  do
           id: beneficiary.id,
           type: :beneficiary,
           attributes: {
-            msisdn: "+85510999002",
+            phone_number: "+85510999002",
             gender: "F",
             status: "disabled",
-            language_code: "en",
+            language_code: "eng",
             date_of_birth: "1990-01-01",
             metadata: {
               foo: "bar"
@@ -209,12 +273,169 @@ RSpec.resource "Beneficiaries"  do
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_schema("beneficiary")
       expect(jsonapi_response_attributes).to include(
-        "msisdn" => "+85510999002",
-        "language_code" => "en",
+        "phone_number" => "+85510999002",
+        "language_code" => "eng",
         "gender" => "F",
         "date_of_birth" => "1990-01-01",
         "metadata" => { "foo" => "bar" }
       )
+    end
+  end
+
+  get "/v1/beneficiaries/stats" do
+    with_options scope: :filter do
+      parameter(
+        :iso_country_code, "The [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the beneficiary.",
+        required: false
+      )
+      parameter(
+        :language_code, "The [ISO ISO 639-2](https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes) alpha-3 language code of the beneficiary.",
+        required: false
+      )
+      parameter(
+        :gender, "Must be one of `M` or `F`.",
+        required: false
+      )
+      parameter(
+        :disability_status, "If supplied, must be one of #{Contact.disability_status.values.map { |t| "`#{t}`" }.join(", ")}.",
+        required: false
+      )
+      parameter(
+        :status, "Must be one of `active` or `disabled`.",
+        required: false,
+        method: :_disabled # NOTE: It seems to be a bug. It's always adding `status: nil` in the `filter` params.
+      )
+      parameter(
+        :date_of_birth, "Date of birth in `YYYY-MM-DD` format.",
+        required: false
+      )
+      parameter(
+        :"address.iso_region_code", "The [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) region code of the address",
+        required: false
+      )
+      parameter(
+      :"address.administrative_division_level_2_code", "The second-level administrative subdivision code of the address (e.g. district code)",
+        required: false
+      )
+      parameter(
+        :"address.administrative_division_level_2_name", "The second-level administrative subdivision name of the address (e.g. district name)",
+        required: false
+      )
+      parameter(
+        :"address.administrative_division_level_3_code", "The third-level administrative subdivision code of the address (e.g. commune code)",
+        required: false
+      )
+      parameter(
+        :"address.administrative_division_level_3_name", "The third-level administrative subdivision name of the address (e.g. commune name)",
+        required: false
+      )
+      parameter(
+        :"address.administrative_division_level_4_code", "The forth-level administrative subdivision code of the address (e.g. village code)",
+        required: false
+      )
+      parameter(
+        :"address.administrative_division_level_4_name", "The forth-level administrative subdivision name of the address (e.g. village name)",
+        required: false
+      )
+    end
+
+    parameter(
+      :group_by,
+      "An array of fields to group by. Supported fields: #{V1::BeneficiaryStatsRequestSchema::GROUPS.map { |group| "`#{group}`" }.join(", ")}.",
+      required: true
+    )
+
+
+    example "Fetch beneficiaries stats" do
+      account = create(:account)
+      male_beneficiary = create(:beneficiary, account:, gender: "M")
+      female_beneficiary = create(:beneficiary, account:, gender: "F")
+      create(
+        :beneficiary_address,
+        beneficiary: male_beneficiary,
+        iso_region_code: "KH-12",
+        administrative_division_level_2_code: "1201"
+      )
+      create_list(
+        :beneficiary_address,
+        2,
+        beneficiary: male_beneficiary,
+        iso_region_code: "KH-12",
+        administrative_division_level_2_code: "1202"
+      )
+      create_list(
+        :beneficiary_address,
+        2,
+        beneficiary: female_beneficiary,
+        iso_region_code: "KH-1",
+        administrative_division_level_2_code: "0102"
+      )
+
+      set_authorization_header_for(account)
+      do_request(
+        filter: { "gender": "M" },
+        group_by: [
+          "iso_country_code",
+          "address.iso_region_code",
+          "address.administrative_division_level_2_code"
+        ]
+      )
+
+      expect(response_status).to eq(200)
+      expect(response_body).to match_jsonapi_resource_collection_schema("stat", pagination: false)
+      results = json_response.fetch("data").map { |data| data.dig("attributes", "result") }
+
+      expect(results).to match_array(
+        [
+          {
+            "iso_country_code" => "KH",
+            "address.iso_region_code" => "KH-12",
+            "address.administrative_division_level_2_code" => "1201",
+            "value" => 1
+          },
+          {
+            "iso_country_code" => "KH",
+            "address.iso_region_code" => "KH-12",
+            "address.administrative_division_level_2_code" => "1202",
+            "value" => 2
+          }
+        ]
+      )
+    end
+
+    example "Fetch beneficiaries stats by gender", document: false do
+      account = create(:account)
+      create_list(:beneficiary, 2, account:, gender: "M")
+      create(:beneficiary, account:, gender: "F")
+
+      set_authorization_header_for(account)
+      do_request(group_by: [ "gender" ])
+
+      expect(response_status).to eq(200)
+      expect(response_body).to match_jsonapi_resource_collection_schema("stat", pagination: false)
+      results = json_response.fetch("data").map { |data| data.dig("attributes", "result") }
+
+      expect(results).to match_array(
+        [
+          {
+            "gender" => "M",
+            "value" => 2
+          },
+          {
+            "gender" => "F",
+            "value" => 1
+          }
+        ]
+      )
+    end
+
+    example "Handles invalid requests", document: false do
+      account = create(:account)
+
+      set_authorization_header_for(account)
+      do_request
+
+      expect(response_status).to eq(400)
     end
   end
 end

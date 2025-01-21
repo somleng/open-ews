@@ -31,10 +31,10 @@ RSpec::Matchers.define :match_jsonapi_resource_schema do |schema_name|
   end
 end
 
-RSpec::Matchers.define :match_jsonapi_resource_collection_schema do |schema_name|
+RSpec::Matchers.define :match_jsonapi_resource_collection_schema do |schema_name, options = {}|
   match do |response_body|
     @validator = JSONAPIResourceSchemaValidator.new(response_body, schema_name)
-    @validator.valid_collection?
+    @validator.valid_collection?(**options)
   end
 
   failure_message do
@@ -59,7 +59,7 @@ class APIResponseSchemaValidator
   end
 
   def valid_collection?(**options)
-    schema = options.fetch(:pagination, true) ? define_collection_schema : define_collection_schema_with_no_pagination
+    schema = options.fetch(:pagination, true) == false ? define_collection_schema_with_no_pagination : define_collection_schema
 
     validate_schema(schema)
   end
@@ -115,8 +115,15 @@ class JSONAPIResourceSchemaValidator < APIResponseSchemaValidator
     validate_schema(define_resource_schema)
   end
 
-  def valid_collection?
-    validate_schema(define_collection_schema)
+  def valid_collection?(**options)
+    return unless super
+
+    if options[:pagination] == false
+      json_response = JSON.parse(data)
+      raise "Collection have pagination links" if json_response["links"].present?
+    end
+
+    true
   end
 
   private
@@ -140,6 +147,16 @@ class JSONAPIResourceSchemaValidator < APIResponseSchemaValidator
       required(:links).schema do
         required(:prev).maybe(:str?)
         required(:next).maybe(:str?)
+      end
+    end
+  end
+
+  def define_collection_schema_with_no_pagination
+    __schema__ = schema
+
+    Dry::Schema.JSON do
+      required(:data).value(:array).each do
+        schema(__schema__)
       end
     end
   end

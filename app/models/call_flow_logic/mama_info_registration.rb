@@ -425,17 +425,22 @@ module CallFlowLogic
     end
 
     def persist_date_of_birth
+      contact = phone_call.contact
       date_of_birth = metadata(phone_call, :unconfirmed_date_of_birth)
       update_metadata!(phone_call, date_of_birth: date_of_birth)
-      update_metadata!(phone_call.contact, date_of_birth: date_of_birth)
-      phone_call.contact.metadata.delete("deregistered_at")
-      phone_call.contact.save!
+      update_metadata!(contact, date_of_birth: date_of_birth)
+      contact.metadata.delete("deregistered_at")
+      contact.date_of_birth = date_of_birth
+      contact.status = :active
+      contact.save!
     end
 
     def persist_deregistered
+      contact = phone_call.contact
       update_metadata!(phone_call.contact, deregistered_at: Time.current)
       phone_call.contact.metadata.delete("date_of_birth")
-      phone_call.contact.save!
+      contact.status = :disabled
+      contact.save!
     end
 
     def play(filename, response)

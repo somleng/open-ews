@@ -2,34 +2,34 @@ require "rails_helper"
 
 module V1
   RSpec.describe BeneficiaryRequestSchema, type: :request_schema do
-    it "validates the msisdn" do
+    it "validates the phone_number" do
       contact = create(:contact)
 
       expect(
-        validate_schema(input_params: { data: { attributes: { msisdn: nil } } })
-      ).not_to have_valid_field(:data, :attributes, :msisdn)
+        validate_schema(input_params: { data: { attributes: { phone_number: nil } } })
+      ).not_to have_valid_field(:data, :attributes, :phone_number)
 
       expect(
-        validate_schema(input_params: { data: { attributes: { msisdn: "+855 97 2345 6789" } }  })
-      ).not_to have_valid_field(:data, :attributes, :msisdn)
+        validate_schema(input_params: { data: { attributes: { phone_number: "+855 97 2345 6789" } }  })
+      ).not_to have_valid_field(:data, :attributes, :phone_number)
 
       expect(
-        validate_schema(input_params: { data: { attributes: { msisdn: "+855 97 2345 678" } }  })
-      ).to have_valid_field(:data, :attributes, :msisdn)
-
-      expect(
-        validate_schema(
-          input_params: { data: { attributes: { msisdn: contact.msisdn, iso_country_code: "KH" } }  },
-          options: { account: contact.account }
-        )
-      ).not_to have_valid_field(:data, :attributes, :msisdn)
+        validate_schema(input_params: { data: { attributes: { phone_number: "+855 97 2345 678" } }  })
+      ).to have_valid_field(:data, :attributes, :phone_number)
 
       expect(
         validate_schema(
-          input_params: { data: { attributes: { msisdn: "+855 97 2345 678", iso_country_code: "KH" } }  },
+          input_params: { data: { attributes: { phone_number: contact.msisdn, iso_country_code: "KH" } }  },
           options: { account: contact.account }
         )
-      ).to have_valid_field(:data, :attributes, :msisdn)
+      ).not_to have_valid_field(:data, :attributes, :phone_number)
+
+      expect(
+        validate_schema(
+          input_params: { data: { attributes: { phone_number: "+855 12 222 222", iso_country_code: "KH" } }  },
+          options: { account: contact.account }
+        )
+      ).to have_valid_field(:data, :attributes, :phone_number)
     end
 
     it "validates the iso_country_code" do
@@ -112,6 +112,14 @@ module V1
       expect(
         validate_schema(input_params: { data: { attributes: { address: { iso_region_code: "KH-1" } } } })
       ).to have_valid_field(:data, :attributes, :address, :iso_region_code)
+
+      expect(
+        validate_schema(input_params: { data: { attributes: { address: { iso_region_code: "KH-1", administrative_division_level_2_code: "0101", administrative_division_level_3_code: "010101" } } } })
+      ).to have_valid_field(:data, :attributes, :address, :administrative_division_level_2_code)
+
+      expect(
+        validate_schema(input_params: { data: { attributes: { address: { iso_region_code: "KH-1", administrative_division_level_3_code: "010101" } } } })
+      ).not_to have_valid_field(:data, :attributes, :address, :administrative_division_level_2_code)
     end
 
     it "validates the metadata fields attributes" do
@@ -126,12 +134,12 @@ module V1
       ).to have_valid_field(:data, :attributes, :metadata)
     end
 
-    it "handles postprocessing" do
+    it "handles post processing" do
       result = validate_schema(
         input_params: {
           data: {
             attributes: {
-              msisdn: "(855) 97 2345 678",
+              phone_number: "(855) 97 2345 678",
               iso_country_code: "kh"
             }
           }

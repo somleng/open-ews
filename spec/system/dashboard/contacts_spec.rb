@@ -27,56 +27,6 @@ RSpec.describe "Contacts", :aggregate_failures do
     end
   end
 
-  xit "can create a new contact" do
-    user = create(:user)
-    phone_number = generate(:somali_msisdn)
-
-    sign_in(user)
-    visit new_dashboard_contact_path
-
-    expect(page).to have_title("New Contact")
-
-    click_on("Create Contact")
-
-    expect(page).to have_content("Phone number must be filled")
-
-    fill_in("Phone number", with: phone_number)
-    fill_in_key_value_for(:metadata, with: { key: "name", value: "Bob Chann" })
-    click_on("Create Contact")
-
-    expect(page).to have_text("Contact was successfully created.")
-    expect(page).to have_content(phone_number)
-    expect(page).to have_content("Bob Chann")
-  end
-
-  xit "can update a contact", :js do
-    user = create(:user)
-    contact = create(
-      :contact,
-      account: user.account,
-      metadata: {
-        "location" => { "country" => "kh", "city" => "Phnom Penh" }
-      }
-    )
-
-    sign_in(user)
-    visit edit_dashboard_contact_path(contact)
-
-    expect(page).to have_title("Edit Contact")
-
-    updated_phone_number = generate(:somali_msisdn)
-    fill_in("Phone number", with: updated_phone_number)
-    remove_key_value_for(:metadata)
-    remove_key_value_for(:metadata)
-    add_key_value_for(:metadata)
-    fill_in_key_value_for(:metadata, with: { key: "gender", value: "female" })
-    click_on("Save")
-
-    expect(page).to have_content("Contact was successfully updated.")
-    expect(page).to have_content(updated_phone_number)
-    expect(page).to have_content("female")
-  end
-
   it "can delete a contact" do
     user = create(:user)
     contact = create(:contact, account: user.account)
@@ -92,7 +42,7 @@ RSpec.describe "Contacts", :aggregate_failures do
 
   it "can show a contact" do
     user = create(:user)
-    phone_number = generate(:somali_msisdn)
+    phone_number = generate(:phone_number)
     contact = create(
       :contact,
       account: user.account,

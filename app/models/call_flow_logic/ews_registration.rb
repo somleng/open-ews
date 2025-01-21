@@ -371,7 +371,9 @@ module CallFlowLogic
       contact.addresses.find_or_create_by!(
         iso_region_code: commune.province.iso3166_2,
         administrative_division_level_2_code: commune.district_id,
-        administrative_division_level_3_code: commune.id
+        administrative_division_level_2_name: commune.district.name_en,
+        administrative_division_level_3_code: commune.id,
+        administrative_division_level_3_name: commune.name_en,
       )
 
       commune_ids = contact.metadata.fetch("commune_ids", [])

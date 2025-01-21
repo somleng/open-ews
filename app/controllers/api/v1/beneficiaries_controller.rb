@@ -18,7 +18,10 @@ module API
           # TODO: can remove this once after we rename the model to beneficiary
           location: ->(resource) { api_v1_beneficiary_path(resource) }
         ) do |permitted_params|
-            CreateBeneficiaryWithAddress.new(permitted_params).call
+            CreateBeneficiaryWithAddress.new(
+              account: current_account,
+              **permitted_params
+            ).call
           end
       end
 

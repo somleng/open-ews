@@ -25,11 +25,11 @@ gem "aws-sdk-cloudwatch"
 gem "aws-sdk-rails"
 gem "aws-sdk-s3", require: false
 gem "aws-sdk-sqs"
+gem "aws-actionmailer-ses"
 gem "bitmask_attributes", github: "numerex/bitmask_attributes"
 gem "bootsnap", require: false
 gem "cocoon"
 gem "cssbundling-rails"
-gem "coverband"
 gem "countries"
 gem "cursor_paginator"
 gem "devise"

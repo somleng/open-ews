@@ -18,7 +18,6 @@ Rails.application.routes.draw do
 
   namespace :admin do
     mount(PgHero::Engine, at: "pghero")
-    mount Coverband::Reporters::Web.new, at: "coverage"
   end
 
   namespace "dashboard" do
@@ -69,6 +68,8 @@ Rails.application.routes.draw do
     end
 
     resources :beneficiaries, only: [ :index, :create, :show, :update ] do
+      get "stats" => "beneficiaries/stats#index", on: :collection
+
       resources :addresses, only: [ :index, :create, :show, :destroy ]
     end
   end

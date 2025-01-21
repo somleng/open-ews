@@ -1,5 +1,5 @@
 FactoryBot.define do
-  sequence :somali_msisdn, 252_662_345_678, &:to_s
+  sequence(:phone_number, "855972345678")
 
   sequence :twilio_request_params do
     params = Twilio::REST::Client.new.api.account.calls.method(:create).parameters.map do |param|
@@ -12,7 +12,7 @@ FactoryBot.define do
   sequence :twilio_remote_call_event_details do
     {
       CallSid: SecureRandom.uuid,
-      From: FactoryBot.generate(:somali_msisdn),
+      From: FactoryBot.generate(:phone_number),
       To: "345",
       CallStatus: "completed",
       Direction: "inbound",
@@ -78,7 +78,8 @@ FactoryBot.define do
 
   factory :contact, aliases: [ :beneficiary ] do
     account
-    msisdn { generate(:somali_msisdn) }
+    iso_country_code { "KH" }
+    msisdn { generate(:phone_number) }
 
     trait :disabled do
       status { "disabled" }
@@ -114,7 +115,7 @@ FactoryBot.define do
 
     trait :inbound do
       callout_participation { nil }
-      msisdn { generate(:somali_msisdn) }
+      msisdn { generate(:phone_number) }
       remote_direction { PhoneCall::TWILIO_DIRECTIONS[:inbound] }
     end
 
@@ -217,8 +218,17 @@ FactoryBot.define do
     association :audio_file, factory: :active_storage_attachment, filename: "test.mp3"
   end
 
-  factory :address, class: "BeneficiaryAddress" do
+  factory :beneficiary_address do
     beneficiary
     iso_region_code { "KH-1" }
+
+    trait :full do
+      administrative_division_level_2_code { "0102" }
+      administrative_division_level_2_name { "Mongkol Borei" }
+      administrative_division_level_3_code { "010201" }
+      administrative_division_level_3_name { "Banteay Neang" }
+      administrative_division_level_4_code { "01020101" }
+      administrative_division_level_4_name { "Ou Thum" }
+    end
   end
 end

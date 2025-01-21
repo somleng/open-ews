@@ -1,11 +1,11 @@
 require "rspec_api_documentation/dsl"
 
 RspecApiDocumentation.configure do |config|
-  config.api_name = "Somleng SCFM API Documentation"
+  config.api_name = "OpenEWS API Documentation"
   config.api_explanation = <<~HEREDOC
-    This is the API Documentation for Somleng Simple Call Flow Manager (Somleng SCFM).
+    This is the API Documentation for OpenEWS.
   HEREDOC
-  config.format = :slate
+  config.format = :open_ews_slate
   config.curl_headers_to_filter = [ "Host", "Cookie", "Content-Type" ]
 
   config.request_headers_to_include = []
@@ -13,7 +13,7 @@ RspecApiDocumentation.configure do |config|
   config.request_body_formatter = proc do |params|
     JSON.pretty_generate(params) if params.present?
   end
-  config.keep_source_order = false
+  config.keep_source_order = true
   config.disable_dsl_status!
 
   # https://github.com/zipmark/rspec_api_documentation/pull/458
@@ -23,15 +23,5 @@ RspecApiDocumentation.configure do |config|
     else
       response_body
     end
-  end
-
-  config.define_group :scfm_api do |conf|
-    conf.filter = :scfm_api
-    conf.docs_dir = Rails.root.join("doc/api")
-  end
-
-  config.define_group :open_ews_api do |conf|
-    conf.filter = :open_ews_api
-    conf.docs_dir = Rails.root.join("doc/open_ews_api")
   end
 end

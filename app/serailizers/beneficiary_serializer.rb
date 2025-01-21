@@ -1,8 +1,8 @@
 class BeneficiarySerializer < ResourceSerializer
-  attributes :msisdn, :language_code, :date_of_birth, :iso_country_code, :metadata
+  attributes :phone_number, :gender, :disability_status, :language_code, :date_of_birth, :iso_country_code, :metadata
   has_many :addresses, serializer: BeneficiaryAddressSerializer
 
-  attribute :gender do |object|
-    object.gender_value
+  attribute :phone_number do |object|
+    object.msisdn
   end
 end

@@ -242,6 +242,7 @@ module CallFlowLogic
       contact.addresses.find_or_create_by!(
         iso_region_code: district.province.iso3166,
         administrative_division_level_2_code: district.code,
+        administrative_division_level_2_name: district.name_en,
       )
 
       registered_districts = contact.metadata.fetch("registered_districts", [])
