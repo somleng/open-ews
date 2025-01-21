@@ -102,6 +102,7 @@ FactoryBot.define do
   factory :callout_participation do
     callout
     contact
+    beneficiary_phone_number { contact.msisdn }
   end
 
   factory :phone_call do

@@ -140,7 +140,7 @@ RSpec.resource "Beneficiaries"  do
       expect(response_status).to eq(201)
       expect(response_body).to match_jsonapi_resource_schema("beneficiary")
       expect(jsonapi_response_attributes).to include(
-        "phone_number" => "+85510999999",
+        "phone_number" => "85510999999",
         "language_code" => "khm",
         "gender" => "M",
         "date_of_birth" => "1990-01-01",
@@ -273,7 +273,7 @@ RSpec.resource "Beneficiaries"  do
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_schema("beneficiary")
       expect(jsonapi_response_attributes).to include(
-        "phone_number" => "+85510999002",
+        "phone_number" => "85510999002",
         "language_code" => "eng",
         "gender" => "F",
         "date_of_birth" => "1990-01-01",
@@ -436,6 +436,18 @@ RSpec.resource "Beneficiaries"  do
       do_request
 
       expect(response_status).to eq(400)
+    end
+  end
+
+  delete "/v1/beneficiaries/:id" do
+    example "Delete a beneficiary" do
+      beneficiary = create(:beneficiary)
+      create(:beneficiary_address, beneficiary:)
+
+      set_authorization_header_for(beneficiary.account)
+      do_request(id: beneficiary.id)
+
+      expect(response_status).to eq(204)
     end
   end
 end

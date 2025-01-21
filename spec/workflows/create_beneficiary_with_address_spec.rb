@@ -19,7 +19,7 @@ RSpec.describe CreateBeneficiaryWithAddress do
     ).call
 
     expect(contact).to have_attributes(
-      msisdn: "+85510999999",
+      msisdn: "85510999999",
       language_code: "km",
       gender: "M",
       date_of_birth: Date.parse("1990-01-01"),
@@ -42,7 +42,7 @@ RSpec.describe CreateBeneficiaryWithAddress do
     ).call
 
     expect(contact).to have_attributes(
-      msisdn: "+85510999999",
+      msisdn: "85510999999",
       iso_country_code: "KH"
     )
   end
