@@ -15,7 +15,7 @@ module API
           with: ::V1::BroadcastPopulationRequestSchema,
           location: ->(resource) { api_v1_broadcast_population_path(broadcast, resource) }
         ) do |permitted_params|
-            broadcast_populations_scope.create!(permitted_params)
+            broadcast_populations_scope.create!(account: current_account, **permitted_params)
           end
       end
 

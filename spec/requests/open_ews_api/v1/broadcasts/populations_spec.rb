@@ -45,7 +45,7 @@ RSpec.resource "Broadcast's Populations"  do
             parameters: {
               gender: "M",
               address: {
-                "administrative_division_level_3_code.any": ["020101", "020102"]
+                "administrative_division_level_3_code.any": [ "020101", "020102" ]
               }
             }
           }
@@ -58,7 +58,7 @@ RSpec.resource "Broadcast's Populations"  do
         "parameters" => {
           "gender" => "M",
           "address" => {
-            "administrative_division_level_3_code.any" => ["020101", "020102"]
+            "administrative_division_level_3_code.any" => [ "020101", "020102" ]
           }
         },
       )

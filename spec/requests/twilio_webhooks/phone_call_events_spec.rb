@@ -66,7 +66,6 @@ RSpec.describe "Phone Call Events" do
     expect(response.code).to eq("201")
     created_event = RemotePhoneCallEvent.last!
     expect(created_event).to have_attributes(
-      phone_call:,
       call_duration: 87,
       phone_call: have_attributes(
         status: "completed",
@@ -102,7 +101,7 @@ RSpec.describe "Phone Call Events" do
       CallStatus: options.fetch(:call_status) { "ringing" },
       AccountSid: options.fetch(:account_sid),
       CallDuration: options.fetch(:call_duration) { nil },
-      ApiVersion: options.fetch(:api_version) { "2010-04-01" },
+      ApiVersion: options.fetch(:api_version) { "2010-04-01" }
     }.compact
   end
 
