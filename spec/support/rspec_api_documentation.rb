@@ -20,6 +20,7 @@ RspecApiDocumentation.configure do |config|
     `https://api.open-ews.org/v1/`
 
     Requests should include the following components:
+
     1. **HTTP Method:** The API supports standard methods such as `GET`, `POST`, `PATCH`, and `DELETE`. Use the appropriate method based on the endpoint requirements.
     2. **Headers:** Ensure the request includes the `Authorization` header with a valid API token and the `Content-Type` header set to `application/vnd.api+json` to comply with JSON:API standards.
     3. **Endpoint URL:** Combine the base URL with the specific endpoint path to form the complete request URL.
@@ -30,7 +31,9 @@ RspecApiDocumentation.configure do |config|
     POST https://api.open-ews.org/v1/beneficiaries
     Authorization: Bearer YOUR_API_TOKEN
     Content-Type: application/vnd.api+json
+    ```
 
+    ```json
     {
       "data": {
         "type": "beneficiary",
@@ -54,9 +57,7 @@ RspecApiDocumentation.configure do |config|
 
     ### Example Authorization Header
 
-    ```http
-    Authorization: Bearer YOUR_API_TOKEN
-    ```
+    `Authorization: Bearer YOUR_API_TOKEN`
   HEREDOC
 
   config.format = :open_ews_slate

@@ -352,6 +352,7 @@ RSpec.resource "Beneficiaries"  do
         ### Functionality
 
         This endpoint returns aggregated statistics about the beneficiaries in your system. Common use cases include:
+
         - Counting the total number of beneficiaries.
         - Grouping beneficiaries by attributes such as location, gender, or address attributes.
         - Identifying trends or patterns in beneficiary data.
@@ -359,6 +360,7 @@ RSpec.resource "Beneficiaries"  do
         ### Parameters
 
         The endpoint may accept query parameters to filter or group the data. Common parameters include:
+
         - **Filters:** Specify conditions for narrowing down the results. For example, you might filter beneficiaries by a specific region or status.
         - **Group By:** Group the statistics by a particular attribute such as `gender`, `address`, or disability status.
       HEREDOC
