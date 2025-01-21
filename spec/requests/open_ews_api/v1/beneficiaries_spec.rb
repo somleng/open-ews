@@ -345,8 +345,24 @@ RSpec.resource "Beneficiaries"  do
       required: true
     )
 
-
     example "Fetch beneficiaries stats" do
+      explanation <<~HEREDOC
+        This endpoint provides statistical insights into the beneficiaries managed within the OpenEWS system. This endpoint is particularly useful for generating reports, analyzing beneficiary data, and monitoring the scope of your early warning system.
+
+        ### Functionality
+
+        This endpoint returns aggregated statistics about the beneficiaries in your system. Common use cases include:
+        - Counting the total number of beneficiaries.
+        - Grouping beneficiaries by attributes such as location, gender, or address attributes.
+        - Identifying trends or patterns in beneficiary data.
+
+        ### Parameters
+
+        The endpoint may accept query parameters to filter or group the data. Common parameters include:
+        - **Filters:** Specify conditions for narrowing down the results. For example, you might filter beneficiaries by a specific region or status.
+        - **Group By:** Group the statistics by a particular attribute such as `gender`, `address`, or disability status.
+      HEREDOC
+
       account = create(:account)
       male_beneficiary = create(:beneficiary, account:, gender: "M")
       female_beneficiary = create(:beneficiary, account:, gender: "F")
