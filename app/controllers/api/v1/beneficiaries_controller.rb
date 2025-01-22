@@ -2,8 +2,12 @@ module API
   module V1
     class BeneficiariesController < BaseController
       def index
-        beneficiaries = apply_filters(beneficiaries_scope, with: BeneficiaryFilter)
-        respond_with_resource(beneficiaries)
+        validate_request_schema(
+          with: BeneficiaryFilter,
+          input_params: request.query_parameters
+        ) do |permitted_params|
+            FilterScopeQuery.new(beneficiaries_scope, permitted_params).apply
+        end
       end
 
       def show

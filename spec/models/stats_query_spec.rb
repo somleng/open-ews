@@ -1,11 +1,11 @@
 require "rails_helper"
 
-RSpec.describe AggregateDataQuery, type: :model do
+RSpec.describe StatsQuery, type: :model do
   it "return results with a simple group by field" do
     create_list(:beneficiary, 2, gender: "M")
     create_list(:beneficiary, 3, gender: "F")
 
-    result = AggregateDataQuery.new(
+    result = StatsQuery.new(
       group_by_fields: [
         BeneficiaryField.find("gender")
       ],
@@ -33,7 +33,7 @@ RSpec.describe AggregateDataQuery, type: :model do
         administrative_division_level_2_code: "1202"
       )
 
-    result = AggregateDataQuery.new(
+    result = StatsQuery.new(
       group_by_fields: [
         BeneficiaryField.find("iso_country_code"),
         BeneficiaryField.find("address.iso_region_code"),
@@ -70,7 +70,7 @@ RSpec.describe AggregateDataQuery, type: :model do
         administrative_division_level_2_code: "0102"
       )
 
-    result = AggregateDataQuery.new(
+    result = StatsQuery.new(
       filter_fields: {
         BeneficiaryField.find("address.iso_region_code") => "KH-12"
       },
@@ -88,7 +88,7 @@ RSpec.describe AggregateDataQuery, type: :model do
   end
 
   it "raise an error if the result is too large" do
-    stub_const("AggregateDataQuery::MAX_RESULTS", 2)
+    stub_const("StatsQuery::MAX_RESULTS", 2)
 
     beneficiary = create(:beneficiary, iso_country_code: "KH")
     create(
@@ -113,13 +113,13 @@ RSpec.describe AggregateDataQuery, type: :model do
     )
 
     expect {
-      AggregateDataQuery.new(
+      StatsQuery.new(
         group_by_fields: [
           BeneficiaryField.find("iso_country_code"),
           BeneficiaryField.find("address.iso_region_code"),
           BeneficiaryField.find("address.administrative_division_level_2_code")
         ],
       ).apply(Contact.all)
-    }.to raise_error(AggregateDataQuery::TooManyResultsError)
+    }.to raise_error(StatsQuery::TooManyResultsError)
   end
 end

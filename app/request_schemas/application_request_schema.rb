@@ -6,6 +6,10 @@ class ApplicationRequestSchema < Dry::Validation::Contract
 
   delegate :success?, :errors, to: :result
 
+  register_macro(:phone_number_format) do
+    key.failure(text: "is invalid") if key? && !Phony.plausible?(value)
+  end
+
   module Types
     include Dry.Types()
 
@@ -16,11 +20,6 @@ class ApplicationRequestSchema < Dry::Validation::Contract
     UpcaseString = String.constructor do |string|
       string.upcase if string.present?
     end
-  end
-
-
-  register_macro(:phone_number_format) do
-    key.failure(text: "is invalid") if key? && !Phony.plausible?(value)
   end
 
   def initialize(input_params:, options: {})
