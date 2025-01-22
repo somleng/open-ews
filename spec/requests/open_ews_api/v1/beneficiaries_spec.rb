@@ -3,10 +3,9 @@ require "rails_helper"
 RSpec.resource "Beneficiaries"  do
   get "/v1/beneficiaries" do
     with_options scope: :filter do
-      parameter(
-        :status, "Must be one of #{Contact.status.values.map { |t| "`#{t}`" }.join(", ")}.",
-        required: false
-      )
+      BeneficiaryField.all.each do |field|
+        parameter(field.name, field.description, required: false)
+      end
     end
 
     example "List all active beneficiaries" do
@@ -284,59 +283,18 @@ RSpec.resource "Beneficiaries"  do
 
   get "/v1/beneficiaries/stats" do
     with_options scope: :filter do
-      parameter(
-        :iso_country_code, "The [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the beneficiary.",
-        required: false
-      )
-      parameter(
-        :language_code, "The [ISO ISO 639-2](https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes) alpha-3 language code of the beneficiary.",
-        required: false
-      )
-      parameter(
-        :gender, "Must be one of `M` or `F`.",
-        required: false
-      )
-      parameter(
-        :disability_status, "If supplied, must be one of #{Contact.disability_status.values.map { |t| "`#{t}`" }.join(", ")}.",
-        required: false
-      )
-      parameter(
-        :status, "Must be one of `active` or `disabled`.",
-        required: false,
-        method: :_disabled # NOTE: It seems to be a bug. It's always adding `status: nil` in the `filter` params.
-      )
-      parameter(
-        :date_of_birth, "Date of birth in `YYYY-MM-DD` format.",
-        required: false
-      )
-      parameter(
-        :"address.iso_region_code", "The [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) region code of the address",
-        required: false
-      )
-      parameter(
-      :"address.administrative_division_level_2_code", "The second-level administrative subdivision code of the address (e.g. district code)",
-        required: false
-      )
-      parameter(
-        :"address.administrative_division_level_2_name", "The second-level administrative subdivision name of the address (e.g. district name)",
-        required: false
-      )
-      parameter(
-        :"address.administrative_division_level_3_code", "The third-level administrative subdivision code of the address (e.g. commune code)",
-        required: false
-      )
-      parameter(
-        :"address.administrative_division_level_3_name", "The third-level administrative subdivision name of the address (e.g. commune name)",
-        required: false
-      )
-      parameter(
-        :"address.administrative_division_level_4_code", "The forth-level administrative subdivision code of the address (e.g. village code)",
-        required: false
-      )
-      parameter(
-        :"address.administrative_division_level_4_name", "The forth-level administrative subdivision name of the address (e.g. village name)",
-        required: false
-      )
+      BeneficiaryField.all.each do |field|
+        if field.name == "status"
+          parameter(
+            field.name.to_sym,
+            field.description,
+            required: false,
+            method: :_disabled # NOTE: It seems to be a bug. It's always adding `status: nil` in the `filter` params.
+          )
+        else
+          parameter(field.name.to_sym, field.description, required: false)
+        end
+      end
     end
 
     parameter(
