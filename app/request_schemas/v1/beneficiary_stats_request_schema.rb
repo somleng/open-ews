@@ -37,9 +37,7 @@ module V1
     def output
       result = super
 
-      result[:filter_fields] = result.fetch(:filter, {}).each_with_object({}) do |(filter, value), filters|
-        filters[BeneficiaryField.find(filter.to_s)] = value
-      end
+      result[:filter_fields] = BeneficiaryFilter.new(input_params: result).output
 
       result[:group_by_fields] = result[:group_by].map do |group|
         BeneficiaryField.find(group)

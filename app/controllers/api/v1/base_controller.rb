@@ -46,17 +46,6 @@ module API
         end
       end
 
-      def apply_filters(resources_scope, with:, **options)
-        schema_options = options.delete(:schema_options) || {}
-        input_params = request.query_parameters
-        schema = with.new(input_params:, options: schema_options)
-        if schema.success?
-          FilterScopeQuery.new(resources_scope, schema.output).apply
-        else
-          respond_with_errors(schema, **options)
-        end
-      end
-
       def respond_with_errors(object, **)
         respond_with(object, responder: InvalidRequestSchemaResponder, **)
       end
