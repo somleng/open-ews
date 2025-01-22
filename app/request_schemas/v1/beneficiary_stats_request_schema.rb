@@ -14,8 +14,7 @@ module V1
       "address.administrative_division_level_4_name"
     ].freeze
 
-    params do
-      optional(:filter).hash(Filters::BeneficiaryFilter)
+    params(BeneficiaryFilter.schema) do
       required(:group_by).value(array[:string])
     end
 
