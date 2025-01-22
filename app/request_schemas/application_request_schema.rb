@@ -6,19 +6,6 @@ class ApplicationRequestSchema < Dry::Validation::Contract
 
   delegate :success?, :errors, to: :result
 
-  module Types
-    include Dry.Types()
-
-    Number = String.constructor do |string|
-      string.gsub(/\D/, "") if string.present?
-    end
-
-    UpcaseString = String.constructor do |string|
-      string.upcase if string.present?
-    end
-  end
-
-
   register_macro(:phone_number_format) do
     key.failure(text: "is invalid") if key? && !Phony.plausible?(value)
   end

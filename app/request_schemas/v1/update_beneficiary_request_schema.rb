@@ -5,8 +5,8 @@ module V1
         required(:id).filled(:integer)
         required(:type).filled(:str?, eql?: "beneficiary")
         required(:attributes).value(:hash).schema do
-          optional(:phone_number).filled(Types::Number)
-          optional(:iso_country_code).filled(Types::UpcaseString, included_in?: Contact.iso_country_code.values)
+          optional(:phone_number).filled(SchemaTypes::Number)
+          optional(:iso_country_code).filled(SchemaTypes::UpcaseString, included_in?: Contact.iso_country_code.values)
           optional(:disability_status).maybe(:string, included_in?: Contact.disability_status.values)
           optional(:language_code).maybe(:string)
           optional(:date_of_birth).maybe(:date)
