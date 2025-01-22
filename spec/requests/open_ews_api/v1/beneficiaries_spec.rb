@@ -4,7 +4,7 @@ RSpec.resource "Beneficiaries"  do
   get "/v1/beneficiaries" do
     with_options scope: :filter do
       BeneficiaryField.all.each do |field|
-        parameter(field.name, field.description, required: false)
+        parameter(field.name, field.description, required: false, method: :_disabled)
       end
     end
 
@@ -284,16 +284,7 @@ RSpec.resource "Beneficiaries"  do
   get "/v1/beneficiaries/stats" do
     with_options scope: :filter do
       BeneficiaryField.all.each do |field|
-        if field.name == "status"
-          parameter(
-            field.name.to_sym,
-            field.description,
-            required: false,
-            method: :_disabled # NOTE: It seems to be a bug. It's always adding `status: nil` in the `filter` params.
-          )
-        else
-          parameter(field.name.to_sym, field.description, required: false)
-        end
+        parameter(field.name, field.description, required: false, method: :_disabled)
       end
     end
 
