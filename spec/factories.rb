@@ -79,7 +79,7 @@ FactoryBot.define do
   factory :contact, aliases: [ :beneficiary ] do
     account
     iso_country_code { "KH" }
-    msisdn { generate(:phone_number) }
+    phone_number { generate(:phone_number) }
 
     trait :disabled do
       status { "disabled" }
@@ -102,7 +102,6 @@ FactoryBot.define do
   factory :callout_participation do
     callout
     contact
-    beneficiary_phone_number { contact.msisdn }
   end
 
   factory :phone_call do
@@ -116,7 +115,7 @@ FactoryBot.define do
 
     trait :inbound do
       callout_participation { nil }
-      msisdn { generate(:phone_number) }
+      phone_number { generate(:phone_number) }
       remote_direction { PhoneCall::TWILIO_DIRECTIONS[:inbound] }
     end
 
@@ -150,7 +149,7 @@ FactoryBot.define do
       if evaluator.build_phone_call
         remote_phone_call_event.phone_call ||= create(
           :phone_call,
-          msisdn: remote_phone_call_event.details[:From],
+          phone_number: remote_phone_call_event.details[:From],
           remote_call_id: remote_phone_call_event.remote_call_id,
           remote_direction: remote_phone_call_event.remote_direction
         )

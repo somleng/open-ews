@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_21_110447) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_23_085352) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -98,16 +98,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_21_110447) do
     t.bigint "callout_id", null: false
     t.bigint "contact_id"
     t.bigint "callout_population_id"
-    t.string "msisdn", null: false
     t.string "call_flow_logic", null: false
     t.jsonb "metadata", default: {}, null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.boolean "answered", default: false, null: false
     t.integer "phone_calls_count", default: 0, null: false
-    t.string "beneficiary_phone_number", null: false
+    t.string "phone_number", null: false
     t.index ["callout_id", "contact_id"], name: "index_callout_participations_on_callout_id_and_contact_id", unique: true
-    t.index ["callout_id", "msisdn"], name: "index_callout_participations_on_callout_id_and_msisdn", unique: true
     t.index ["callout_id"], name: "index_callout_participations_on_callout_id"
     t.index ["callout_population_id"], name: "index_callout_participations_on_callout_population_id"
     t.index ["contact_id"], name: "index_callout_participations_on_contact_id"
@@ -129,7 +127,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_21_110447) do
   end
 
   create_table "contacts", force: :cascade do |t|
-    t.string "msisdn", null: false
+    t.string "phone_number", null: false
     t.jsonb "metadata", default: {}, null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -145,7 +143,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_21_110447) do
     t.index ["account_id", "gender"], name: "index_contacts_on_account_id_and_gender"
     t.index ["account_id", "iso_country_code"], name: "index_contacts_on_account_id_and_iso_country_code"
     t.index ["account_id", "language_code"], name: "index_contacts_on_account_id_and_language_code"
-    t.index ["account_id", "msisdn"], name: "index_contacts_on_account_id_and_msisdn", unique: true
+    t.index ["account_id", "phone_number"], name: "index_contacts_on_account_id_and_phone_number", unique: true
     t.index ["account_id", "status"], name: "index_contacts_on_account_id_and_status", where: "((status)::text = 'active'::text)"
     t.index ["account_id"], name: "index_contacts_on_account_id"
     t.index ["created_at"], name: "index_contacts_on_created_at"
@@ -215,7 +213,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_21_110447) do
     t.bigint "callout_participation_id"
     t.bigint "contact_id"
     t.string "status", null: false
-    t.string "msisdn", null: false
+    t.string "phone_number", null: false
     t.string "remote_call_id"
     t.string "remote_status"
     t.string "remote_direction"
@@ -238,7 +236,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_21_110447) do
     t.index ["callout_participation_id"], name: "index_phone_calls_on_callout_participation_id"
     t.index ["contact_id"], name: "index_phone_calls_on_contact_id"
     t.index ["created_at"], name: "index_phone_calls_on_created_at"
-    t.index ["msisdn"], name: "index_phone_calls_on_msisdn"
+    t.index ["phone_number"], name: "index_phone_calls_on_phone_number"
     t.index ["remote_call_id"], name: "index_phone_calls_on_remote_call_id", unique: true
     t.index ["remote_status_fetch_queued_at"], name: "index_phone_calls_on_remote_status_fetch_queued_at"
     t.index ["remotely_queued_at"], name: "index_phone_calls_on_remotely_queued_at"

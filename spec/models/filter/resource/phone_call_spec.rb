@@ -44,7 +44,7 @@ module Filter
 
           results = filter.resources
 
-          expect(results).to match_array([phone_call])
+          expect(results).to match_array([ phone_call ])
         end
 
         it "filters by gt, gteq, lt, lteq" do
@@ -55,7 +55,7 @@ module Filter
 
           results = filter.resources
 
-          expect(results).to match_array([phone_call])
+          expect(results).to match_array([ phone_call ])
         end
 
         it "filters by callout_id" do
@@ -71,7 +71,7 @@ module Filter
 
           results = filter.resources
 
-          expect(results).to match_array([phone_call])
+          expect(results).to match_array([ phone_call ])
         end
 
         it "filters by callout_participation_id" do
@@ -82,7 +82,7 @@ module Filter
 
           results = filter.resources
 
-          expect(results).to match_array([phone_call])
+          expect(results).to match_array([ phone_call ])
         end
 
         it "filters by contact_id" do
@@ -93,7 +93,7 @@ module Filter
 
           results = filter.resources
 
-          expect(results).to match_array([phone_call])
+          expect(results).to match_array([ phone_call ])
         end
       end
 

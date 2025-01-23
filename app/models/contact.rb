@@ -3,7 +3,7 @@ class Contact < ApplicationRecord
 
   include MetadataHelpers
 
-  attribute :msisdn, :phone_number
+  attribute :phone_number, :phone_number
 
   enumerize :status, in: [ :active, :disabled ], scope: :shallow
   enumerize :gender, in: [ "M", "F" ]
@@ -18,7 +18,7 @@ class Contact < ApplicationRecord
   has_many :phone_calls
   has_many :remote_phone_call_events, through: :phone_calls
 
-  validates :msisdn, presence: true
+  validates :phone_number, presence: true
 
   delegate :call_flow_logic,
            to: :account,
@@ -26,5 +26,12 @@ class Contact < ApplicationRecord
 
   def self.jsonapi_serializer_class
     BeneficiarySerializer
+  end
+
+  # NOTE: This is for backward compatibility until we moved to the new API
+  def as_json(*)
+    result = super
+    result["msisdn"] = result["phone_number"]
+    result
   end
 end

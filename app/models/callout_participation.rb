@@ -6,7 +6,7 @@ class CalloutParticipation < ApplicationRecord
     "failed"
   ].freeze
 
-  attribute :msisdn, :phone_number
+  attribute :phone_number, :phone_number
 
   belongs_to :callout
   belongs_to :contact
@@ -20,14 +20,13 @@ class CalloutParticipation < ApplicationRecord
   has_many :remote_phone_call_events, through: :phone_calls
 
   delegate :call_flow_logic, to: :callout, prefix: true, allow_nil: true
-  delegate :msisdn, to: :contact, prefix: true, allow_nil: true
   delegate :account, to: :callout
 
-  before_validation :set_msisdn_from_contact,
+  before_validation :set_phone_number_from_contact,
                     :set_call_flow_logic,
                     on: :create
 
-  validates :msisdn, presence: true
+  validates :phone_number, presence: true
 
   def self.still_trying(max_phone_calls)
     where(answered: false).where(arel_table[:phone_calls_count].lt(max_phone_calls))
@@ -35,8 +34,8 @@ class CalloutParticipation < ApplicationRecord
 
   private
 
-  def set_msisdn_from_contact
-    self.msisdn ||= contact_msisdn
+  def set_phone_number_from_contact
+    self.phone_number ||= contact&.phone_number
   end
 
   def set_call_flow_logic

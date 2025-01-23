@@ -14,7 +14,7 @@ RSpec.describe QueueRemoteCallJob do
         :phone_call,
         :queued,
         account: account,
-        msisdn: "855715100860"
+        phone_number: "855715100860"
       )
       stub_twilio_request(
         response: {

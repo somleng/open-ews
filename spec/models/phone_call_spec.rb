@@ -17,7 +17,7 @@ RSpec.describe PhoneCall do
   end
 
   describe "validations" do
-    it { is_expected.to validate_presence_of(:msisdn) }
+    it { is_expected.to validate_presence_of(:phone_number) }
 
     it "allows multiple phone calls for the one callout participation" do
       account = create(:account)
@@ -41,7 +41,7 @@ RSpec.describe PhoneCall do
   it "sets defaults" do
     phone_call = create(:phone_call)
 
-    expect(phone_call.msisdn).to be_present
+    expect(phone_call.phone_number).to be_present
   end
 
   it "sets defaults for an outbound call" do
@@ -50,7 +50,7 @@ RSpec.describe PhoneCall do
     phone_call.valid?
 
     expect(phone_call.contact).to eq(phone_call.callout_participation.contact)
-    expect(phone_call.msisdn).to eq(phone_call.callout_participation.msisdn)
+    expect(phone_call.phone_number).to eq(phone_call.callout_participation.phone_number)
   end
 
   it "can destroy a new phone call" do

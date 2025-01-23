@@ -25,7 +25,7 @@ class StartRapidproFlow < ApplicationWorkflow
 
     response = rapidpro_client.start_flow(
       flow: flow_id,
-      urns: ["tel:#{phone_call.msisdn}"]
+      urns: [ "tel:#{phone_call.phone_number}" ]
     )
 
     phone_call.metadata["rapidpro"]["start_flow_response_status"] = response.status

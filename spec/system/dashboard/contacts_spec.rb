@@ -46,7 +46,7 @@ RSpec.describe "Contacts", :aggregate_failures do
     contact = create(
       :contact,
       account: user.account,
-      msisdn: phone_number,
+      phone_number:,
       metadata: { "location" => { "country" => "Cambodia" } }
     )
 

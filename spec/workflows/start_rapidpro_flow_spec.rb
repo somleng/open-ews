@@ -13,7 +13,7 @@ RSpec.describe StartRapidproFlow do
     workflow.call
 
     expect(workflow.rapidpro_client).to have_received(:start_flow).with(
-      flow: flow_id, urns: ["tel:#{workflow.phone_call.msisdn}"]
+      flow: flow_id, urns: [ "tel:#{workflow.phone_call.phone_number}" ]
     )
 
     expect(

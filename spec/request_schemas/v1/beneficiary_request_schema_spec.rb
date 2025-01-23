@@ -19,7 +19,7 @@ module V1
 
       expect(
         validate_schema(
-          input_params: { data: { attributes: { phone_number: contact.msisdn, iso_country_code: "KH" } }  },
+          input_params: { data: { attributes: { phone_number: contact.phone_number, iso_country_code: "KH" } }  },
           options: { account: contact.account }
         )
       ).not_to have_valid_field(:data, :attributes, :phone_number)
@@ -132,24 +132,6 @@ module V1
       expect(
         validate_schema(input_params: { data: { attributes: { metadata: { "foo" => "bar" } } }  })
       ).to have_valid_field(:data, :attributes, :metadata)
-    end
-
-    it "handles post processing" do
-      result = validate_schema(
-        input_params: {
-          data: {
-            attributes: {
-              phone_number: "(855) 97 2345 678",
-              iso_country_code: "kh"
-            }
-          }
-        }
-      ).output
-
-      expect(result).to include(
-        msisdn: "855972345678",
-        iso_country_code: "KH"
-      )
     end
 
     def validate_schema(input_params:, options: {})

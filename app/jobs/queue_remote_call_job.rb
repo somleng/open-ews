@@ -7,7 +7,7 @@ class QueueRemoteCallJob < ApplicationJob
     begin
       somleng_client = Somleng::Client.new(provider: phone_call.platform_provider)
       response = somleng_client.api.account.calls.create(
-        to: phone_call.msisdn,
+        to: phone_call.phone_number,
         from: phone_call.account.from_phone_number,
         url: twilio_webhooks_phone_call_events_url(protocol: :https),
         status_callback: twilio_webhooks_phone_call_events_url(protocol: :https)
