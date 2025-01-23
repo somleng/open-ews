@@ -32,6 +32,13 @@ class CalloutParticipation < ApplicationRecord
     where(answered: false).where(arel_table[:phone_calls_count].lt(max_phone_calls))
   end
 
+  # NOTE: This is for backward compatibility until we moved to the new API
+  def as_json(*)
+    result = super
+    result["msisdn"] = result.delete("phone_number")
+    result
+  end
+
   private
 
   def set_phone_number_from_contact

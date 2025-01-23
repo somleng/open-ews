@@ -140,7 +140,7 @@ class PhoneCall < ApplicationRecord
   # NOTE: This is for backward compatibility until we moved to the new API
   def as_json(*)
     result = super
-    result["msisdn"] = result["phone_number"]
+    result["msisdn"] = result.delete("phone_number")
     result
   end
 
