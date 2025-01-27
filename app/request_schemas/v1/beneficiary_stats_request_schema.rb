@@ -19,6 +19,8 @@ module V1
       required(:group_by).value(array[:string])
     end
 
+    rule(:filter).validate(contract: BeneficiaryFilter)
+
     rule(:group_by) do
       next key.failure("is invalid") unless value.all? { |group| group.in?(GROUPS) }
 
