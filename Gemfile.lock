@@ -641,6 +641,7 @@ DEPENDENCIES
   responders
   rspec-rails
   rspec_api_documentation!
+  rubocop
   rubocop-performance
   rubocop-rails-omakase
   rubocop-rspec
