@@ -67,9 +67,8 @@ Rails.application.routes.draw do
       resources :populations, only: [ :index, :show, :create ]
     end
 
-    resources :beneficiaries, only: [ :index, :create, :show, :update ] do
+    resources :beneficiaries, only: [ :index, :create, :show, :update, :destroy ] do
       get "stats" => "beneficiaries/stats#index", on: :collection
-
       resources :addresses, only: [ :index, :create, :show, :destroy ]
     end
   end

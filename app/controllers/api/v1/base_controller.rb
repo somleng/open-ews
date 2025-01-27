@@ -7,7 +7,7 @@ module API
       before_action :verify_requested_format!
       before_action :doorkeeper_authorize!
 
-      rescue_from AggregateDataQuery::TooManyResultsError do
+      rescue_from StatsQuery::TooManyResultsError do
         render json: { "errors": [ { "title":  "Too many results" } ] }, status: :bad_request
       end
 
@@ -48,14 +48,6 @@ module API
 
       def respond_with_errors(object, **)
         respond_with(object, responder: InvalidRequestSchemaResponder, **)
-      end
-
-      def apply_filters(resources_scope, with: nil)
-        filter_class = with || "#{resources_scope.name}Filter".constantize
-        filter_class.new(
-          resources_scope:,
-          input_params: request.params
-        ).apply
       end
     end
   end

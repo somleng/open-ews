@@ -3,10 +3,9 @@ require "rails_helper"
 RSpec.resource "Beneficiaries"  do
   get "/v1/beneficiaries" do
     with_options scope: :filter do
-      parameter(
-        :status, "Must be one of #{Contact.status.values.map { |t| "`#{t}`" }.join(", ")}.",
-        required: false
-      )
+      BeneficiaryField.all.each do |field|
+        parameter(field.name, field.description, required: false, method: :_disabled)
+      end
     end
 
     example "List all active beneficiaries" do
@@ -140,7 +139,7 @@ RSpec.resource "Beneficiaries"  do
       expect(response_status).to eq(201)
       expect(response_body).to match_jsonapi_resource_schema("beneficiary")
       expect(jsonapi_response_attributes).to include(
-        "phone_number" => "+85510999999",
+        "phone_number" => "85510999999",
         "language_code" => "khm",
         "gender" => "M",
         "date_of_birth" => "1990-01-01",
@@ -273,7 +272,7 @@ RSpec.resource "Beneficiaries"  do
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_schema("beneficiary")
       expect(jsonapi_response_attributes).to include(
-        "phone_number" => "+85510999002",
+        "phone_number" => "85510999002",
         "language_code" => "eng",
         "gender" => "F",
         "date_of_birth" => "1990-01-01",
@@ -284,59 +283,9 @@ RSpec.resource "Beneficiaries"  do
 
   get "/v1/beneficiaries/stats" do
     with_options scope: :filter do
-      parameter(
-        :iso_country_code, "The [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the beneficiary.",
-        required: false
-      )
-      parameter(
-        :language_code, "The [ISO ISO 639-2](https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes) alpha-3 language code of the beneficiary.",
-        required: false
-      )
-      parameter(
-        :gender, "Must be one of `M` or `F`.",
-        required: false
-      )
-      parameter(
-        :disability_status, "If supplied, must be one of #{Contact.disability_status.values.map { |t| "`#{t}`" }.join(", ")}.",
-        required: false
-      )
-      parameter(
-        :status, "Must be one of `active` or `disabled`.",
-        required: false,
-        method: :_disabled # NOTE: It seems to be a bug. It's always adding `status: nil` in the `filter` params.
-      )
-      parameter(
-        :date_of_birth, "Date of birth in `YYYY-MM-DD` format.",
-        required: false
-      )
-      parameter(
-        :"address.iso_region_code", "The [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) region code of the address",
-        required: false
-      )
-      parameter(
-      :"address.administrative_division_level_2_code", "The second-level administrative subdivision code of the address (e.g. district code)",
-        required: false
-      )
-      parameter(
-        :"address.administrative_division_level_2_name", "The second-level administrative subdivision name of the address (e.g. district name)",
-        required: false
-      )
-      parameter(
-        :"address.administrative_division_level_3_code", "The third-level administrative subdivision code of the address (e.g. commune code)",
-        required: false
-      )
-      parameter(
-        :"address.administrative_division_level_3_name", "The third-level administrative subdivision name of the address (e.g. commune name)",
-        required: false
-      )
-      parameter(
-        :"address.administrative_division_level_4_code", "The forth-level administrative subdivision code of the address (e.g. village code)",
-        required: false
-      )
-      parameter(
-        :"address.administrative_division_level_4_name", "The forth-level administrative subdivision name of the address (e.g. village name)",
-        required: false
-      )
+      BeneficiaryField.all.each do |field|
+        parameter(field.name, field.description, required: false, method: :_disabled)
+      end
     end
 
     parameter(
@@ -345,8 +294,26 @@ RSpec.resource "Beneficiaries"  do
       required: true
     )
 
-
     example "Fetch beneficiaries stats" do
+      explanation <<~HEREDOC
+        This endpoint provides statistical insights into the beneficiaries managed within the OpenEWS system. This endpoint is particularly useful for generating reports, analyzing beneficiary data, and monitoring the scope of your early warning system.
+
+        ### Functionality
+
+        This endpoint returns aggregated statistics about the beneficiaries in your system. Common use cases include:
+
+        - Counting the total number of beneficiaries.
+        - Grouping beneficiaries by attributes such as location, gender, or address attributes.
+        - Identifying trends or patterns in beneficiary data.
+
+        ### Parameters
+
+        The endpoint may accept query parameters to filter or group the data. Common parameters include:
+
+        - **Filters:** Specify conditions for narrowing down the results. For example, you might filter beneficiaries by a specific region or status.
+        - **Group By:** Group the statistics by a particular attribute such as `gender`, `address`, or disability status.
+      HEREDOC
+
       account = create(:account)
       male_beneficiary = create(:beneficiary, account:, gender: "M")
       female_beneficiary = create(:beneficiary, account:, gender: "F")
@@ -436,6 +403,18 @@ RSpec.resource "Beneficiaries"  do
       do_request
 
       expect(response_status).to eq(400)
+    end
+  end
+
+  delete "/v1/beneficiaries/:id" do
+    example "Delete a beneficiary" do
+      beneficiary = create(:beneficiary)
+      create(:beneficiary_address, beneficiary:)
+
+      set_authorization_header_for(beneficiary.account)
+      do_request(id: beneficiary.id)
+
+      expect(response_status).to eq(204)
     end
   end
 end

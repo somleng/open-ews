@@ -147,7 +147,7 @@ module V1
       ).output
 
       expect(result).to include(
-        msisdn: "+855972345678",
+        msisdn: "855972345678",
         iso_country_code: "KH"
       )
     end

@@ -10,6 +10,18 @@ class ApplicationRequestSchema < Dry::Validation::Contract
     key.failure(text: "is invalid") if key? && !Phony.plausible?(value)
   end
 
+  module Types
+    include Dry.Types()
+
+    Number = String.constructor do |string|
+      string.gsub(/\D/, "") if string.present?
+    end
+
+    UpcaseString = String.constructor do |string|
+      string.upcase if string.present?
+    end
+  end
+
   def initialize(input_params:, options: {})
     super(**options)
 

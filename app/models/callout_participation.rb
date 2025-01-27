@@ -1,11 +1,12 @@
 class CalloutParticipation < ApplicationRecord
-  include MsisdnHelpers
   include MetadataHelpers
   include HasCallFlowLogic
 
   DEFAULT_RETRY_STATUSES = [
     "failed"
   ].freeze
+
+  attribute :msisdn, :phone_number
 
   belongs_to :callout
   belongs_to :contact
@@ -25,6 +26,8 @@ class CalloutParticipation < ApplicationRecord
   before_validation :set_msisdn_from_contact,
                     :set_call_flow_logic,
                     on: :create
+
+  validates :msisdn, presence: true
 
   def self.still_trying(max_phone_calls)
     where(answered: false).where(arel_table[:phone_calls_count].lt(max_phone_calls))

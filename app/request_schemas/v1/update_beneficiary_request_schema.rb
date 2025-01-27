@@ -5,9 +5,9 @@ module V1
         required(:id).filled(:integer)
         required(:type).filled(:str?, eql?: "beneficiary")
         required(:attributes).value(:hash).schema do
+          optional(:phone_number).filled(Types::Number)
           optional(:iso_country_code).filled(Types::UpcaseString, included_in?: Contact.iso_country_code.values)
           optional(:disability_status).maybe(:string, included_in?: Contact.disability_status.values)
-          optional(:phone_number).filled(:string)
           optional(:language_code).maybe(:string)
           optional(:date_of_birth).maybe(:date)
           optional(:gender).maybe(:string, included_in?: Contact.gender.values)
@@ -18,7 +18,7 @@ module V1
 
     attribute_rule(:phone_number).validate(:phone_number_format)
     attribute_rule(:phone_number) do |attributes|
-      next unless account.contacts.where_msisdn(attributes.fetch(:phone_number)).where.not(id: resource.id).exists?
+      next unless account.contacts.where(msisdn: attributes.fetch(:phone_number)).where.not(id: resource.id).exists?
 
       key([ :data, :attributes, :phone_number ]).failure(text: "must be unique")
     end
@@ -26,7 +26,7 @@ module V1
 
     def output
       result = super
-      result[:msisdn] = PhonyRails.normalize_number(result.delete(:phone_number)) if result.key?(:phone_number)
+      result[:msisdn] = result.delete(:phone_number) if result.key?(:phone_number)
       result
     end
   end

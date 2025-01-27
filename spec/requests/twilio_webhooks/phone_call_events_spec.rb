@@ -6,7 +6,8 @@ RSpec.describe "Phone Call Events" do
     request_body = build_request_body(
       account_sid: account.twilio_account_sid,
       direction: "inbound",
-      call_status: "in-progress"
+      call_status: "in-progress",
+      from: "+85510202101"
     )
 
     post(
@@ -30,7 +31,7 @@ RSpec.describe "Phone Call Events" do
         remote_status: request_body.fetch(:CallStatus),
         remote_direction: request_body.fetch(:Direction),
         contact: have_attributes(
-          msisdn: request_body.fetch(:From)
+          msisdn: "85510202101"
         )
       )
     )
