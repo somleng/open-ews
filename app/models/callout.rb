@@ -108,6 +108,10 @@ class Callout < ApplicationRecord
     BroadcastSerializer
   end
 
+  def as_json(*)
+    super(except: "beneficiary_parameters")
+  end
+
   private
 
   def set_call_flow_logic

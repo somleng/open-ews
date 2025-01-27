@@ -31,4 +31,32 @@ RSpec.resource "Broadcasts"  do
       expect(json_response.dig("data", "id")).to eq(broadcast.id.to_s)
     end
   end
+
+  post "/v1/broadcasts" do
+    example "Create a broadcasts" do
+      account = create(:account)
+
+      set_authorization_header_for(account)
+      do_request(
+        data: {
+          type: :broadcast,
+          attributes: {
+            audio_url: "https://www.example.com/sample.mp3",
+            beneficiary_parameters: {
+              gender: "M"
+            }
+          }
+        }
+      )
+
+      expect(response_status).to eq(201)
+      expect(response_body).to match_jsonapi_resource_schema("broadcast")
+      expect(json_response.dig("data", "attributes")).to include(
+        "audio_url" => "https://www.example.com/sample.mp3",
+        "beneficiary_parameters" => {
+          "gender" => "M"
+        }
+      )
+    end
+  end
 end

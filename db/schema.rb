@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_21_110447) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_27_074839) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -123,6 +123,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_21_110447) do
     t.string "audio_url"
     t.jsonb "settings", default: {}, null: false
     t.bigint "created_by_id"
+    t.jsonb "beneficiary_parameters", default: {}, null: false
     t.index ["account_id"], name: "index_callouts_on_account_id"
     t.index ["created_by_id"], name: "index_callouts_on_created_by_id"
     t.index ["status"], name: "index_callouts_on_status"
