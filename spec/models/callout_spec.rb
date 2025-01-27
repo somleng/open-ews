@@ -81,7 +81,7 @@ RSpec.describe Callout do
     end
 
     describe "#start!" do
-      let(:current_status) { :initialized }
+      let(:current_status) { :pending }
       let(:asserted_new_status) { :running }
       let(:event) { :start }
 

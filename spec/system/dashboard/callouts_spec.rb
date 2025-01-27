@@ -5,7 +5,7 @@ RSpec.describe "Callouts", :aggregate_failures do
     user          = create(:user)
     callout       = create(
       :callout,
-      :initialized,
+      :pending,
       call_flow_logic: CallFlowLogic::HelloWorld,
       account: user.account
     )
@@ -128,7 +128,7 @@ RSpec.describe "Callouts", :aggregate_failures do
     user = create(:user)
     callout = create(
       :callout,
-      :initialized,
+      :pending,
       account: user.account,
       call_flow_logic: CallFlowLogic::HelloWorld,
       created_by: user,
@@ -187,11 +187,7 @@ RSpec.describe "Callouts", :aggregate_failures do
 
   it "can perform actions on callouts", :js do
     user = create(:user)
-    callout = create(
-      :callout,
-      :initialized,
-      account: user.account
-    )
+    callout = create(:callout, :pending, account: user.account)
 
     sign_in(user)
     visit dashboard_callout_path(callout)

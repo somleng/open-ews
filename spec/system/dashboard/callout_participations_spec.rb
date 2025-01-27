@@ -12,7 +12,7 @@ RSpec.describe "Callout Participations" do
     sign_in(user)
     visit(
       dashboard_callout_participations_path(
-        q: { callout_filter_params: { status: :initialized } }
+        q: { callout_filter_params: { status: :pending } }
       )
     )
 

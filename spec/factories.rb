@@ -53,7 +53,8 @@ FactoryBot.define do
       end
     end
 
-    trait :initialized do
+    trait :pending do
+      status { Callout::STATE_PENDING }
     end
 
     trait :can_start do

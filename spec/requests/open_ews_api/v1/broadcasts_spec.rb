@@ -43,7 +43,8 @@ RSpec.resource "Broadcasts"  do
           attributes: {
             audio_url: "https://www.example.com/sample.mp3",
             beneficiary_parameters: {
-              gender: "M"
+              gender: "M",
+              "address.iso_region_code" => "KH-1"
             }
           }
         }
@@ -52,9 +53,11 @@ RSpec.resource "Broadcasts"  do
       expect(response_status).to eq(201)
       expect(response_body).to match_jsonapi_resource_schema("broadcast")
       expect(json_response.dig("data", "attributes")).to include(
+        "status" => "pending",
         "audio_url" => "https://www.example.com/sample.mp3",
         "beneficiary_parameters" => {
-          "gender" => "M"
+          "gender" => "M",
+          "address.iso_region_code" => "KH-1"
         }
       )
     end

@@ -5,7 +5,7 @@ RSpec.describe Event::Callout do
 
   it_behaves_like("resource_event") do
     let(:event) { "start" }
-    let(:asserted_current_status) { Callout::STATE_INITIALIZED }
+    let(:asserted_current_status) { Callout::STATE_PENDING }
     let(:asserted_new_status) { Callout::STATE_RUNNING }
   end
 end

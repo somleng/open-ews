@@ -70,14 +70,14 @@ class Callout < ApplicationRecord
   after_commit      :process_audio_file
 
   aasm column: :status, whiny_transitions: false do
-    state :initialized, initial: true
+    state :pending, initial: true
     state :running
     state :paused
     state :stopped
 
     event :start do
       transitions(
-        from: :initialized,
+        from: :pending,
         to: :running
       )
     end

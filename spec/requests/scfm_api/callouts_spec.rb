@@ -143,7 +143,7 @@ RSpec.resource "Callouts" do
       callout = create(
         :callout,
         account: account,
-        status: Callout::STATE_INITIALIZED
+        status: Callout::STATE_PENDING
       )
 
       set_authorization_header_for(account)
