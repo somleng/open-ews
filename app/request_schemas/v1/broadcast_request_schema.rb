@@ -5,7 +5,7 @@ module V1
         required(:type).filled(:str?, eql?: "broadcast")
         required(:attributes).value(:hash).schema do
           required(:audio_url).filled(:string)
-          optional(:beneficiary_parameters).schema(BeneficiaryFilter.schema)
+          optional(:beneficiary_parameters).filled(:hash).schema(BeneficiaryFilter.schema)
           optional(:metadata).value(:hash)
         end
       end

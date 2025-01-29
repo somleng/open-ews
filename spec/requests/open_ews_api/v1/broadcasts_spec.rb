@@ -61,5 +61,25 @@ RSpec.resource "Broadcasts"  do
         }
       )
     end
+
+    example "Failed to create a broadcast", document: false do
+      account = create(:account)
+
+      set_authorization_header_for(account)
+      do_request(
+        data: {
+          type: :broadcast,
+          attributes: {
+            audio_url: nil,
+            beneficiary_parameters: {}
+          }
+        }
+      )
+
+      expect(response_status).to eq(422)
+      expect(response_body).to match_api_response_schema("jsonapi_error")
+      expect(json_response.dig("errors", 0, "source", "pointer")).to eq("/data/attributes/audio_url")
+      expect(json_response.dig("errors", 1, "source", "pointer")).to eq("/data/attributes/beneficiary_parameters")
+    end
   end
 end
