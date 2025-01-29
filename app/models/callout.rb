@@ -112,6 +112,10 @@ class Callout < ApplicationRecord
     super(except: "beneficiary_parameters")
   end
 
+  def updatable?
+    status == "pending"
+  end
+
   private
 
   def set_call_flow_logic

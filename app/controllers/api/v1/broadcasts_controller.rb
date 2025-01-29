@@ -21,6 +21,18 @@ module API
           end
       end
 
+      def update
+        broadcast = broadcasts_scope.find(params[:id])
+
+        validate_request_schema(
+          with: ::V1::UpdateBroadcastRequestSchema,
+          schema_options: { resource: broadcast },
+        ) do |permitted_params|
+            broadcast.update!(permitted_params)
+            broadcast
+          end
+      end
+
       private
 
       def broadcasts_scope

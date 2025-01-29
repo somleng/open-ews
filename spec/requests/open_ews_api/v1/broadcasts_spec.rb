@@ -82,4 +82,68 @@ RSpec.resource "Broadcasts"  do
       expect(json_response.dig("errors", 1, "source", "pointer")).to eq("/data/attributes/beneficiary_parameters")
     end
   end
+
+  patch "/v1/broadcasts/:id" do
+    example "Update a broadcasts" do
+      account = create(:account)
+      broadcast = create(
+        :broadcast,
+        account:,
+        audio_url: "https://www.example.com/old-sample.mp3",
+        beneficiary_parameters: {
+          gender: "M"
+        }
+      )
+
+      set_authorization_header_for(account)
+      do_request(
+        id: broadcast.id,
+        data: {
+          id: broadcast.id,
+          type: :broadcast,
+          attributes: {
+            audio_url: "https://www.example.com/sample.mp3",
+            beneficiary_parameters: {
+              gender: "F"
+            }
+          }
+        }
+      )
+
+      expect(response_status).to eq(200)
+      expect(response_body).to match_jsonapi_resource_schema("broadcast")
+      expect(json_response.dig("data", "attributes")).to include(
+        "status" => "pending",
+        "audio_url" => "https://www.example.com/sample.mp3",
+        "beneficiary_parameters" => {
+          "gender" => "F"
+        }
+      )
+    end
+
+    example "Failed to update a broadcast", document: false do
+      account = create(:account)
+      broadcast = create(
+        :broadcast,
+        account:,
+        status: :running
+      )
+
+      set_authorization_header_for(account)
+      do_request(
+        id: broadcast.id,
+        data: {
+          id: broadcast.id,
+          type: :broadcast,
+          attributes: {
+            audio_url: "https://www.example.com/sample.mp3"
+          }
+        }
+      )
+
+      expect(response_status).to eq(422)
+      expect(response_body).to match_api_response_schema("jsonapi_error")
+      expect(json_response.dig("errors", 0, "source", "pointer")).to eq("/data/id")
+    end
+  end
 end
