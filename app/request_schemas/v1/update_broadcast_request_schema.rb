@@ -20,10 +20,10 @@ module V1
     end
 
     attribute_rule(:status) do
-      break unless key?
-      break if value == "running" && (resource.may_start? || resource.may_resume?)
-      break if value == "paused" && resource.may_pause?
-      break if value == "stopped" && resource.may_stop?
+      next unless key?
+      next if value == "running" && (resource.may_start? || resource.may_resume?)
+      next if value == "paused" && resource.may_pause?
+      next if value == "stopped" && resource.may_stop?
 
       key.failure("does not allow to transition from #{resource.status} to #{value}")
     end

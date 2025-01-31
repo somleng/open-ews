@@ -63,9 +63,7 @@ Rails.application.routes.draw do
   end
 
   namespace :v1, module: "api/v1", as: "api_v1", defaults: { format: "json" } do
-    resources :broadcasts, only: [ :index, :show, :create, :update ] do
-      resources :populations, only: [ :index, :show, :create ]
-    end
+    resources :broadcasts, only: [ :index, :show, :create, :update ]
 
     resources :beneficiaries, only: [ :index, :create, :show, :update, :destroy ] do
       get "stats" => "beneficiaries/stats#index", on: :collection
