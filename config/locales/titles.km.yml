@@ -36,6 +36,7 @@ km:
       edit: កែប្រែ សេចក្ដីប្រកាស
       index: សេចក្ដីប្រកាស
       new: បង្កើត សេចក្ដីប្រកាស
+      pause_callout: ផ្អាក
       resume_callout: បន្តរដំណើរការ
       show: សេចក្ដីប្រកាស %{id}
       start_callout: ចាប់ផ្ដើម

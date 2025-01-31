@@ -144,8 +144,7 @@ RSpec.resource "Broadcasts"  do
 
       expect(response_status).to eq(422)
       expect(response_body).to match_api_response_schema("jsonapi_error")
-      expect(json_response.dig("errors", 0, "source", "pointer")).to eq("/data/id")
-      expect(json_response.dig("errors", 1, "source", "pointer")).to eq("/data/attributes/status")
+      expect(json_response.dig("errors", 0, "source", "pointer")).to eq("/data/attributes/status")
     end
   end
 end

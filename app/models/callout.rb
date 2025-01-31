@@ -91,7 +91,7 @@ class Callout < ApplicationRecord
 
     event :resume do
       transitions(
-        from: %i[paused stopped],
+        from: :paused,
         to: :running
       )
     end

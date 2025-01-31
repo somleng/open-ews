@@ -36,6 +36,7 @@ en:
       edit: Edit Callout
       index: Callouts
       new: New Callout
+      pause_callout: Pause
       resume_callout: Resume
       show: Callout %{id}
       start_callout: Start

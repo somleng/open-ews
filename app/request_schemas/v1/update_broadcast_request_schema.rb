@@ -15,12 +15,10 @@ module V1
 
     attribute_rule(:audio_url).validate(:url_format)
 
-    rule(data: :id) do
-      key.failure("Updates are only allowed when the status is pending.") unless resource.updatable?
-    end
-
     attribute_rule(:status) do
       next unless key?
+
+      next if value == "pending" && resource.status == value
       next if value == "running" && (resource.may_start? || resource.may_resume?)
       next if value == "paused" && resource.may_pause?
       next if value == "stopped" && resource.may_stop?

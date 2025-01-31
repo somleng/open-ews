@@ -12,6 +12,11 @@
       <%= translate(:"titles.callouts.stop_callout") %>
     <% end %>
   <% end %>
+  <% if resource.may_pause? %>
+    <%= button_to(dashboard_callout_callout_events_path(resource, event: :pause), class: "btn btn-outline-warning", form_class: "d-inline", form: { data: { turbo_confim: translate(:"titles.actions.data_confirm")}}) do %>
+      <%= translate(:"titles.callouts.pause_callout") %>
+    <% end %>
+  <% end %>
   <% if resource.may_resume? %>
     <%= button_to(dashboard_callout_callout_events_path(resource, event: :resume), class: "btn btn-outline-success", form_class: "d-inline", form: { data: { turbo_confim: translate(:"titles.actions.data_confirm")}}) do %>
       <%= translate(:"titles.callouts.resume_callout") %>
