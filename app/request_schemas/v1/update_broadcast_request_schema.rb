@@ -13,6 +13,7 @@ module V1
       end
     end
 
+    attribute_rule(:beneficiary_filter).validate(contract: BeneficiaryFilter)
     attribute_rule(:audio_url).validate(:url_format)
 
     attribute_rule(:status) do
