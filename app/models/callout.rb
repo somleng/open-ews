@@ -36,6 +36,8 @@ class Callout < ApplicationRecord
   belongs_to :created_by, class_name: "User", optional: true
 
   has_many :callout_participations, dependent: :restrict_with_error
+  has_many :broadcast_beneficiaries, class_name: "CalloutParticipation", dependent: :restrict_with_error
+  has_many :beneficiaries, class_name: "Contact", through: :broadcast_beneficiaries, source: :contact
 
   has_many :batch_operations,
            class_name: "BatchOperation::Base",
@@ -78,20 +80,21 @@ class Callout < ApplicationRecord
 
   aasm column: :status, whiny_transitions: false do
     state :pending, initial: true
+    state :queued
     state :running
     state :stopped
     state :completed
 
     event :start do
       transitions(
-        from: :pending,
+        from: [ :pending, :queued ],
         to: :running
       )
     end
 
     event :stop do
       transitions(
-        from: :running,
+        from: [ :running, :queued ],
         to: :stopped
       )
     end
@@ -99,7 +102,7 @@ class Callout < ApplicationRecord
     # TODO: Remove the pause event after we removed the old API
     event :pause do
       transitions(
-        from: :running,
+        from: [ :running, :queued ],
         to: :stopped
       )
     end

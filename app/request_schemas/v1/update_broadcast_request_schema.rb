@@ -1,5 +1,7 @@
 module V1
   class UpdateBroadcastRequestSchema < JSONAPIRequestSchema
+    STATES = Callout.aasm.states.map { _1.name.to_s } - [ "queued" ]
+
     params do
       required(:data).value(:hash).schema do
         required(:id).filled(:integer)
@@ -7,7 +9,7 @@ module V1
         required(:attributes).value(:hash).schema do
           optional(:audio_url).filled(:string)
           optional(:beneficiary_filter).filled(:hash).schema(BeneficiaryFilter.schema)
-          optional(:status).filled(included_in?: Callout.aasm.states.map { _1.name.to_s })
+          optional(:status).filled(included_in?: STATES)
           optional(:metadata).value(:hash)
         end
       end
@@ -25,6 +27,16 @@ module V1
       next if value == "completed" && resource.may_complete?
 
       key.failure("does not allow to transition from #{resource.status} to #{value}")
+    end
+
+    def output
+      result = super
+
+      if result[:status] == "running" && resource.pending?
+        result[:status] = "queued"
+      end
+
+      result
     end
   end
 end

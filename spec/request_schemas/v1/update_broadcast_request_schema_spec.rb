@@ -65,6 +65,28 @@ module V1
       ).not_to have_valid_field(:data, :attributes, :status)
     end
 
+    it "handles post processing" do
+      broadcast = create(:broadcast, status: :pending)
+
+      result = validate_schema(
+        input_params: {
+          data: {
+            id: broadcast.id,
+            attributes: {
+              status: "running",
+              audio_url: "http://example.com/sample.mp3"
+            }
+          }
+        },
+        options: { resource: broadcast }
+      ).output
+
+      expect(result).to include(
+        status: "queued",
+        audio_url: "http://example.com/sample.mp3"
+      )
+    end
+
     def validate_schema(input_params:, options: {})
       UpdateBroadcastRequestSchema.new(
         input_params:,

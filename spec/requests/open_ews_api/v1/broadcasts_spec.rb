@@ -89,8 +89,11 @@ RSpec.resource "Broadcasts"  do
   patch "/v1/broadcasts/:id" do
     example "Update a broadcasts" do
       account = create(:account)
+      _male_beneficiary = create(:beneficiary, account:, gender: "M")
+      female_beneficiary = create(:beneficiary, account:, gender: "F")
       broadcast = create(
         :broadcast,
+        status: :pending,
         account:,
         audio_url: "https://www.example.com/old-sample.mp3",
         beneficiary_filter: {
@@ -99,29 +102,36 @@ RSpec.resource "Broadcasts"  do
       )
 
       set_authorization_header_for(account)
-      do_request(
-        id: broadcast.id,
-        data: {
+      perform_enqueued_jobs do
+        do_request(
           id: broadcast.id,
-          type: :broadcast,
-          attributes: {
-            audio_url: "https://www.example.com/sample.mp3",
-            beneficiary_filter: {
-              gender: "F"
+          data: {
+            id: broadcast.id,
+            type: :broadcast,
+            attributes: {
+              status: "running",
+              audio_url: "https://www.example.com/sample.mp3",
+              beneficiary_filter: {
+                gender: "F"
+              }
             }
           }
-        }
-      )
+        )
+      end
 
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_schema("broadcast")
       expect(json_response.dig("data", "attributes")).to include(
-        "status" => "pending",
+        "status" => "queued",
         "audio_url" => "https://www.example.com/sample.mp3",
         "beneficiary_filter" => {
           "gender" => "F"
         }
       )
+      expect(broadcast.reload.status).to eq("running")
+      expect(broadcast.beneficiaries).to match_array([ female_beneficiary ])
+      expect(broadcast.phone_calls.count).to eq(1)
+      expect(broadcast.phone_calls.first.beneficiary).to eq(female_beneficiary)
     end
 
     example "Failed to update a broadcast", document: false do
