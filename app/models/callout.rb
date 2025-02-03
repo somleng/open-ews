@@ -96,6 +96,14 @@ class Callout < ApplicationRecord
       )
     end
 
+    # TODO: Remove the pause event after we removed the old API
+    event :pause do
+      transitions(
+        from: :running,
+        to: :stopped
+      )
+    end
+
     event :resume do
       transitions(
         from: :stopped,
@@ -115,8 +123,11 @@ class Callout < ApplicationRecord
     BroadcastSerializer
   end
 
+  # TODO: Remove this after we removed the old API
   def as_json(*)
-    super(except: [ "channel", "beneficiary_filter" ])
+    result = super(except: [ "channel", "beneficiary_filter" ])
+    result["status"] = "initialized" if result["status"] == "pending"
+    result
   end
 
   def updatable?

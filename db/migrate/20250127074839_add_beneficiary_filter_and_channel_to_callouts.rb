@@ -6,7 +6,9 @@ class AddBeneficiaryFilterAndChannelToCallouts < ActiveRecord::Migration[8.0]
     reversible do |dir|
       dir.up do
         execute <<-SQL
-          UPDATE callouts set channel = 'voice'
+          UPDATE callouts SET channel = 'voice';
+          UPDATE callouts SET status = 'stopped' WHERE status = 'paused';
+          UPDATE callouts SET status = 'pending' WHERE status = 'initialized';
         SQL
       end
     end
