@@ -63,6 +63,10 @@ module V1
       expect(
         validate_schema(input_params: { data: { attributes: { status: "stopped" } } }, options: { resource: completed_broadcast })
       ).not_to have_valid_field(:data, :attributes, :status)
+
+      expect(
+        validate_schema(input_params: { data: { attributes: { status: "queued" } } }, options: { resource: pending_broadcast })
+      ).not_to have_valid_field(:data, :attributes, :status)
     end
 
     it "handles post processing" do
