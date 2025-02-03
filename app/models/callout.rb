@@ -1,5 +1,8 @@
 class Callout < ApplicationRecord
+  extend Enumerize
+
   AUDIO_CONTENT_TYPES = %w[audio/mpeg audio/mp3 audio/wav audio/x-wav].freeze
+  CHANNELS = %i[voice].freeze
 
   module ActiveStorageDirty
     attr_reader :audio_file_blob_was, :audio_file_will_change
@@ -26,6 +29,9 @@ class Callout < ApplicationRecord
   store_accessor :settings
   accepts_nested_key_value_fields_for :settings
 
+  # TODO: Remove the default after we removed the old API
+  enumerize :channel, in: CHANNELS, default: :voice
+
   belongs_to :account
   belongs_to :created_by, class_name: "User", optional: true
 
@@ -50,6 +56,7 @@ class Callout < ApplicationRecord
 
   has_one_attached :audio_file
 
+  validates :channel, :status, presence: true
   validates :call_flow_logic, :status, presence: true
 
   validates :audio_file,
@@ -72,8 +79,8 @@ class Callout < ApplicationRecord
   aasm column: :status, whiny_transitions: false do
     state :pending, initial: true
     state :running
-    state :paused
     state :stopped
+    state :completed
 
     event :start do
       transitions(
@@ -82,24 +89,24 @@ class Callout < ApplicationRecord
       )
     end
 
-    event :pause do
+    event :stop do
       transitions(
         from: :running,
-        to: :paused
+        to: :stopped
       )
     end
 
     event :resume do
       transitions(
-        from: :paused,
+        from: :stopped,
         to: :running
       )
     end
 
-    event :stop do
+    event :complete do
       transitions(
-        from: %i[running paused],
-        to: :stopped
+        from: :running,
+        to: :completed
       )
     end
   end
@@ -109,7 +116,7 @@ class Callout < ApplicationRecord
   end
 
   def as_json(*)
-    super(except: "beneficiary_parameters")
+    super(except: [ "channel", "beneficiary_filter" ])
   end
 
   def updatable?

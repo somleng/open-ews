@@ -41,8 +41,9 @@ RSpec.resource "Broadcasts"  do
         data: {
           type: :broadcast,
           attributes: {
+            channel: "voice",
             audio_url: "https://www.example.com/sample.mp3",
-            beneficiary_parameters: {
+            beneficiary_filter: {
               gender: "M",
               "address.iso_region_code" => "KH-1"
             }
@@ -53,9 +54,10 @@ RSpec.resource "Broadcasts"  do
       expect(response_status).to eq(201)
       expect(response_body).to match_jsonapi_resource_schema("broadcast")
       expect(json_response.dig("data", "attributes")).to include(
+        "channel" => "voice",
         "status" => "pending",
         "audio_url" => "https://www.example.com/sample.mp3",
-        "beneficiary_parameters" => {
+        "beneficiary_filter" => {
           "gender" => "M",
           "address.iso_region_code" => "KH-1"
         }
@@ -70,8 +72,9 @@ RSpec.resource "Broadcasts"  do
         data: {
           type: :broadcast,
           attributes: {
+            channel: "voice",
             audio_url: nil,
-            beneficiary_parameters: {}
+            beneficiary_filter: {}
           }
         }
       )
@@ -79,7 +82,7 @@ RSpec.resource "Broadcasts"  do
       expect(response_status).to eq(422)
       expect(response_body).to match_api_response_schema("jsonapi_error")
       expect(json_response.dig("errors", 0, "source", "pointer")).to eq("/data/attributes/audio_url")
-      expect(json_response.dig("errors", 1, "source", "pointer")).to eq("/data/attributes/beneficiary_parameters")
+      expect(json_response.dig("errors", 1, "source", "pointer")).to eq("/data/attributes/beneficiary_filter")
     end
   end
 
@@ -90,7 +93,7 @@ RSpec.resource "Broadcasts"  do
         :broadcast,
         account:,
         audio_url: "https://www.example.com/old-sample.mp3",
-        beneficiary_parameters: {
+        beneficiary_filter: {
           gender: "M"
         }
       )
@@ -103,7 +106,7 @@ RSpec.resource "Broadcasts"  do
           type: :broadcast,
           attributes: {
             audio_url: "https://www.example.com/sample.mp3",
-            beneficiary_parameters: {
+            beneficiary_filter: {
               gender: "F"
             }
           }
@@ -115,7 +118,7 @@ RSpec.resource "Broadcasts"  do
       expect(json_response.dig("data", "attributes")).to include(
         "status" => "pending",
         "audio_url" => "https://www.example.com/sample.mp3",
-        "beneficiary_parameters" => {
+        "beneficiary_filter" => {
           "gender" => "F"
         }
       )

@@ -123,7 +123,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_074839) do
     t.string "audio_url"
     t.jsonb "settings", default: {}, null: false
     t.bigint "created_by_id"
-    t.jsonb "beneficiary_parameters", default: {}, null: false
+    t.string "channel", null: false
+    t.jsonb "beneficiary_filter", default: {}, null: false
     t.index ["account_id"], name: "index_callouts_on_account_id"
     t.index ["created_by_id"], name: "index_callouts_on_created_by_id"
     t.index ["status"], name: "index_callouts_on_status"

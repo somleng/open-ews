@@ -196,22 +196,17 @@ RSpec.describe "Callouts", :aggregate_failures do
 
     expect(page).to have_content("Event was successfully created.")
     expect(page).not_to have_selector(:link_or_button, "Start")
-    expect(page).to have_selector(:link_or_button, "Pause")
+    expect(page).to have_selector(:link_or_button, "Stop")
 
-    click_on("Pause")
+    click_on("Stop")
 
     expect(page).to have_content("Event was successfully created.")
-    expect(page).not_to have_selector(:link_or_button, "Start")
-    expect(page).not_to have_selector(:link_or_button, "Pause")
+    expect(page).not_to have_selector(:link_or_button, "Stop")
     expect(page).to have_selector(:link_or_button, "Resume")
 
     click_on("Resume")
 
     expect(page).not_to have_selector(:link_or_button, "Resume")
     expect(page).to have_selector(:link_or_button, "Stop")
-
-    click_on("Stop")
-
-    expect(page).not_to have_selector(:link_or_button, "Stop")
   end
 end

@@ -42,7 +42,7 @@ RSpec.resource "Callouts" do
 
     parameter(
       :settings,
-      "Additionoal settings which are needed byt the call flow logic."
+      "Additional settings which are needed by the call flow logic."
     )
 
     example "Create a Callout" do

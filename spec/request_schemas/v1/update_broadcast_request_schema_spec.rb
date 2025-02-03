@@ -21,8 +21,8 @@ module V1
     it "validates the status" do
       pending_broadcast = create(:broadcast, status: :pending)
       running_broadcast = create(:broadcast, status: :running)
-      paused_broadcast = create(:broadcast, status: :paused)
       stopped_broadcast = create(:broadcast, status: :stopped)
+      completed_broadcast = create(:broadcast, status: :completed)
 
       expect(
         validate_schema(input_params: { data: { attributes: { status: "foobar" } } }, options: { resource: pending_broadcast })
@@ -41,23 +41,27 @@ module V1
       ).not_to have_valid_field(:data, :attributes, :status)
 
       expect(
-        validate_schema(input_params: { data: { attributes: { status: "paused" } } }, options: { resource: running_broadcast })
-      ).to have_valid_field(:data, :attributes, :status)
-
-      expect(
         validate_schema(input_params: { data: { attributes: { status: "stopped" } } }, options: { resource: running_broadcast })
       ).to have_valid_field(:data, :attributes, :status)
 
       expect(
-        validate_schema(input_params: { data: { attributes: { status: "running" } } }, options: { resource: paused_broadcast })
-      ).to have_valid_field(:data, :attributes, :status)
-
-      expect(
-        validate_schema(input_params: { data: { attributes: { status: "stopped" } } }, options: { resource: paused_broadcast })
+        validate_schema(input_params: { data: { attributes: { status: "completed" } } }, options: { resource: running_broadcast })
       ).to have_valid_field(:data, :attributes, :status)
 
       expect(
         validate_schema(input_params: { data: { attributes: { status: "running" } } }, options: { resource: stopped_broadcast })
+      ).to have_valid_field(:data, :attributes, :status)
+
+      expect(
+        validate_schema(input_params: { data: { attributes: { status: "completed" } } }, options: { resource: stopped_broadcast })
+      ).not_to have_valid_field(:data, :attributes, :status)
+
+      expect(
+        validate_schema(input_params: { data: { attributes: { status: "running" } } }, options: { resource: completed_broadcast })
+      ).not_to have_valid_field(:data, :attributes, :status)
+
+      expect(
+        validate_schema(input_params: { data: { attributes: { status: "stopped" } } }, options: { resource: completed_broadcast })
       ).not_to have_valid_field(:data, :attributes, :status)
     end
 

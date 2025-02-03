@@ -39,6 +39,7 @@ FactoryBot.define do
 
   factory :callout, aliases: [ :broadcast ] do
     account
+    channel { "voice" }
 
     transient do
       audio_file { nil }

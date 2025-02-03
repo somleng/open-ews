@@ -1,3 +1,3 @@
 class BroadcastSerializer < ResourceSerializer
-  attributes :audio_url, :metadata, :beneficiary_parameters, :status
+  attributes :channel, :audio_url, :metadata, :beneficiary_filter, :status
 end

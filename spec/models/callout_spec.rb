@@ -88,32 +88,28 @@ RSpec.describe Callout do
       it { assert_transitions! }
     end
 
-    describe "#pause!" do
+    describe "#stop!" do
       let(:current_status) { :running }
-      let(:asserted_new_status) { :paused }
-      let(:event) { :pause }
+      let(:asserted_new_status) { :stopped }
+      let(:event) { :stop }
 
       it { assert_transitions! }
     end
 
     describe "#resume!" do
-      let(:current_status) { :paused }
+      let(:current_status) { :stopped }
       let(:asserted_new_status) { :running }
       let(:event) { :resume }
 
       it { assert_transitions! }
     end
 
-    describe "#stop!" do
-      let(:asserted_new_status) { :stopped }
-      let(:event) { :stop }
+    describe "#complete!" do
+      let(:current_status) { :running }
+      let(:asserted_new_status) { :completed }
+      let(:event) { :complete }
 
-      %i[running paused].each do |current_status|
-        context "status: '#{current_status}'" do
-          let(:current_status) { current_status }
-          it { assert_transitions! }
-        end
-      end
+      it { assert_transitions! }
     end
   end
 end
