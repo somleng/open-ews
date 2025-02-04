@@ -2,7 +2,7 @@ RSpec.shared_examples_for "msisdn_attribute_filter" do
   it "filters by msisdn" do
     filterable = create(filterable_factory)
 
-    expect(build_filter(msisdn: filterable.msisdn).resources).to match_array([filterable])
+    expect(build_filter(msisdn: filterable.phone_number).resources).to match_array([ filterable ])
     expect(build_filter(msisdn: "wronng").resources).to match_array([])
   end
 

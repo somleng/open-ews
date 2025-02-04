@@ -31,7 +31,7 @@ RSpec.describe "Phone Call Events" do
         remote_status: request_body.fetch(:CallStatus),
         remote_direction: request_body.fetch(:Direction),
         contact: have_attributes(
-          msisdn: "85510202101"
+          phone_number: "85510202101"
         )
       )
     )
@@ -48,7 +48,7 @@ RSpec.describe "Phone Call Events" do
       direction: "outbound-api",
       call_status: "completed",
       from: "1294",
-      to: phone_call.msisdn,
+      to: phone_call.phone_number,
       call_duration: "87"
     )
 

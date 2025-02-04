@@ -17,7 +17,7 @@ class PhoneCall < ApplicationRecord
     inbound: "inbound"
   }.freeze
 
-  attribute :msisdn, :phone_number
+  attribute :phone_number, :phone_number
 
   belongs_to :callout_participation, optional: true, counter_cache: true
   belongs_to :contact, validate: true
@@ -27,27 +27,25 @@ class PhoneCall < ApplicationRecord
 
   include MetadataHelpers
   include HasCallFlowLogic
+  include AASM
 
   delegate :call_flow_logic, to: :callout_participation, prefix: true, allow_nil: true
   delegate :call_flow_logic, to: :contact, prefix: true, allow_nil: true
 
   delegate :contact,
-           :msisdn,
+           :phone_number,
            to: :callout_participation,
            prefix: true,
            allow_nil: true
 
-  delegate :platform_provider,
-           to: :account
+  delegate :platform_provider, to: :account
 
   before_validation :set_defaults, on: :create
   before_destroy    :validate_destroy
-  validates :msisdn, presence: true
+  validates :phone_number, presence: true
 
   accepts_nested_key_value_fields_for :remote_response
   accepts_nested_key_value_fields_for :remote_queue_response
-
-  include AASM
 
   aasm column: :status, whiny_transitions: false do
     state :created, initial: true
@@ -139,6 +137,13 @@ class PhoneCall < ApplicationRecord
     remote_status == "queued" && remotely_queued_at < 1.hour.ago
   end
 
+  # NOTE: This is for backward compatibility until we moved to the new API
+  def as_json(*)
+    result = super
+    result["msisdn"] = result.delete("phone_number")
+    result
+  end
+
   private
 
   def touch_remotely_queued_at
@@ -159,8 +164,8 @@ class PhoneCall < ApplicationRecord
   end
 
   def set_defaults
-    self.msisdn  ||= callout_participation_msisdn
     self.contact ||= callout_participation_contact
+    self.phone_number  ||= callout_participation_phone_number
     self.account ||= contact&.account
     set_call_flow_logic
   end

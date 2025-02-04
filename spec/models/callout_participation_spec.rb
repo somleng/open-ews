@@ -12,10 +12,10 @@ RSpec.describe CalloutParticipation do
   end
 
   describe "validations" do
-    it { is_expected.to validate_presence_of(:msisdn) }
-    it { is_expected.to allow_value(generate(:phone_number)).for(:msisdn) }
-    it { is_expected.to allow_value("252123456").for(:msisdn) }
-    it { is_expected.to allow_value("+252 66-(2)-345-678").for(:msisdn) }
+    it { is_expected.to validate_presence_of(:phone_number) }
+    it { is_expected.to allow_value(generate(:phone_number)).for(:phone_number) }
+    it { is_expected.to allow_value("252123456").for(:phone_number) }
+    it { is_expected.to allow_value("+252 66-(2)-345-678").for(:phone_number) }
   end
 
   it "sets defaults" do
@@ -24,6 +24,6 @@ RSpec.describe CalloutParticipation do
 
     callout_participation.valid?
 
-    expect(callout_participation.msisdn).to eq(contact.msisdn)
+    expect(callout_participation.phone_number).to eq(contact.phone_number)
   end
 end

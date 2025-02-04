@@ -26,7 +26,7 @@ module BatchOperation
         phone_call = callout_participation.phone_calls.first
         expect(phone_call).to have_attributes(
           contact:,
-          msisdn: contact.msisdn,
+          phone_number: contact.phone_number,
           callout_participation:,
           callout: callout_population.callout,
           call_flow_logic: callout_participation.call_flow_logic,
