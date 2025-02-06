@@ -25,13 +25,13 @@ RSpec.describe PopulateBroadcastBeneficiaries do
     expect(broadcast.beneficiaries.count).to eq(1)
     expect(broadcast.broadcast_beneficiaries.first).to have_attributes(
       contact: female_beneficiary,
-      beneficiary_phone_number: female_beneficiary.msisdn,
+      phone_number: female_beneficiary.phone_number,
       phone_calls_count: 1
     )
     expect(broadcast.phone_calls.count).to eq(1)
     expect(broadcast.phone_calls.first).to have_attributes(
       callout_participation: broadcast.broadcast_beneficiaries.first,
-      msisdn: female_beneficiary.msisdn,
+      phone_number: female_beneficiary.phone_number,
       status: "created"
     )
   end

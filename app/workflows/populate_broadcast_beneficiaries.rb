@@ -23,8 +23,7 @@ class PopulateBroadcastBeneficiaries < ApplicationWorkflow
       {
         callout_id: broadcast.id,
         contact_id: beneficiary.id,
-        beneficiary_phone_number: beneficiary.msisdn,
-        msisdn: beneficiary.msisdn,
+        phone_number: beneficiary.phone_number,
         call_flow_logic: broadcast.call_flow_logic,
         phone_calls_count: 1
       }
@@ -41,7 +40,7 @@ class PopulateBroadcastBeneficiaries < ApplicationWorkflow
         contact_id: broadcast_beneficiary.contact_id,
         call_flow_logic: broadcast_beneficiary.call_flow_logic,
         callout_participation_id: broadcast_beneficiary.id,
-        msisdn: broadcast_beneficiary.msisdn,
+        phone_number: broadcast_beneficiary.phone_number,
         status: :created
       }
     end
