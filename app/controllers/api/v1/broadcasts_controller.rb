@@ -29,6 +29,7 @@ module API
           schema_options: { resource: broadcast },
         ) do |permitted_params|
             broadcast.update!(permitted_params)
+
             if broadcast.queued?
               ExecuteWorkflowJob.perform_later(PopulateBroadcastBeneficiaries.to_s, broadcast)
             end

@@ -85,6 +85,7 @@ class Callout < ApplicationRecord
     state :stopped
     state :completed
 
+    # TODO: Remove state transition from pending after we removed the old API
     event :start do
       transitions(
         from: [ :pending, :queued ],
