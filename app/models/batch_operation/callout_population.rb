@@ -53,10 +53,9 @@ module BatchOperation
       callout_participations = contacts_scope.find_each.map do |contact|
         {
           contact_id: contact.id,
-          beneficiary_phone_number: contact.msisdn,
+          phone_number: contact.phone_number,
           callout_id: callout.id,
           callout_population_id: id,
-          msisdn: contact.msisdn,
           call_flow_logic: callout.call_flow_logic
         }
       end
@@ -73,7 +72,7 @@ module BatchOperation
           contact_id: callout_participation.contact_id,
           call_flow_logic: callout_participation.call_flow_logic,
           callout_participation_id: callout_participation.id,
-          msisdn: callout_participation.msisdn,
+          phone_number: callout_participation.phone_number,
           status: :created
         }
       end

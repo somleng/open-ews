@@ -18,16 +18,9 @@ module V1
 
     attribute_rule(:phone_number).validate(:phone_number_format)
     attribute_rule(:phone_number) do |attributes|
-      next unless account.contacts.where(msisdn: attributes.fetch(:phone_number)).where.not(id: resource.id).exists?
+      next unless account.contacts.where(phone_number: attributes.fetch(:phone_number)).where.not(id: resource.id).exists?
 
       key([ :data, :attributes, :phone_number ]).failure(text: "must be unique")
-    end
-
-
-    def output
-      result = super
-      result[:msisdn] = result.delete(:phone_number) if result.key?(:phone_number)
-      result
     end
   end
 end

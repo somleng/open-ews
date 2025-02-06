@@ -162,7 +162,7 @@ RSpec.resource "Beneficiaries"  do
 
     example "Fail to create a beneficiary", document: false do
       account = create(:account)
-      create(:beneficiary, account:, msisdn: "+85510999999")
+      create(:beneficiary, account:, phone_number: "+85510999999")
 
       set_authorization_header_for(account)
       do_request(
@@ -243,7 +243,7 @@ RSpec.resource "Beneficiaries"  do
     example "Update a beneficiary" do
       beneficiary = create(
         :beneficiary,
-        msisdn: "+85510999001",
+        phone_number: "+85510999001",
         gender: nil,
         language_code: nil,
         date_of_birth: nil,

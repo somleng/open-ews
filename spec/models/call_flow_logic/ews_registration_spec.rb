@@ -17,12 +17,12 @@ RSpec.describe CallFlowLogic::EWSRegistration do
   end
 
   it "prompts the main menu" do
-    contact = create(:contact, msisdn: "855715100860")
+    contact = create(:contact, phone_number: "855715100860")
     phone_call = create(
       :phone_call,
       :inbound,
       contact:,
-      msisdn: contact.msisdn,
+      phone_number: contact.phone_number,
       metadata: { status: :playing_introduction }
     )
     event = create_phone_call_event(phone_call:)
