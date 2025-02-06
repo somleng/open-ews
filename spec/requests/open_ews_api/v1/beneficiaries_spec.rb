@@ -340,7 +340,7 @@ RSpec.resource "Beneficiaries"  do
 
       set_authorization_header_for(account)
       do_request(
-        filter: { "gender": "M" },
+        filter: { "gender": "M", "address.iso_region_code": "KH-12" },
         group_by: [
           "iso_country_code",
           "address.iso_region_code",

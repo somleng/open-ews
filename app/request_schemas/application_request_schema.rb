@@ -10,6 +10,36 @@ class ApplicationRequestSchema < Dry::Validation::Contract
     key.failure(text: "is invalid") if key? && !Phony.plausible?(value)
   end
 
+  register_macro(:url_format) do
+    next unless key?
+
+    uri = URI.parse(value)
+    isValid = (uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)) && uri.host.present?
+
+    key.failure(text: "is invalid") unless isValid
+  rescue URI::InvalidURIError
+    key.failure(text: "is invalid")
+  end
+
+  # NOTE: composable contracts
+  #
+  # params do
+  #   required(:a).hash(OtherContract.schema)
+  # end
+  #
+  # rule(:a).validate(contract: OtherContract)
+  #
+  register_macro(:contract) do |macro:|
+    contract_instance = macro.args[0]
+    contract_result = contract_instance.new(input_params: value)
+    unless contract_result.success?
+      errors = contract_result.errors
+      errors.each do |error|
+        key(key.path.to_a + error.path).failure(error.text)
+      end
+    end
+  end
+
   module Types
     include Dry.Types()
 

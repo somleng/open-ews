@@ -37,8 +37,9 @@ FactoryBot.define do
     SecureRandom.uuid
   end
 
-  factory :callout do
+  factory :callout, aliases: [ :broadcast ] do
     account
+    channel { "voice" }
 
     transient do
       audio_file { nil }
@@ -53,7 +54,8 @@ FactoryBot.define do
       end
     end
 
-    trait :initialized do
+    trait :pending do
+      status { Callout::STATE_PENDING }
     end
 
     trait :can_start do
@@ -91,7 +93,7 @@ FactoryBot.define do
 
     traits_for_enum :status, %i[preview queued running finished]
 
-    factory :callout_population, aliases: [ :batch_operation ],
+    factory :callout_population, aliases: [ :batch_operation, :broadcast_population ],
                                  class: "BatchOperation::CalloutPopulation" do
       after(:build) do |callout_population|
         callout_population.callout ||= build(:callout, account: callout_population.account)

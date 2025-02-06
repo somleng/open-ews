@@ -1,5 +1,8 @@
 class Callout < ApplicationRecord
+  extend Enumerize
+
   AUDIO_CONTENT_TYPES = %w[audio/mpeg audio/mp3 audio/wav audio/x-wav].freeze
+  CHANNELS = %i[voice].freeze
 
   module ActiveStorageDirty
     attr_reader :audio_file_blob_was, :audio_file_will_change
@@ -26,16 +29,23 @@ class Callout < ApplicationRecord
   store_accessor :settings
   accepts_nested_key_value_fields_for :settings
 
+  # TODO: Remove the default after we removed the old API
+  enumerize :channel, in: CHANNELS, default: :voice
+
   belongs_to :account
   belongs_to :created_by, class_name: "User", optional: true
 
   has_many :callout_participations, dependent: :restrict_with_error
+  has_many :broadcast_beneficiaries, class_name: "CalloutParticipation", dependent: :restrict_with_error
+  has_many :beneficiaries, class_name: "Contact", through: :broadcast_beneficiaries, source: :contact
 
   has_many :batch_operations,
            class_name: "BatchOperation::Base",
            dependent: :restrict_with_error
 
   has_many :callout_populations,
+           class_name: "BatchOperation::CalloutPopulation"
+  has_many :populations,
            class_name: "BatchOperation::CalloutPopulation"
 
   has_many :phone_calls
@@ -48,6 +58,7 @@ class Callout < ApplicationRecord
 
   has_one_attached :audio_file
 
+  validates :channel, :status, presence: true
   validates :call_flow_logic, :status, presence: true
 
   validates :audio_file,
@@ -68,38 +79,63 @@ class Callout < ApplicationRecord
   after_commit      :process_audio_file
 
   aasm column: :status, whiny_transitions: false do
-    state :initialized, initial: true
+    state :pending, initial: true
+    state :queued
     state :running
-    state :paused
     state :stopped
+    state :completed
 
+    # TODO: Remove state transition from pending after we removed the old API
     event :start do
       transitions(
-        from: :initialized,
-        to: :running
-      )
-    end
-
-    event :pause do
-      transitions(
-        from: :running,
-        to: :paused
-      )
-    end
-
-    event :resume do
-      transitions(
-        from: %i[paused stopped],
+        from: [ :pending, :queued ],
         to: :running
       )
     end
 
     event :stop do
       transitions(
-        from: %i[running paused],
+        from: [ :running, :queued ],
         to: :stopped
       )
     end
+
+    # TODO: Remove the pause event after we removed the old API
+    event :pause do
+      transitions(
+        from: [ :running, :queued ],
+        to: :stopped
+      )
+    end
+
+    event :resume do
+      transitions(
+        from: :stopped,
+        to: :running
+      )
+    end
+
+    event :complete do
+      transitions(
+        from: :running,
+        to: :completed
+      )
+    end
+  end
+
+  def self.jsonapi_serializer_class
+    BroadcastSerializer
+  end
+
+  # TODO: Remove this after we removed the old API
+  def as_json(*)
+    result = super(except: [ "channel", "beneficiary_filter" ])
+    result["status"] = "initialized" if result["status"] == "pending"
+    result
+  end
+
+  def updatable?
+    status == "pending"
   end
 
   private

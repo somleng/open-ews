@@ -67,7 +67,6 @@ RSpec.describe "Phone Call Events" do
     expect(response.code).to eq("201")
     created_event = RemotePhoneCallEvent.last!
     expect(created_event).to have_attributes(
-      phone_call:,
       call_duration: 87,
       phone_call: have_attributes(
         status: "completed",

@@ -76,6 +76,7 @@ end
 
 group :development do
   gem "listen"
+  gem "rubocop"
   gem "rubocop-performance"
   gem "rubocop-rails-omakase", require: false
   gem "rubocop-rspec", require: false

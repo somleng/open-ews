@@ -46,6 +46,15 @@ module API
         end
       end
 
+      def apply_filters(scope, with:)
+        validate_request_schema(
+          with: ApplicationFilter.build_filter_schema(with),
+          input_params: request.query_parameters
+        ) do |permitted_params|
+            FilterScopeQuery.new(scope, permitted_params).apply
+        end
+      end
+
       def respond_with_errors(object, **)
         respond_with(object, responder: InvalidRequestSchemaResponder, **)
       end

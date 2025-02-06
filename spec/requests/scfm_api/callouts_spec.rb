@@ -42,7 +42,7 @@ RSpec.resource "Callouts" do
 
     parameter(
       :settings,
-      "Additionoal settings which are needed byt the call flow logic."
+      "Additional settings which are needed by the call flow logic."
     )
 
     example "Create a Callout" do
@@ -69,6 +69,7 @@ RSpec.resource "Callouts" do
       expect(created_callout.settings).to eq(request_body.fetch(:settings))
       expect(created_callout.call_flow_logic).to eq(request_body.fetch(:call_flow_logic))
       expect(created_callout.audio_url).to eq(request_body.fetch(:audio_url))
+      expect(parsed_response.fetch("status")).to eq("initialized")
     end
   end
 
@@ -143,7 +144,7 @@ RSpec.resource "Callouts" do
       callout = create(
         :callout,
         account: account,
-        status: Callout::STATE_INITIALIZED
+        status: Callout::STATE_PENDING
       )
 
       set_authorization_header_for(account)
