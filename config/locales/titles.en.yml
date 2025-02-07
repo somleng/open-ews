@@ -43,7 +43,7 @@ en:
       stop_callout: Stop
       summary: Callout Summary
       update: Edit Callout
-    contacts:
+    beneficiaries:
       create: New Contact
       edit: Edit Contact
       index: Contacts

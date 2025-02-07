@@ -51,6 +51,9 @@ en:
       callout_participation:
         one: Callout participation
         other: Callout participations
+      beneficiary:
+        one: Contact
+        other: Contacts
       contact:
         one: Contact
         other: Contacts

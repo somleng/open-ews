@@ -15,8 +15,8 @@ module Dashboard
         callout
       elsif callout_population_id
         callout_population
-      elsif contact_id
-        contact
+      elsif beneficiary_id
+        beneficiary
       end
     end
 
@@ -36,12 +36,12 @@ module Dashboard
       @callout_population ||= current_account.batch_operations.find(callout_population_id)
     end
 
-    def contact_id
-      params[:contact_id]
+    def beneficiary_id
+      params[:beneficiary_id]
     end
 
-    def contact
-      @contact ||= current_account.contacts.find(contact_id)
+    def beneficiary
+      @beneficiary ||= current_account.beneficiaries.find(beneficiary_id)
     end
 
     def filter_class
