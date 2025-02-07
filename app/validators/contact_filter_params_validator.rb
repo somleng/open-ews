@@ -10,7 +10,7 @@ class ContactFilterParamsValidator < ActiveModel::EachValidator
 
   def valid?(value)
     Filter::Resource::Contact.new(
-      { association_chain: Contact.all },
+      { association_chain: Beneficiary.all },
       value
     ).resources.any?
     true

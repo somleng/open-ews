@@ -137,7 +137,7 @@ module CallFlowLogic
         transitions from: :gathering_commune,
                     to: :playing_conclusion,
                     if: :commune_gathered?,
-                    after: %i[persist_commune update_contact play_conclusion]
+                    after: %i[persist_commune update_beneficiary play_conclusion]
 
         transitions from: %i[gathering_province gathering_district gathering_commune],
                     to: :gathering_language,
@@ -286,7 +286,7 @@ module CallFlowLogic
     end
 
     def feedback_enabled?
-      FEEDBACK_FEATURE_FLAG_PHONE_NUMBERS.include?(phone_call.contact.phone_number)
+      FEEDBACK_FEATURE_FLAG_PHONE_NUMBERS.include?(phone_call.beneficiary.phone_number)
     end
 
     def language_gathered?
@@ -364,11 +364,11 @@ module CallFlowLogic
       )
     end
 
-    def update_contact
-      contact = phone_call.contact
+    def update_beneficiary
+      beneficiary = phone_call.beneficiary
       commune = Pumi::Commune.find_by_id(phone_call_metadata(:commune_code))
 
-      contact.addresses.find_or_create_by!(
+      beneficiary.addresses.find_or_create_by!(
         iso_region_code: commune.province.iso3166_2,
         administrative_division_level_2_code: commune.district_id,
         administrative_division_level_2_name: commune.district.name_en,
@@ -376,10 +376,10 @@ module CallFlowLogic
         administrative_division_level_3_name: commune.name_en,
       )
 
-      commune_ids = contact.metadata.fetch("commune_ids", [])
+      commune_ids = beneficiary.metadata.fetch("commune_ids", [])
       commune_ids << commune.id
-      contact.language_code = phone_call_metadata(:language_code)
-      contact.metadata = {
+      beneficiary.language_code = phone_call_metadata(:language_code)
+      beneficiary.metadata = {
         "commune_ids" => commune_ids.uniq,
         "language_code" => phone_call_metadata(:language_code),
         "latest_commune_id" => commune.id,
@@ -387,7 +387,7 @@ module CallFlowLogic
         "latest_address_en" => commune.address_en
       }
 
-      contact.save!
+      beneficiary.save!
     end
 
     def phone_call_metadata(key)

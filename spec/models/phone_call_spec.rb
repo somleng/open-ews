@@ -49,7 +49,7 @@ RSpec.describe PhoneCall do
 
     phone_call.valid?
 
-    expect(phone_call.contact).to eq(phone_call.callout_participation.contact)
+    expect(phone_call.beneficiary).to eq(phone_call.callout_participation.beneficiary)
     expect(phone_call.phone_number).to eq(phone_call.callout_participation.phone_number)
   end
 

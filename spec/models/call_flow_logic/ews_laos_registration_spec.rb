@@ -113,9 +113,9 @@ module CallFlowLogic
       assert_gather("select_province-lao.mp3", response)
     end
 
-    it "saves the district, updates the contact and plays a conclusion" do
-      contact = create(
-        :contact,
+    it "saves the district, updates the beneficiary and plays a conclusion" do
+      beneficiary = create(
+        :beneficiary,
         metadata: {
           name: "John Doe",
           registered_districts: %w[1603 1604]
@@ -124,7 +124,7 @@ module CallFlowLogic
       phone_call = create(
         :phone_call,
         :inbound,
-        contact:,
+        beneficiary:,
         metadata: {
           status: :gathering_district,
           province_code: "16"
@@ -142,14 +142,14 @@ module CallFlowLogic
       response = parse_response(call_flow_logic.to_xml)
       expect(phone_call.metadata.fetch("district_code")).to eq("1604")
       expect(phone_call.metadata.fetch("status")).to eq("playing_conclusion")
-      expect(contact.metadata).to eq(
+      expect(beneficiary.metadata).to eq(
         "name" => "John Doe",
         "registered_districts" => %w[1603 1604],
         "latest_district_id" => "1604",
         "latest_address_en" => "Paksong District, Champasak Province",
         "latest_address_lo" => "ເມືອງປາກຊ່ອງ ແຂວງຈຳປາສັກ"
       )
-      expect(contact.addresses.last).to have_attributes(
+      expect(beneficiary.addresses.last).to have_attributes(
         iso_region_code: "LA-CH",
         administrative_division_level_2_code: "1604",
         administrative_division_level_2_name: "Paksong",

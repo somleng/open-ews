@@ -12,7 +12,7 @@ class RetryPhoneCallJob < ApplicationJob
     PhoneCall.create!(
       account: phone_call.account,
       callout_participation:,
-      contact: phone_call.contact,
+      beneficiary: phone_call.beneficiary,
       callout: phone_call.callout
     )
   end

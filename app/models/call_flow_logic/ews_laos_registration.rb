@@ -114,7 +114,7 @@ module CallFlowLogic
         transitions from: :gathering_district,
                     to: :playing_conclusion,
                     if: :district_gathered?,
-                    after: %i[persist_district update_contact play_conclusion]
+                    after: %i[persist_district update_beneficiary play_conclusion]
 
         transitions from: %i[gathering_province gathering_district],
                     to: :gathering_province,
@@ -235,26 +235,26 @@ module CallFlowLogic
       )
     end
 
-    def update_contact
-      contact = phone_call.contact
+    def update_beneficiary
+      beneficiary = phone_call.beneficiary
       district = DISTRICTS.find { |d| d.code == phone_call_metadata(:district_code) }
 
-      contact.addresses.find_or_create_by!(
+      beneficiary.addresses.find_or_create_by!(
         iso_region_code: district.province.iso3166,
         administrative_division_level_2_code: district.code,
         administrative_division_level_2_name: district.name_en,
       )
 
-      registered_districts = contact.metadata.fetch("registered_districts", [])
+      registered_districts = beneficiary.metadata.fetch("registered_districts", [])
       registered_districts << district.code
       registered_districts.uniq!
-      contact.metadata = {
+      beneficiary.metadata = {
         "registered_districts" => registered_districts,
         "latest_district_id" => district.code,
         "latest_address_en" => district.address_en,
         "latest_address_lo" => district.address_lo
       }
-      contact.save!
+      beneficiary.save!
     end
 
     def phone_call_metadata(key)

@@ -103,7 +103,7 @@ FactoryBot.define do
 
   factory :callout_participation do
     callout
-    contact
+    beneficiary
   end
 
   factory :phone_call do

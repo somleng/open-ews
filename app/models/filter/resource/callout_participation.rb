@@ -8,7 +8,7 @@ module Filter
       private
 
       def filter_params
-        params.slice(:call_flow_logic, :callout_id, :contact_id, :callout_population_id)
+        params.slice(:call_flow_logic, :callout_id, :beneficiary_id, :callout_population_id)
       end
 
       def callout_scope

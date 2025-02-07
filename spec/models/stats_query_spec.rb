@@ -9,7 +9,7 @@ RSpec.describe StatsQuery, type: :model do
       group_by_fields: [
         BeneficiaryField.find("gender")
       ],
-    ).apply(Contact.all)
+    ).apply(Beneficiary.all)
 
     expect(result).to contain_exactly(
       have_attributes(groups: [ "gender" ], key: [ "M" ], value: 2),
@@ -39,7 +39,7 @@ RSpec.describe StatsQuery, type: :model do
         BeneficiaryField.find("address.iso_region_code"),
         BeneficiaryField.find("address.administrative_division_level_2_code")
       ],
-    ).apply(Contact.all)
+    ).apply(Beneficiary.all)
 
     expect(result).to contain_exactly(
       have_attributes(groups: [ "iso_country_code", "address.iso_region_code", "address.administrative_division_level_2_code" ], key: [ "KH", "KH-12", "1202" ], value: 2),
@@ -79,7 +79,7 @@ RSpec.describe StatsQuery, type: :model do
         BeneficiaryField.find("address.iso_region_code"),
         BeneficiaryField.find("address.administrative_division_level_2_code")
       ],
-    ).apply(Contact.all)
+    ).apply(Beneficiary.all)
 
     expect(result).to contain_exactly(
       have_attributes(groups: [ "iso_country_code", "address.iso_region_code", "address.administrative_division_level_2_code" ], key: [ "KH", "KH-12", "1202" ], value: 2),
@@ -119,7 +119,7 @@ RSpec.describe StatsQuery, type: :model do
           BeneficiaryField.find("address.iso_region_code"),
           BeneficiaryField.find("address.administrative_division_level_2_code")
         ],
-      ).apply(Contact.all)
+      ).apply(Beneficiary.all)
     }.to raise_error(StatsQuery::TooManyResultsError)
   end
 end

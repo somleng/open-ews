@@ -85,11 +85,11 @@ module Filter
           expect(results).to match_array([ phone_call ])
         end
 
-        it "filters by contact_id" do
-          contact = create(:contact)
-          phone_call = create(:phone_call, contact: contact)
+        it "filters by beneficiary_id" do
+          beneficiary = create(:beneficiary)
+          phone_call = create(:phone_call, beneficiary: beneficiary)
           create(:phone_call)
-          filter = build_filter(contact_id: contact.id)
+          filter = build_filter(beneficiary_id: beneficiary.id)
 
           results = filter.resources
 

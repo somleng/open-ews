@@ -17,12 +17,12 @@ RSpec.describe CallFlowLogic::EWSRegistration do
   end
 
   it "prompts the main menu" do
-    contact = create(:contact, phone_number: "855715100860")
+    beneficiary = create(:beneficiary, phone_number: "855715100860")
     phone_call = create(
       :phone_call,
       :inbound,
-      contact:,
-      phone_number: contact.phone_number,
+      beneficiary:,
+      phone_number: beneficiary.phone_number,
       metadata: { status: :playing_introduction }
     )
     event = create_phone_call_event(phone_call:)
@@ -304,9 +304,9 @@ RSpec.describe CallFlowLogic::EWSRegistration do
     expect(event.phone_call.metadata.fetch("status")).to eq("gathering_commune")
   end
 
-  it "saves the commune, updates the contact and plays a conclusion" do
-    contact = create(
-      :contact,
+  it "saves the commune, updates the beneficiary and plays a conclusion" do
+    beneficiary = create(
+      :beneficiary,
       metadata: {
         name: "John Doe",
         language_code: "khm",
@@ -316,7 +316,7 @@ RSpec.describe CallFlowLogic::EWSRegistration do
     phone_call = create(
       :phone_call,
       :inbound,
-      contact: contact,
+      beneficiary: beneficiary,
       metadata: {
         status: :gathering_commune,
         language_code: "krr",
@@ -336,8 +336,8 @@ RSpec.describe CallFlowLogic::EWSRegistration do
     response = parse_response(call_flow_logic.to_xml)
     expect(phone_call.metadata.fetch("commune_code")).to eq("010505") # Samraong
     expect(phone_call.metadata.fetch("status")).to eq("playing_conclusion")
-    expect(contact.language_code).to eq("krr")
-    expect(contact.metadata).to eq(
+    expect(beneficiary.language_code).to eq("krr")
+    expect(beneficiary.metadata).to eq(
       "commune_ids" => %w[120101 010505],
       "name" => "John Doe",
       "language_code" => "krr",
@@ -345,7 +345,7 @@ RSpec.describe CallFlowLogic::EWSRegistration do
       "latest_address_km" => "ឃុំសំរោង ស្រុកអូរជ្រៅ ខេត្តបន្ទាយមានជ័យ",
       "latest_address_en" => "Samraong Commune, Ou Chrov District, Banteay Meanchey Province"
     )
-    expect(contact.addresses.last).to have_attributes(
+    expect(beneficiary.addresses.last).to have_attributes(
       iso_region_code: "KH-1",
       administrative_division_level_2_code: "0105",
       administrative_division_level_2_name: "Ou Chrov",

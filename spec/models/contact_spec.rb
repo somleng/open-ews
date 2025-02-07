@@ -1,7 +1,7 @@
 require "rails_helper"
 
-RSpec.describe Contact do
-  let(:factory) { :contact }
+RSpec.describe Beneficiary do
+  let(:factory) { :beneficiary }
 
   include_examples "has_metadata"
 

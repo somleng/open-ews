@@ -46,7 +46,7 @@ module Filter
         params.slice(
           :callout_id,
           :callout_participation_id,
-          :contact_id,
+          :beneficiary_id,
           :status,
           :call_flow_logic,
           :remote_call_id,
