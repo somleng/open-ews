@@ -37,7 +37,7 @@ class Callout < ApplicationRecord
 
   has_many :callout_participations, dependent: :restrict_with_error
   has_many :broadcast_beneficiaries, class_name: "CalloutParticipation", dependent: :restrict_with_error
-  has_many :beneficiaries, class_name: "Contact", through: :broadcast_beneficiaries, source: :contact
+  has_many :beneficiaries, through: :broadcast_beneficiaries
 
   has_many :batch_operations,
            class_name: "BatchOperation::Base",

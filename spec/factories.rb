@@ -78,7 +78,7 @@ FactoryBot.define do
     end
   end
 
-  factory :contact, aliases: [ :beneficiary ] do
+  factory :beneficiary do
     account
     iso_country_code { "KH" }
     phone_number { generate(:phone_number) }

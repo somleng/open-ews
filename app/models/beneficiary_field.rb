@@ -11,9 +11,9 @@ class BeneficiaryField
 
   def self.all
     @all ||= [
-      self.new(name: "status", column: "status", description: "Must be one of #{Contact.status.values.map { |t| "`#{t}`" }.join(", ")}."),
+      self.new(name: "status", column: "status", description: "Must be one of #{Beneficiary.status.values.map { |t| "`#{t}`" }.join(", ")}."),
       self.new(name: "gender", column: "gender", description: "Must be one of `M` or `F`."),
-      self.new(name: "disability_status", column: "disability_status", description: "Must be one of #{Contact.disability_status.values.map { |t| "`#{t}`" }.join(", ")}."),
+      self.new(name: "disability_status", column: "disability_status", description: "Must be one of #{Beneficiary.disability_status.values.map { |t| "`#{t}`" }.join(", ")}."),
       self.new(name: "date_of_birth", column: "date_of_birth", description: "Date of birth in `YYYY-MM-DD` format."),
       self.new(name: "language_code", column: "language_code", description: "The [ISO ISO 639-2](https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes) alpha-3 language code of the beneficiary."),
       self.new(name: "iso_country_code", column: "iso_country_code", description: "The [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the beneficiary."),

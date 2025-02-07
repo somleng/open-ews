@@ -22,7 +22,7 @@ class PopulateBroadcastBeneficiaries < ApplicationWorkflow
     broadcast_beneficiaries = beneficiaries_scope.find_each.map do |beneficiary|
       {
         callout_id: broadcast.id,
-        contact_id: beneficiary.id,
+        beneficiary_id: beneficiary.id,
         phone_number: beneficiary.phone_number,
         call_flow_logic: broadcast.call_flow_logic,
         phone_calls_count: 1
@@ -37,7 +37,7 @@ class PopulateBroadcastBeneficiaries < ApplicationWorkflow
       {
         account_id: account.id,
         callout_id: broadcast.id,
-        contact_id: broadcast_beneficiary.contact_id,
+        beneficiary_id: broadcast_beneficiary.beneficiary_id,
         call_flow_logic: broadcast_beneficiary.call_flow_logic,
         callout_participation_id: broadcast_beneficiary.id,
         phone_number: broadcast_beneficiary.phone_number,

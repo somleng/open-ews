@@ -20,8 +20,7 @@ class PhoneCall < ApplicationRecord
   attribute :phone_number, :phone_number
 
   belongs_to :callout_participation, optional: true, counter_cache: true
-  belongs_to :contact, validate: true
-  belongs_to :beneficiary, class_name: "Contact", foreign_key: "contact_id"
+  belongs_to :beneficiary, validate: true
   belongs_to :account
   belongs_to :callout, optional: true
   has_many   :remote_phone_call_events, dependent: :restrict_with_error
@@ -31,9 +30,9 @@ class PhoneCall < ApplicationRecord
   include AASM
 
   delegate :call_flow_logic, to: :callout_participation, prefix: true, allow_nil: true
-  delegate :call_flow_logic, to: :contact, prefix: true, allow_nil: true
+  delegate :call_flow_logic, to: :beneficiary, prefix: true, allow_nil: true
 
-  delegate :contact,
+  delegate :beneficiary,
            :phone_number,
            to: :callout_participation,
            prefix: true,
@@ -131,7 +130,7 @@ class PhoneCall < ApplicationRecord
   def set_call_flow_logic
     return if call_flow_logic.present?
 
-    self.call_flow_logic = callout_participation_call_flow_logic || contact_call_flow_logic
+    self.call_flow_logic = callout_participation_call_flow_logic || beneficiary_call_flow_logic
   end
 
   def remote_call_expired?
@@ -165,9 +164,9 @@ class PhoneCall < ApplicationRecord
   end
 
   def set_defaults
-    self.contact ||= callout_participation_contact
+    self.beneficiary ||= callout_participation_beneficiary
     self.phone_number  ||= callout_participation_phone_number
-    self.account ||= contact&.account
+    self.account ||= beneficiary&.account
     set_call_flow_logic
   end
 

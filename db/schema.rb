@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_27_074839) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_07_081034) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -78,6 +78,30 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_074839) do
     t.index ["updated_at"], name: "index_batch_operations_on_updated_at"
   end
 
+  create_table "beneficiaries", force: :cascade do |t|
+    t.string "phone_number", null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.bigint "account_id", null: false
+    t.string "status", default: "active", null: false
+    t.string "language_code"
+    t.string "gender"
+    t.date "date_of_birth"
+    t.citext "iso_country_code", null: false
+    t.string "disability_status"
+    t.index ["account_id", "date_of_birth"], name: "index_beneficiaries_on_account_id_and_date_of_birth"
+    t.index ["account_id", "disability_status"], name: "index_beneficiaries_on_account_id_and_disability_status"
+    t.index ["account_id", "gender"], name: "index_beneficiaries_on_account_id_and_gender"
+    t.index ["account_id", "iso_country_code"], name: "index_beneficiaries_on_account_id_and_iso_country_code"
+    t.index ["account_id", "language_code"], name: "index_beneficiaries_on_account_id_and_language_code"
+    t.index ["account_id", "phone_number"], name: "index_beneficiaries_on_account_id_and_phone_number", unique: true
+    t.index ["account_id", "status"], name: "index_beneficiaries_on_account_id_and_status", where: "((status)::text = 'active'::text)"
+    t.index ["account_id"], name: "index_beneficiaries_on_account_id"
+    t.index ["created_at"], name: "index_beneficiaries_on_created_at"
+    t.index ["updated_at"], name: "index_beneficiaries_on_updated_at"
+  end
+
   create_table "beneficiary_addresses", force: :cascade do |t|
     t.bigint "beneficiary_id", null: false
     t.citext "iso_region_code", null: false
@@ -96,7 +120,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_074839) do
 
   create_table "callout_participations", force: :cascade do |t|
     t.bigint "callout_id", null: false
-    t.bigint "contact_id"
+    t.bigint "beneficiary_id"
     t.bigint "callout_population_id"
     t.string "call_flow_logic", null: false
     t.jsonb "metadata", default: {}, null: false
@@ -105,10 +129,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_074839) do
     t.boolean "answered", default: false, null: false
     t.integer "phone_calls_count", default: 0, null: false
     t.string "phone_number", null: false
-    t.index ["callout_id", "contact_id"], name: "index_callout_participations_on_callout_id_and_contact_id", unique: true
+    t.index ["beneficiary_id"], name: "index_callout_participations_on_beneficiary_id"
+    t.index ["callout_id", "beneficiary_id"], name: "index_callout_participations_on_callout_id_and_beneficiary_id", unique: true
     t.index ["callout_id"], name: "index_callout_participations_on_callout_id"
     t.index ["callout_population_id"], name: "index_callout_participations_on_callout_population_id"
-    t.index ["contact_id"], name: "index_callout_participations_on_contact_id"
   end
 
   create_table "callouts", force: :cascade do |t|
@@ -126,30 +150,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_074839) do
     t.index ["account_id"], name: "index_callouts_on_account_id"
     t.index ["created_by_id"], name: "index_callouts_on_created_by_id"
     t.index ["status"], name: "index_callouts_on_status"
-  end
-
-  create_table "contacts", force: :cascade do |t|
-    t.string "phone_number", null: false
-    t.jsonb "metadata", default: {}, null: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.bigint "account_id", null: false
-    t.string "status", default: "active", null: false
-    t.string "language_code"
-    t.string "gender"
-    t.date "date_of_birth"
-    t.citext "iso_country_code", null: false
-    t.string "disability_status"
-    t.index ["account_id", "date_of_birth"], name: "index_contacts_on_account_id_and_date_of_birth"
-    t.index ["account_id", "disability_status"], name: "index_contacts_on_account_id_and_disability_status"
-    t.index ["account_id", "gender"], name: "index_contacts_on_account_id_and_gender"
-    t.index ["account_id", "iso_country_code"], name: "index_contacts_on_account_id_and_iso_country_code"
-    t.index ["account_id", "language_code"], name: "index_contacts_on_account_id_and_language_code"
-    t.index ["account_id", "phone_number"], name: "index_contacts_on_account_id_and_phone_number", unique: true
-    t.index ["account_id", "status"], name: "index_contacts_on_account_id_and_status", where: "((status)::text = 'active'::text)"
-    t.index ["account_id"], name: "index_contacts_on_account_id"
-    t.index ["created_at"], name: "index_contacts_on_created_at"
-    t.index ["updated_at"], name: "index_contacts_on_updated_at"
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|
@@ -213,7 +213,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_074839) do
 
   create_table "phone_calls", force: :cascade do |t|
     t.bigint "callout_participation_id"
-    t.bigint "contact_id"
+    t.bigint "beneficiary_id"
     t.string "status", null: false
     t.string "phone_number", null: false
     t.string "remote_call_id"
@@ -233,10 +233,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_074839) do
     t.datetime "remote_status_fetch_queued_at", precision: nil
     t.bigint "callout_id"
     t.index ["account_id"], name: "index_phone_calls_on_account_id"
+    t.index ["beneficiary_id"], name: "index_phone_calls_on_beneficiary_id"
     t.index ["callout_id", "status"], name: "index_phone_calls_on_callout_id_and_status"
     t.index ["callout_id"], name: "index_phone_calls_on_callout_id"
     t.index ["callout_participation_id"], name: "index_phone_calls_on_callout_participation_id"
-    t.index ["contact_id"], name: "index_phone_calls_on_contact_id"
     t.index ["created_at"], name: "index_phone_calls_on_created_at"
     t.index ["phone_number"], name: "index_phone_calls_on_phone_number"
     t.index ["remote_call_id"], name: "index_phone_calls_on_remote_call_id", unique: true
@@ -248,14 +248,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_074839) do
   create_table "recordings", force: :cascade do |t|
     t.bigint "phone_call_id", null: false
     t.bigint "account_id", null: false
-    t.bigint "contact_id", null: false
+    t.bigint "beneficiary_id", null: false
     t.string "external_recording_id", null: false
     t.string "external_recording_url", null: false
     t.integer "duration", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_recordings_on_account_id"
-    t.index ["contact_id"], name: "index_recordings_on_contact_id"
+    t.index ["beneficiary_id"], name: "index_recordings_on_beneficiary_id"
     t.index ["created_at"], name: "index_recordings_on_created_at"
     t.index ["phone_call_id"], name: "index_recordings_on_phone_call_id"
   end
@@ -315,13 +315,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_074839) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "batch_operations", "accounts"
   add_foreign_key "batch_operations", "callouts"
-  add_foreign_key "beneficiary_addresses", "contacts", column: "beneficiary_id", on_delete: :cascade
+  add_foreign_key "beneficiaries", "accounts"
+  add_foreign_key "beneficiary_addresses", "beneficiaries", on_delete: :cascade
   add_foreign_key "callout_participations", "batch_operations", column: "callout_population_id"
+  add_foreign_key "callout_participations", "beneficiaries", on_delete: :nullify
   add_foreign_key "callout_participations", "callouts"
-  add_foreign_key "callout_participations", "contacts", on_delete: :nullify
   add_foreign_key "callouts", "accounts"
   add_foreign_key "callouts", "users", column: "created_by_id"
-  add_foreign_key "contacts", "accounts"
   add_foreign_key "oauth_access_grants", "accounts", column: "resource_owner_id"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "accounts", column: "created_by_id"
@@ -329,11 +329,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_074839) do
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_applications", "accounts", column: "owner_id"
   add_foreign_key "phone_calls", "accounts"
+  add_foreign_key "phone_calls", "beneficiaries", on_delete: :nullify
   add_foreign_key "phone_calls", "callout_participations"
   add_foreign_key "phone_calls", "callouts"
-  add_foreign_key "phone_calls", "contacts", on_delete: :nullify
   add_foreign_key "recordings", "accounts"
-  add_foreign_key "recordings", "contacts"
+  add_foreign_key "recordings", "beneficiaries"
   add_foreign_key "recordings", "phone_calls"
   add_foreign_key "remote_phone_call_events", "phone_calls"
   add_foreign_key "users", "accounts"

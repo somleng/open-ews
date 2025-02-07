@@ -25,10 +25,7 @@ class Account < ApplicationRecord
   has_many :users,
            dependent: :restrict_with_error
 
-  has_many :contacts,
-           dependent: :restrict_with_error
-  has_many :beneficiaries, class_name: "Contact",
-           dependent: :restrict_with_error
+  has_many :beneficiaries, dependent: :restrict_with_error
 
   has_many :callouts, dependent: :restrict_with_error
   has_many :broadcasts, class_name: "Callout", dependent: :restrict_with_error
