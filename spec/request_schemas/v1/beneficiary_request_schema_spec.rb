@@ -3,7 +3,7 @@ require "rails_helper"
 module V1
   RSpec.describe BeneficiaryRequestSchema, type: :request_schema do
     it "validates the phone_number" do
-      contact = create(:contact)
+      beneficiary = create(:beneficiary)
 
       expect(
         validate_schema(input_params: { data: { attributes: { phone_number: nil } } })
@@ -19,15 +19,15 @@ module V1
 
       expect(
         validate_schema(
-          input_params: { data: { attributes: { phone_number: contact.phone_number, iso_country_code: "KH" } }  },
-          options: { account: contact.account }
+          input_params: { data: { attributes: { phone_number: beneficiary.phone_number, iso_country_code: "KH" } }  },
+          options: { account: beneficiary.account }
         )
       ).not_to have_valid_field(:data, :attributes, :phone_number)
 
       expect(
         validate_schema(
           input_params: { data: { attributes: { phone_number: "+855 12 222 222", iso_country_code: "KH" } }  },
-          options: { account: contact.account }
+          options: { account: beneficiary.account }
         )
       ).to have_valid_field(:data, :attributes, :phone_number)
     end

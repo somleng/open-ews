@@ -24,7 +24,7 @@ RSpec.describe PopulateBroadcastBeneficiaries do
     expect(broadcast.status).to eq("running")
     expect(broadcast.beneficiaries.count).to eq(1)
     expect(broadcast.broadcast_beneficiaries.first).to have_attributes(
-      contact: female_beneficiary,
+      beneficiary: female_beneficiary,
       phone_number: female_beneficiary.phone_number,
       phone_calls_count: 1
     )
