@@ -157,12 +157,4 @@ RSpec.describe "Callout Populations" do
       contact_filter_metadata:
     )
   end
-
-  def create_contact(account, metadata)
-    create(
-      :contact,
-      account:,
-      metadata:
-    )
-  end
 end

@@ -11,7 +11,7 @@ class RemotePhoneCallEvent < ApplicationRecord
             :remote_direction,
             presence: true
 
-  delegate :contact,
+  delegate :beneficiary,
            to: :phone_call
 
   delegate :complete!,

@@ -65,6 +65,7 @@ km:
         other: អ្នកប្រីប្រាស់
   attributes:
     beneficiary: សមាជិកទំនាក់ទំនង
+    beneficiary_id: សមាជិកទំនាក់ទំនង
     call_flow_logic: វិធីសាស្រ្តការហៅចេញ
     created_at: បង្កើតនៅពេល
     duration: រយៈ (វិនាទី)

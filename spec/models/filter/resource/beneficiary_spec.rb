@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Filter::Resource::Contact do
+RSpec.describe Filter::Resource::Beneficiary do
   let(:filterable_factory) { :beneficiary }
   let(:association_chain) { Beneficiary.all }
 

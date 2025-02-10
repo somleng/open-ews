@@ -65,6 +65,7 @@ en:
         other: Users
   attributes:
     beneficiary: Contact
+    beneficiary_id: Contact
     call_flow_logic: Call flow
     created_at: Created at
     duration: Duration (seconds)

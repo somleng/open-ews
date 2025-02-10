@@ -1,6 +1,6 @@
 module Filter
   module Resource
-    class Contact < Filter::Resource::Msisdn
+    class Beneficiary < Filter::Resource::Msisdn
     end
   end
 end

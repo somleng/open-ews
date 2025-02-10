@@ -49,12 +49,8 @@ class Callout < ApplicationRecord
            class_name: "BatchOperation::CalloutPopulation"
 
   has_many :phone_calls
-
-  has_many :remote_phone_call_events,
-           through: :phone_calls
-
-  has_many :contacts,
-           through: :callout_participations
+  has_many :remote_phone_call_events, through: :phone_calls
+  has_many :beneficiaries, through: :callout_participations
 
   has_one_attached :audio_file
 

@@ -42,7 +42,7 @@ module BatchOperation
     private
 
     def beneficiaries_scope
-      Filter::Resource::Contact.new(
+      Filter::Resource::Beneficiary.new(
         { association_chain: account.beneficiaries },
         contact_filter_params.with_indifferent_access
       ).resources.where.not(id: CalloutParticipation.select(:beneficiary_id).where(callout:))

@@ -75,7 +75,6 @@ Rails.application.routes.draw do
     resources :callouts, except: %i[new edit] do
       resources :callout_events, only: :create
       resources :callout_participations, only: %i[index]
-      resources :contacts, only: :index
       resources :phone_calls, only: :index
       resources :batch_operations, only: %i[create index]
     end
