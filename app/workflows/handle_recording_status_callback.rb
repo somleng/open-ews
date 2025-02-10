@@ -23,7 +23,7 @@ class HandleRecordingStatusCallback < ApplicationWorkflow
 
     Recording.create!(
       phone_call:,
-      contact: phone_call.contact,
+      beneficiary: phone_call.beneficiary,
       account: phone_call.account,
       external_recording_id: recording_params.fetch(:recording_sid),
       external_recording_url: recording_params.fetch(:recording_url),

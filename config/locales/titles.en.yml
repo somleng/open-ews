@@ -22,6 +22,13 @@ en:
       index: Callout Populations
       queue: Start
       show: Callout Population %{id}
+    beneficiaries:
+      create: New Contact
+      edit: Edit Contact
+      index: Contacts
+      new: New Contact
+      show: Contact %{id}
+      update: Edit Contact
     callout_participations:
       index: Callout Participations
       show: Callout Participation %{id}
@@ -43,13 +50,6 @@ en:
       stop_callout: Stop
       summary: Callout Summary
       update: Edit Callout
-    beneficiaries:
-      create: New Contact
-      edit: Edit Contact
-      index: Contacts
-      new: New Contact
-      show: Contact %{id}
-      update: Edit Contact
     phone_calls:
       index: Phone Calls
       queue: Send

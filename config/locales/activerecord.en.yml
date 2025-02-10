@@ -45,15 +45,15 @@ en:
       batch_operation/phone_call_queue_remote_fetch:
         one: Fetch phone call status
         other: Fetch phone call status
+      beneficiary:
+        one: Contact
+        other: Contacts
       callout:
         one: Callout
         other: Callouts
       callout_participation:
         one: Callout participation
         other: Callout participations
-      beneficiary:
-        one: Contact
-        other: Contacts
       phone_call:
         one: Phone call
         other: Phone calls
@@ -64,10 +64,10 @@ en:
         one: User
         other: Users
   attributes:
+    beneficiary: Contact
     call_flow_logic: Call flow
     created_at: Created at
     duration: Duration (seconds)
     metadata: Metadata
     msisdn: Phone number
     status: Status
-    beneficiary: Contact
