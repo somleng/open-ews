@@ -141,6 +141,7 @@ class PhoneCall < ApplicationRecord
   def as_json(*)
     result = super
     result["msisdn"] = result.delete("phone_number")
+    result["contact_id"] = result.delete("beneficiary_id")
     result
   end
 
