@@ -1,0 +1,7 @@
+= content_tag_for(:tr, beneficiary) do
+  %td
+    = link_to(beneficiary.id, show_location(beneficiary))
+  %td
+    = beneficiary.phone_number
+  %td
+    = local_time(beneficiary.created_at)

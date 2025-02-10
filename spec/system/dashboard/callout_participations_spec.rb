@@ -56,7 +56,7 @@ RSpec.describe "Callout Participations" do
     end
   end
 
-  it "can list all the callout participations for a contact" do
+  it "can list all the callout participations for a beneficiary" do
     user = create(:user)
     callout_participation = create_callout_participation(account: user.account)
     other_callout_participation = create_callout_participation(account: user.account)

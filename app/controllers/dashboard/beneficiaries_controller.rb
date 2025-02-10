@@ -1,9 +1,9 @@
 module Dashboard
-  class ContactsController < Dashboard::BaseController
+  class BeneficiariesController < Dashboard::BaseController
     private
 
     def association_chain
-      current_account.contacts
+      current_account.beneficiaries
     end
 
     def build_key_value_fields

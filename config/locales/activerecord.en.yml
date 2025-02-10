@@ -54,9 +54,6 @@ en:
       beneficiary:
         one: Contact
         other: Contacts
-      contact:
-        one: Contact
-        other: Contacts
       phone_call:
         one: Phone call
         other: Phone calls
@@ -73,3 +70,4 @@ en:
     metadata: Metadata
     msisdn: Phone number
     status: Status
+    beneficiary: Contact

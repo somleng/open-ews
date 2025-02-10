@@ -43,7 +43,7 @@ km:
       stop_callout: បញ្ឈប់
       summary: Callout Summary
       update: កែប្រែ សេចក្ដីប្រកាស
-    contacts:
+    beneficiaries:
       create: បង្កើត សមាជិកទំនាក់ទំនង
       edit: កែប្រែ សមាជិកទំនាក់ទំនង
       index: សមាជិកទំនាក់ទំនង

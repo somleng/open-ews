@@ -15,8 +15,8 @@ module Dashboard
         callout_participation
       elsif callout_id
         callout
-      elsif contact_id
-        contact
+      elsif beneficiary_id
+        beneficiary
       end
     end
 
@@ -36,12 +36,12 @@ module Dashboard
       @callout ||= current_account.callouts.find(callout_id)
     end
 
-    def contact_id
-      params[:contact_id]
+    def beneficiary_id
+      params[:beneficiary_id]
     end
 
-    def contact
-      @contact ||= current_account.contacts.find(contact_id)
+    def beneficiary
+      @beneficiary ||= current_account.beneficiaries.find(beneficiary_id)
     end
 
     def filter_class

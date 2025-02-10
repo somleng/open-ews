@@ -6,8 +6,8 @@
   = show_for(resource) do |f|
     = f.attribute :id
     = f.attribute :phone_number
-    = f.attribute :contact do
-      = link_to(resource.contact_id, dashboard_contact_path(resource.contact_id))
+    = f.attribute :beneficiary do
+      = link_to(resource.beneficiary_id, dashboard_beneficiary_path(resource.beneficiary_id))
     = f.attribute :direction, value: resource.direction.to_s.humanize
     = f.attribute :status, value: resource.status.humanize
     = f.attribute :duration

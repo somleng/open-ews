@@ -51,7 +51,7 @@ km:
       callout_participation:
         one: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
         other: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
-      contact:
+      beneficiary:
         one: សមាជិកទំនាក់ទំនង
         other: សមាជិកទំនាក់ទំនង
       phone_call:
