@@ -55,7 +55,7 @@ FactoryBot.define do
     end
 
     trait :pending do
-      status { Callout::STATE_PENDING }
+      status { Broadcast::STATE_PENDING }
     end
 
     trait :can_start do
@@ -74,7 +74,7 @@ FactoryBot.define do
     end
 
     trait :running do
-      status { Callout::STATE_RUNNING }
+      status { Broadcast::STATE_RUNNING }
     end
   end
 

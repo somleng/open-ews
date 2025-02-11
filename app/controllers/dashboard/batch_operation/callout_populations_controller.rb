@@ -1,17 +1,17 @@
 module Dashboard
   module BatchOperation
     class CalloutPopulationsController < Dashboard::BaseController
-      helper_method :callout
+      helper_method :broadcast
 
       private
 
       def parent_resource
-        callout if params[:callout_id]
+        broadcast if params[:broadcast_id]
       end
 
       def association_chain
-        if params[:callout_id]
-          callout.callout_populations
+        if params[:broadcast_id]
+          broadcast.callout_populations
         else
           current_account.batch_operations
         end
@@ -28,11 +28,11 @@ module Dashboard
       end
 
       def prepare_resource_for_create
-        resource.account = callout.account
+        resource.account = broadcast.account
       end
 
-      def callout
-        @callout ||= current_account.callouts.find(params[:callout_id])
+      def broadcast
+        @broadcast ||= current_account.broadcasts.find(params[:broadcast_id])
       end
 
       def build_key_value_fields

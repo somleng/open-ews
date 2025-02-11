@@ -51,7 +51,7 @@ class StartRapidproFlow < ApplicationWorkflow
   end
 
   def callout_settings
-    phone_call.callout&.settings || {}
+    phone_call.broadcast&.settings || {}
   end
 
   def account_settings

@@ -1,5 +1,12 @@
 <%= page_title(title: title) do %>
-  <% url = resource.is_a?(BatchOperation::CalloutPopulation) && resource.callout ? dashboard_callout_batch_operation_path(resource.callout, resource) : dashboard_batch_operation_path(resource) %>
+  <% url =
+    (
+      if resource.is_a?(BatchOperation::CalloutPopulation) && resource.broadcast
+        dashboard_broadcast_batch_operation_path(resource.broadcast, resource)
+      else
+        dashboard_batch_operation_path(resource)
+      end
+    ) %>
   <%= render("shared/destroy_resource_page_action", path: url) %>
 
   <% if resource.may_queue? %>
@@ -9,7 +16,10 @@
   <% end %>
 
   <% if resource.is_a?(BatchOperation::CalloutPopulation) %>
-    <%= render("shared/edit_resource_page_action", path: edit_dashboard_batch_operation_callout_population_path(resource)) %>
+    <%= render(
+      "shared/edit_resource_page_action",
+      path: edit_dashboard_batch_operation_callout_population_path(resource),
+    ) %>
   <% end %>
 <% end %>
 
@@ -18,11 +28,12 @@
     <%= f.attribute :id %>
     <%= f.attribute :type, value: resource.model_name.human %>
     <%= f.attribute :status, value: resource.status.humanize %>
-    <% if resource.is_a?(BatchOperation::CalloutPopulation) && resource.callout %>
-      <%= f.attribute :callout do %>
-        <%= link_to(resource.callout.id, dashboard_callout_path(resource.callout)) %>
+    <% if resource.is_a?(BatchOperation::CalloutPopulation) && resource.broadcast %>
+      <%= f.attribute :broadcast do %>
+        <%= link_to(resource.broadcast.id, dashboard_broadcast_path(resource.broadcast)) %>
       <% end %>
-      <%= f.attribute :contact_filter_metadata, value: json_attribute_value(resource.contact_filter_metadata) %>
+      <%= f.attribute :contact_filter_metadata,
+                  value: json_attribute_value(resource.contact_filter_metadata) %>
     <% end %>
     <%= f.attribute :created_at, value: local_time(resource.created_at) %>
   <% end %>

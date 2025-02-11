@@ -2,7 +2,7 @@ module Filter
   module Resource
     class CalloutParticipation < Filter::Resource::Msisdn
       def self.attribute_filters
-        super << :callout_scope
+        super << :broadcast_scope
       end
 
       private
@@ -14,7 +14,7 @@ module Filter
         result
       end
 
-      def callout_scope
+      def broadcast_scope
         Filter::Scope::Callout.new(options, params)
       end
     end

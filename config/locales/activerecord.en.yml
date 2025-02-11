@@ -2,7 +2,7 @@
 en:
   activemodel:
     attributes:
-      callout_summary:
+      broadcast_summary:
         busy_calls: Busy calls
         completed_calls: Completed calls
         errored_calls: Errored calls
@@ -51,6 +51,9 @@ en:
       callout:
         one: Callout
         other: Callouts
+      broadcast:
+        one: Callout
+        other: Callouts
       callout_participation:
         one: Callout participation
         other: Callout participations
@@ -66,6 +69,8 @@ en:
   attributes:
     beneficiary: Contact
     beneficiary_id: Contact
+    broadcast: Callout
+    broadcast_id: Callout
     call_flow_logic: Call flow
     created_at: Created at
     duration: Duration (seconds)

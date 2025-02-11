@@ -1,15 +1,15 @@
 module Dashboard
-  class CalloutsController < Dashboard::BaseController
-    helper_method :callout_summary
+  class BroadcastsController < Dashboard::BaseController
+    helper_method :broadcast_summary
 
     private
 
     def association_chain
-      current_account.callouts
+      current_account.broadcasts
     end
 
     def permitted_params
-      params.fetch(:callout, {}).permit(
+      params.fetch(:broadcast, {}).permit(
         :call_flow_logic,
         :audio_file,
         :audio_url,
@@ -32,8 +32,8 @@ module Dashboard
       resource.created_by ||= current_user
     end
 
-    def callout_summary
-      @callout_summary ||= CalloutSummary.new(resource)
+    def broadcast_summary
+      @broadcast_summary ||= BroadcastSummary.new(resource)
     end
   end
 end

@@ -7,8 +7,8 @@
 .card-body
   = show_for(resource) do |f|
     = f.attribute :id
-    = f.attribute :callout do
-      = link_to(resource.callout_id, dashboard_callout_path(resource.callout_id))
+    = f.attribute :broadcast do
+      = link_to(resource.broadcast_id, dashboard_broadcast_path(resource.broadcast_id))
     = f.attribute :beneficiary do
       = link_to(resource.beneficiary_id, dashboard_beneficiary_path(resource.beneficiary_id))
     = f.attribute :callout_population do

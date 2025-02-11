@@ -2,7 +2,7 @@
 km:
   activemodel:
     attributes:
-      callout_summary:
+      broadcast_summary:
         busy_calls: Busy calls
         completed_calls: Completed calls
         errored_calls: Errored calls
@@ -51,6 +51,9 @@ km:
       callout:
         one: សេចក្ដីប្រកាស
         other: សេចក្ដីប្រកាស
+      broadcast:
+        one: សេចក្ដីប្រកាស
+        other: សេចក្ដីប្រកាស
       callout_participation:
         one: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
         other: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
@@ -66,6 +69,8 @@ km:
   attributes:
     beneficiary: សមាជិកទំនាក់ទំនង
     beneficiary_id: សមាជិកទំនាក់ទំនង
+    broadcast: សេចក្ដីប្រកាស
+    broadcast_id: សេចក្ដីប្រកាស
     call_flow_logic: វិធីសាស្រ្តការហៅចេញ
     created_at: បង្កើតនៅពេល
     duration: រយៈ (វិនាទី)

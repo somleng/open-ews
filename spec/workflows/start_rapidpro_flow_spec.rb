@@ -99,8 +99,8 @@ RSpec.describe StartRapidproFlow do
     callout_settings = options.delete(:callout_settings) || {}
     rapidpro_client = options.key?(:rapidpro_client) ? options.delete(:rapidpro_client) : fake_rapidpro_client
     account = create(:account, settings: account_settings)
-    callout = create(:callout, settings: callout_settings, account: account)
-    callout_participation = create_callout_participation(account: account, callout: callout)
+    broadcast = create(:broadcast, settings: callout_settings, account: account)
+    callout_participation = create_callout_participation(account: account, broadcast:)
     phone_call = create_phone_call(account: account, callout_participation: callout_participation)
     described_class.new(phone_call, { rapidpro_client: rapidpro_client }.compact)
   end

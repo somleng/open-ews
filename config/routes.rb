@@ -13,15 +13,15 @@ Rails.application.routes.draw do
              controllers: { invitations: "users/invitations" },
              skip: :registrations
 
-  get "dashboard", to: "dashboard/callouts#index", as: :user_root
-  root to: "dashboard/callouts#index"
+  get "dashboard", to: "dashboard/broadcasts#index", as: :user_root
+  root to: "dashboard/broadcasts#index"
 
   namespace :admin do
     mount(PgHero::Engine, at: "pghero")
   end
 
   namespace "dashboard" do
-    root to: "callouts#index"
+    root to: "broadcasts#index"
     resources :access_tokens
     resource :account, only: %i[edit update]
 
@@ -38,7 +38,7 @@ Rails.application.routes.draw do
       resources :phone_calls, only: :index
     end
 
-    resources :callouts do
+    resources :broadcasts do
       namespace :batch_operation do
         resources :callout_populations, only: %i[new create]
       end

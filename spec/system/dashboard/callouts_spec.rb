@@ -1,42 +1,42 @@
 require "rails_helper"
 
 RSpec.describe "Callouts", :aggregate_failures do
-  it "can list callouts" do
+  it "can list broadcasts" do
     user          = create(:user)
-    callout       = create(
-      :callout,
+    broadcast       = create(
+      :broadcast,
       :pending,
       call_flow_logic: CallFlowLogic::HelloWorld,
       account: user.account
     )
-    other_callout = create(:callout)
+    other_broadcast = create(:broadcast)
 
     sign_in(user)
-    visit dashboard_callouts_path
+    visit dashboard_broadcasts_path
 
     expect(page).to have_title("Callouts")
 
     within("#page_actions") do
-      expect(page).to have_link("New", href: new_dashboard_callout_path)
+      expect(page).to have_link("New", href: new_dashboard_broadcast_path)
     end
 
     within("#resources") do
-      expect(page).to have_content_tag_for(callout)
-      expect(page).not_to have_content_tag_for(other_callout)
+      expect(page).to have_content_tag_for(broadcast)
+      expect(page).not_to have_content_tag_for(other_broadcast)
       expect(page).to have_content("#")
       expect(page).to have_link(
-        callout.id.to_s,
-        href: dashboard_callout_path(callout)
+        broadcast.id.to_s,
+        href: dashboard_broadcast_path(broadcast)
       )
       expect(page).to have_content("Hello World")
     end
   end
 
-  it "create and start a callout", :js do
+  it "create and start a broadcast", :js do
     user = create(:user)
 
     sign_in(user)
-    visit new_dashboard_callout_path
+    visit new_dashboard_broadcast_path
 
     expect(page).to have_title("New Callout")
 
@@ -76,7 +76,7 @@ RSpec.describe "Callouts", :aggregate_failures do
     user = create(:user)
 
     sign_in(user)
-    visit new_dashboard_callout_path
+    visit new_dashboard_broadcast_path
 
     attach_file("Audio file", Rails.root + file_fixture("test.mp3"))
     choose("Hello World")
@@ -87,15 +87,15 @@ RSpec.describe "Callouts", :aggregate_failures do
 
   it "can update a callout", :js do
     user = create(:user)
-    callout = create(
-      :callout,
+    broadcast = create(
+      :broadcast,
       account: user.account,
       metadata: { "location" => { "country" => "kh", "city" => "Phnom Penh" } },
       settings: { "rapidpro" => { "flow_id" => "flow-id" } }
     )
 
     sign_in(user)
-    visit edit_dashboard_callout_path(callout)
+    visit edit_dashboard_broadcast_path(broadcast)
 
     expect(page).to have_title("Edit Callout")
 
@@ -106,28 +106,28 @@ RSpec.describe "Callouts", :aggregate_failures do
     click_on "Save"
 
     expect(page).to have_text("Callout was successfully updated.")
-    expect(callout.reload.metadata).to eq({})
-    expect(callout.reload.settings).to eq({})
-    expect(callout.call_flow_logic).to eq(CallFlowLogic::HelloWorld.to_s)
+    expect(broadcast.reload.metadata).to eq({})
+    expect(broadcast.reload.settings).to eq({})
+    expect(broadcast.call_flow_logic).to eq(CallFlowLogic::HelloWorld.to_s)
   end
 
   it "can delete a callout" do
     user = create(:user)
-    callout = create(:callout, account: user.account)
+    broadcast = create(:broadcast, account: user.account)
 
     sign_in(user)
-    visit dashboard_callout_path(callout)
+    visit dashboard_broadcast_path(broadcast)
 
     click_on "Delete"
 
-    expect(page).to have_current_path(dashboard_callouts_path, ignore_query: true)
+    expect(page).to have_current_path(dashboard_broadcasts_path, ignore_query: true)
     expect(page).to have_text("Callout was successfully destroyed.")
   end
 
-  it "can show a callout" do
+  it "can show a broadcast" do
     user = create(:user)
-    callout = create(
-      :callout,
+    broadcast = create(
+      :broadcast,
       :pending,
       account: user.account,
       call_flow_logic: CallFlowLogic::HelloWorld,
@@ -139,42 +139,42 @@ RSpec.describe "Callouts", :aggregate_failures do
     )
 
     sign_in(user)
-    visit dashboard_callout_path(callout)
+    visit dashboard_broadcast_path(broadcast)
 
-    expect(page).to have_title("Callout #{callout.id}")
+    expect(page).to have_title("Callout #{broadcast.id}")
 
     within("#page_actions") do
-      expect(page).to have_link("Edit", href: edit_dashboard_callout_path(callout))
+      expect(page).to have_link("Edit", href: edit_dashboard_broadcast_path(broadcast))
     end
 
     within("#related_links") do
       expect(page).to have_link(
         "Callout Populations",
-        href: dashboard_callout_batch_operations_path(callout)
+        href: dashboard_broadcast_batch_operations_path(broadcast)
       )
 
       expect(page).to have_link(
         "Callout Participations",
-        href: dashboard_callout_callout_participations_path(callout)
+        href: dashboard_broadcast_callout_participations_path(broadcast)
       )
       expect(page).to have_link(
         "Phone Calls",
-        href: dashboard_callout_phone_calls_path(callout)
+        href: dashboard_broadcast_phone_calls_path(broadcast)
       )
     end
 
-    within(".callout") do
-      expect(page).to have_content(callout.id)
-      expect(page).to have_link(callout.audio_url, href: callout.audio_url)
+    within(".broadcast") do
+      expect(page).to have_content(broadcast.id)
+      expect(page).to have_link(broadcast.audio_url, href: broadcast.audio_url)
       expect(page).to have_link(
-        callout.created_by_id.to_s,
-        href: dashboard_user_path(callout.created_by)
+        broadcast.created_by_id.to_s,
+        href: dashboard_user_path(broadcast.created_by)
       )
     end
 
-    within("#callout_summary") do
+    within("#broadcast_summary") do
       expect(page).to have_content("Callout Summary")
-      expect(page).to have_link("Refresh", href: dashboard_callout_path(callout))
+      expect(page).to have_link("Refresh", href: dashboard_broadcast_path(broadcast))
       expect(page).to have_content("Participants")
       expect(page).to have_content("Participants still to be called")
       expect(page).to have_content("Completed calls")
@@ -185,12 +185,12 @@ RSpec.describe "Callouts", :aggregate_failures do
     end
   end
 
-  it "can perform actions on callouts", :js do
+  it "can perform actions on broadcasts", :js do
     user = create(:user)
-    callout = create(:callout, :pending, account: user.account)
+    broadcast = create(:broadcast, :pending, account: user.account)
 
     sign_in(user)
-    visit dashboard_callout_path(callout)
+    visit dashboard_broadcast_path(broadcast)
 
     click_on("Start")
 

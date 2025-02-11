@@ -38,16 +38,16 @@ en:
       new: New Callout Population
       show: Callout Population %{id}
       update: Edit Callout Population
-    callouts:
+    broadcasts:
       create: New Callout
       edit: Edit Callout
       index: Callouts
       new: New Callout
-      pause_callout: Pause
-      resume_callout: Resume
+      pause: Pause
+      resume: Resume
       show: Callout %{id}
-      start_callout: Start
-      stop_callout: Stop
+      start: Start
+      stop: Stop
       summary: Callout Summary
       update: Edit Callout
     phone_calls:
