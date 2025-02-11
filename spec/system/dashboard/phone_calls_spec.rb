@@ -69,13 +69,13 @@ RSpec.describe "Phone Calls" do
     end
   end
 
-  it "can list all phone calls for a contact" do
+  it "can list all phone calls for a beneficiary" do
     user = create(:user)
     phone_call = create_phone_call(account: user.account)
     other_phone_call = create_phone_call(account: user.account)
 
     sign_in(user)
-    visit(dashboard_contact_phone_calls_path(phone_call.contact))
+    visit(dashboard_beneficiary_phone_calls_path(phone_call.beneficiary))
 
     within("#resources") do
       expect(page).to have_content_tag_for(phone_call)
@@ -111,8 +111,8 @@ RSpec.describe "Phone Calls" do
       )
 
       expect(page).to have_link(
-        phone_call.contact_id.to_s,
-        href: dashboard_contact_path(phone_call.contact_id)
+        phone_call.beneficiary_id.to_s,
+        href: dashboard_beneficiary_path(phone_call.beneficiary_id)
       )
     end
   end

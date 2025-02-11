@@ -1,0 +1,7 @@
+= page_title(title: title) do
+  -# TODO: Re-enable this once after data migration to native columns
+  -# = render("shared/new_resource_page_action", path: new_dashboard_beneficiary_path)
+
+.card-body
+  = render("shared/resources_table", resource_class: Beneficiary, columns: [:phone_number, :created_at])
+  = render("shared/pagination", resources: resources)

@@ -34,7 +34,7 @@ RSpec.describe HandlePhoneCallEvent do
     expect(phone_call.phone_number).to match(event_details.fetch(:From))
     expect(phone_call.remote_status).to eq("in-progress")
 
-    expect(phone_call.contact).to have_attributes(
+    expect(phone_call.beneficiary).to have_attributes(
       persisted?: true,
       account: account,
       phone_number: "85510900123"

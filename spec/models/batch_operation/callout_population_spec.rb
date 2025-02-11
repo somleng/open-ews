@@ -6,27 +6,26 @@ module BatchOperation
 
     it { is_expected.to belong_to(:callout) }
     it { is_expected.to have_many(:callout_participations).dependent(:restrict_with_error) }
-    it { is_expected.to have_many(:contacts) }
 
     describe "#run!" do
       it "populates the callout" do
         callout_population = create(:callout_population)
-        contact = create(:contact, account: callout_population.account)
-        already_participating_contact = create(:contact, account: callout_population.account)
-        create(:callout_participation, contact: already_participating_contact,
+        beneficiary = create(:beneficiary, account: callout_population.account)
+        already_participating_beneficiary = create(:beneficiary, account: callout_population.account)
+        create(:callout_participation, beneficiary: already_participating_beneficiary,
                                        callout: callout_population.callout)
-        _other_contact = create(:contact)
+        _other_beneficiary = create(:beneficiary)
 
         callout_population.run!
 
         expect(callout_population.callout_participations.count).to eq(1)
         callout_participation = callout_population.callout_participations.first
-        expect(callout_participation.contact).to eq(contact)
+        expect(callout_participation.beneficiary).to eq(beneficiary)
         expect(callout_participation.phone_calls_count).to eq(1)
         phone_call = callout_participation.phone_calls.first
         expect(phone_call).to have_attributes(
-          contact:,
-          phone_number: contact.phone_number,
+          beneficiary:,
+          phone_number: beneficiary.phone_number,
           callout_participation:,
           callout: callout_population.callout,
           call_flow_logic: callout_participation.call_flow_logic,
@@ -38,9 +37,9 @@ module BatchOperation
       it "handles multiple runs" do
         callout = create(:callout)
         callout_population = create(:callout_population, callout:)
-        contact = create(:contact, account: callout_population.account)
+        beneficiary = create(:beneficiary, account: callout_population.account)
         callout_participation = create(
-          :callout_participation, contact:, callout:, callout_population:
+          :callout_participation, beneficiary:, callout:, callout_population:
         )
         create(:phone_call, :completed, callout_participation:)
 

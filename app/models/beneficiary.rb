@@ -1,4 +1,4 @@
-class Contact < ApplicationRecord
+class Beneficiary < ApplicationRecord
   extend Enumerize
 
   include MetadataHelpers

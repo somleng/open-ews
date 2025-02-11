@@ -1,7 +1,0 @@
-= content_tag_for(:tr, contact) do
-  %td
-    = link_to(contact.id, show_location(contact))
-  %td
-    = contact.phone_number
-  %td
-    = local_time(contact.created_at)

@@ -20,8 +20,8 @@ module CallFlowLogic
     # Already registered flow
 
     it "handles users who are already registered" do
-      contact = create(:contact, metadata: { date_of_birth: "2023-01-01" })
-      phone_call = create(:phone_call, contact: contact, metadata: { status: :playing_introduction })
+      beneficiary = create(:beneficiary, metadata: { date_of_birth: "2023-01-01" })
+      phone_call = create(:phone_call, beneficiary: beneficiary, metadata: { status: :playing_introduction })
       event = create_phone_call_event(phone_call: phone_call)
       call_flow_logic = CallFlowLogic::MamaInfoRegistration.new(
         phone_call: phone_call,
@@ -38,8 +38,8 @@ module CallFlowLogic
 
     it "plays the registered date of birth (future)" do
       travel_to(Time.zone.local(2022, 6, 1)) do
-        contact = create(:contact, metadata: { date_of_birth: "2023-01-01" })
-        phone_call = create(:phone_call, contact: contact, metadata: { status: :playing_already_registered })
+        beneficiary = create(:beneficiary, metadata: { date_of_birth: "2023-01-01" })
+        phone_call = create(:phone_call, beneficiary: beneficiary, metadata: { status: :playing_already_registered })
         event = create_phone_call_event(phone_call: phone_call)
         call_flow_logic = CallFlowLogic::MamaInfoRegistration.new(
           phone_call: phone_call,
@@ -63,8 +63,8 @@ module CallFlowLogic
 
     it "plays the registered date of birth (past)" do
       travel_to(Time.zone.local(2022, 6, 1)) do
-        contact = create(:contact, metadata: { date_of_birth: "2022-01-01" })
-        phone_call = create(:phone_call, contact: contact, metadata: { status: :playing_already_registered })
+        beneficiary = create(:beneficiary, metadata: { date_of_birth: "2022-01-01" })
+        phone_call = create(:phone_call, beneficiary: beneficiary, metadata: { status: :playing_already_registered })
         event = create_phone_call_event(phone_call: phone_call)
         call_flow_logic = CallFlowLogic::MamaInfoRegistration.new(
           phone_call: phone_call,
@@ -87,8 +87,8 @@ module CallFlowLogic
     end
 
     it "gathers whether to update details or deregister" do
-      contact = create(:contact, metadata: { date_of_birth: "2022-01-01" })
-      phone_call = create(:phone_call, contact: contact, metadata: { status: :playing_registered_date_of_birth })
+      beneficiary = create(:beneficiary, metadata: { date_of_birth: "2022-01-01" })
+      phone_call = create(:phone_call, beneficiary: beneficiary, metadata: { status: :playing_registered_date_of_birth })
       event = create_phone_call_event(phone_call: phone_call)
       call_flow_logic = CallFlowLogic::MamaInfoRegistration.new(
         phone_call: phone_call,
@@ -104,8 +104,8 @@ module CallFlowLogic
     end
 
     it "updates the details" do
-      contact = create(:contact, metadata: { date_of_birth: "2022-01-01" })
-      phone_call = create(:phone_call, contact: contact, metadata: { status: :gathering_update_details_or_deregister })
+      beneficiary = create(:beneficiary, metadata: { date_of_birth: "2022-01-01" })
+      phone_call = create(:phone_call, beneficiary: beneficiary, metadata: { status: :gathering_update_details_or_deregister })
       event = create_phone_call_event(
         phone_call: phone_call,
         event_details: { Digits: "1" }
@@ -124,8 +124,8 @@ module CallFlowLogic
     end
 
     it "deregisters the user" do
-      contact = create(:contact, metadata: { date_of_birth: "2022-01-01" })
-      phone_call = create(:phone_call, contact: contact, metadata: { status: :gathering_update_details_or_deregister })
+      beneficiary = create(:beneficiary, metadata: { date_of_birth: "2022-01-01" })
+      phone_call = create(:phone_call, beneficiary: beneficiary, metadata: { status: :gathering_update_details_or_deregister })
       event = create_phone_call_event(
         phone_call: phone_call,
         event_details: { Digits: "2" }
@@ -140,14 +140,14 @@ module CallFlowLogic
 
       response = parse_response(call_flow_logic.to_xml)
       expect(phone_call.metadata.fetch("status")).to eq("playing_deregistered")
-      expect(contact.metadata.fetch("deregistered_at")).to be_present
-      expect(contact.metadata.key?("date_of_birth")).to eq(false)
+      expect(beneficiary.metadata.fetch("deregistered_at")).to be_present
+      expect(beneficiary.metadata.key?("date_of_birth")).to eq(false)
       assert_play(audio_url(:deregistration_successful), response)
     end
 
     it "handles invalid inputs" do
-      contact = create(:contact, metadata: { date_of_birth: "2022-01-01" })
-      phone_call = create(:phone_call, contact: contact, metadata: { status: :gathering_update_details_or_deregister })
+      beneficiary = create(:beneficiary, metadata: { date_of_birth: "2022-01-01" })
+      phone_call = create(:phone_call, beneficiary: beneficiary, metadata: { status: :gathering_update_details_or_deregister })
       event = create_phone_call_event(
         phone_call: phone_call,
         event_details: { Digits: "3" }
@@ -307,7 +307,7 @@ module CallFlowLogic
       assert_play(audio_url(:registration_successful), response)
       expect(phone_call.metadata.fetch("date_of_birth")).to eq("2023-01-01")
       expect(phone_call.metadata.fetch("status")).to eq("playing_registration_successful")
-      expect(phone_call.contact.metadata.fetch("date_of_birth")).to eq("2023-01-01")
+      expect(phone_call.beneficiary.metadata.fetch("date_of_birth")).to eq("2023-01-01")
     end
 
     it "handles invalid pregnancy status confirmation inputs" do
@@ -424,12 +424,12 @@ module CallFlowLogic
     end
 
     it "handles valid age confirmation inputs" do
-      contact = create(:contact, metadata: { deregistered_at: Time.current })
+      beneficiary = create(:beneficiary, metadata: { deregistered_at: Time.current })
 
       phone_call = create(
         :phone_call,
         :inbound,
-        contact: contact,
+        beneficiary: beneficiary,
         metadata: {
           status: :confirming_age,
           unconfirmed_date_of_birth: "2023-01-01"
@@ -451,8 +451,8 @@ module CallFlowLogic
       assert_play(audio_url(:registration_successful), response)
       expect(phone_call.metadata.fetch("date_of_birth")).to eq("2023-01-01")
       expect(phone_call.metadata.fetch("status")).to eq("playing_registration_successful")
-      expect(phone_call.contact.metadata.fetch("date_of_birth")).to eq("2023-01-01")
-      expect(phone_call.contact.metadata.key?("deregistered_at")).to eq(false)
+      expect(phone_call.beneficiary.metadata.fetch("date_of_birth")).to eq("2023-01-01")
+      expect(phone_call.beneficiary.metadata.key?("deregistered_at")).to eq(false)
     end
 
     it "handles invalid age confirmation inputs" do

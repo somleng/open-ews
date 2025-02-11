@@ -78,7 +78,7 @@ FactoryBot.define do
     end
   end
 
-  factory :contact, aliases: [ :beneficiary ] do
+  factory :beneficiary do
     account
     iso_country_code { "KH" }
     phone_number { generate(:phone_number) }
@@ -103,7 +103,7 @@ FactoryBot.define do
 
   factory :callout_participation do
     callout
-    contact
+    beneficiary
   end
 
   factory :phone_call do
@@ -212,7 +212,7 @@ FactoryBot.define do
   factory :recording do
     phone_call
     account { phone_call.account }
-    contact { phone_call.contact }
+    beneficiary { phone_call.beneficiary }
     external_recording_id { SecureRandom.uuid }
     external_recording_url { "https://api.somleng.org/2010-04-01/Accounts/#{SecureRandom.uuid}/Calls/#{SecureRandom.uuid}/Recordings/#{external_recording_id}" }
     duration { 15 }

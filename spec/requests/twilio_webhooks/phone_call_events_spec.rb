@@ -30,7 +30,7 @@ RSpec.describe "Phone Call Events" do
         remote_call_id: request_body.fetch(:CallSid),
         remote_status: request_body.fetch(:CallStatus),
         remote_direction: request_body.fetch(:Direction),
-        contact: have_attributes(
+        beneficiary: have_attributes(
           phone_number: "85510202101"
         )
       )

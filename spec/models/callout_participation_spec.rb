@@ -19,11 +19,11 @@ RSpec.describe CalloutParticipation do
   end
 
   it "sets defaults" do
-    contact = create(:contact)
-    callout_participation = build(:callout_participation, contact: contact)
+    beneficiary = create(:beneficiary)
+    callout_participation = build(:callout_participation, beneficiary: beneficiary)
 
     callout_participation.valid?
 
-    expect(callout_participation.phone_number).to eq(contact.phone_number)
+    expect(callout_participation.phone_number).to eq(beneficiary.phone_number)
   end
 end

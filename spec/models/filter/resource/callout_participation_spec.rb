@@ -20,17 +20,17 @@ RSpec.describe Filter::Resource::CalloutParticipation do
 
       filter = build_filter(callout_id: callout.id)
 
-      expect(filter.resources).to match_array([callout_participation])
+      expect(filter.resources).to match_array([ callout_participation ])
     end
 
-    it "filters by contact_id" do
+    it "filters by beneficiary_id" do
       _non_matching_callout_participation = create(:callout_participation)
-      contact = create(:contact)
-      callout_participation = create(:callout_participation, contact: contact)
+      beneficiary = create(:beneficiary)
+      callout_participation = create(:callout_participation, beneficiary: beneficiary)
 
-      filter = build_filter(contact_id: contact.id)
+      filter = build_filter(beneficiary_id: beneficiary.id)
 
-      expect(filter.resources).to match_array([callout_participation])
+      expect(filter.resources).to match_array([ callout_participation ])
     end
 
     it "filters by callout_population_id" do
@@ -40,7 +40,7 @@ RSpec.describe Filter::Resource::CalloutParticipation do
 
       filter = build_filter(callout_population_id: callout_population.id)
 
-      expect(filter.resources).to match_array([callout_participation])
+      expect(filter.resources).to match_array([ callout_participation ])
     end
   end
 

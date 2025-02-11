@@ -8,7 +8,7 @@ RSpec.describe Account do
 
   describe "associations" do
     it { is_expected.to have_many(:users).dependent(:restrict_with_error) }
-    it { is_expected.to have_many(:contacts).dependent(:restrict_with_error) }
+    it { is_expected.to have_many(:beneficiaries).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:callouts).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:batch_operations).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:callout_participations) }

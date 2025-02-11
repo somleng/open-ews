@@ -42,8 +42,8 @@ RSpec.describe "Recordings" do
       )
 
       expect(page).to have_link(
-        recording.contact_id.to_s,
-        href: dashboard_contact_path(recording.contact_id)
+        recording.beneficiary_id.to_s,
+        href: dashboard_beneficiary_path(recording.beneficiary_id)
       )
     end
   end

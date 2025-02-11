@@ -69,13 +69,13 @@ class HandlePhoneCallEvent < ApplicationWorkflow
     PhoneCall.find_or_create_by!(remote_call_id: event.remote_call_id) do |phone_call|
       phone_call.remote_direction = event.remote_direction
       phone_call.phone_number = phone_call.inbound? ? params.fetch(:From) : params.fetch(:To)
-      phone_call.contact = create_or_find_contact!(params.fetch(:AccountSid), phone_call.phone_number)
+      phone_call.beneficiary = create_or_find_beneficiary!(params.fetch(:AccountSid), phone_call.phone_number)
     end
   end
 
-  def create_or_find_contact!(platform_account_sid, phone_number)
+  def create_or_find_beneficiary!(platform_account_sid, phone_number)
     account = Account.find_by_platform_account_sid(platform_account_sid)
-    Contact.find_or_create_by!(account:, phone_number:) do |record|
+    Beneficiary.find_or_create_by!(account:, phone_number:) do |record|
       record.iso_country_code = ACCOUNT_COUNTRY_CODES.fetch(account.id, "KH")
     end
   end

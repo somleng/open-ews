@@ -287,7 +287,7 @@ module CallFlowLogic
     end
 
     def play_registered_date_of_birth
-      date_of_birth = Date.parse(metadata(phone_call.contact, :date_of_birth))
+      date_of_birth = Date.parse(metadata(phone_call.beneficiary, :date_of_birth))
 
       @voice_response = Twilio::TwiML::VoiceResponse.new do |response|
         play(date_of_birth.past? ? :confirm_age : :confirm_pregnancy_status, response)
@@ -335,7 +335,7 @@ module CallFlowLogic
     end
 
     def registered?
-      phone_call.contact.metadata["date_of_birth"].present?
+      phone_call.beneficiary.metadata["date_of_birth"].present?
     end
 
     def update_details?
@@ -425,22 +425,22 @@ module CallFlowLogic
     end
 
     def persist_date_of_birth
-      contact = phone_call.contact
+      beneficiary = phone_call.beneficiary
       date_of_birth = metadata(phone_call, :unconfirmed_date_of_birth)
       update_metadata!(phone_call, date_of_birth: date_of_birth)
-      update_metadata!(contact, date_of_birth: date_of_birth)
-      contact.metadata.delete("deregistered_at")
-      contact.date_of_birth = date_of_birth
-      contact.status = :active
-      contact.save!
+      update_metadata!(beneficiary, date_of_birth: date_of_birth)
+      beneficiary.metadata.delete("deregistered_at")
+      beneficiary.date_of_birth = date_of_birth
+      beneficiary.status = :active
+      beneficiary.save!
     end
 
     def persist_deregistered
-      contact = phone_call.contact
-      update_metadata!(phone_call.contact, deregistered_at: Time.current)
-      phone_call.contact.metadata.delete("date_of_birth")
-      contact.status = :disabled
-      contact.save!
+      beneficiary = phone_call.beneficiary
+      update_metadata!(phone_call.beneficiary, deregistered_at: Time.current)
+      phone_call.beneficiary.metadata.delete("date_of_birth")
+      beneficiary.status = :disabled
+      beneficiary.save!
     end
 
     def play(filename, response)

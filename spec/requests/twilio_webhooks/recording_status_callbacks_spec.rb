@@ -30,7 +30,7 @@ RSpec.describe "Recoding Status Callbacks" do
     expect(account.recordings.last).to have_attributes(
       phone_call:,
       account:,
-      contact: phone_call.contact,
+      beneficiary: phone_call.beneficiary,
       audio_file: be_attached,
       external_recording_id: request_body.fetch(:RecordingSid),
       external_recording_url: request_body.fetch(:RecordingUrl),

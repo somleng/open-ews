@@ -4,7 +4,7 @@ RSpec.describe CreateBeneficiaryWithAddress do
   it "creates a beneficiary with an address" do
     account = create(:account)
 
-    contact = CreateBeneficiaryWithAddress.new(
+    beneficiary = CreateBeneficiaryWithAddress.new(
       account:,
       phone_number: "+85510999999",
       language_code: "km",
@@ -18,7 +18,7 @@ RSpec.describe CreateBeneficiaryWithAddress do
       }
     ).call
 
-    expect(contact).to have_attributes(
+    expect(beneficiary).to have_attributes(
       phone_number: "85510999999",
       language_code: "km",
       gender: "M",
@@ -26,7 +26,7 @@ RSpec.describe CreateBeneficiaryWithAddress do
       metadata: { "foo" => "bar" },
       iso_country_code: "KH"
     )
-    expect(contact.addresses.first).to have_attributes(
+    expect(beneficiary.addresses.first).to have_attributes(
       iso_region_code: "KH-1",
       administrative_division_level_2_code: "0112"
     )
@@ -35,13 +35,13 @@ RSpec.describe CreateBeneficiaryWithAddress do
   it "creates a beneficiary without an address" do
     account = create(:account)
 
-    contact = CreateBeneficiaryWithAddress.new(
+    beneficiary = CreateBeneficiaryWithAddress.new(
       account:,
       phone_number: "+85510999999",
       iso_country_code: "KH",
     ).call
 
-    expect(contact).to have_attributes(
+    expect(beneficiary).to have_attributes(
       phone_number: "85510999999",
       iso_country_code: "KH"
     )

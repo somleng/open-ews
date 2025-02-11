@@ -5,8 +5,7 @@ module BatchOperation
     belongs_to :callout
 
     has_many :callout_participations, dependent: :restrict_with_error
-
-    has_many :contacts, through: :callout_participations
+    has_many :beneficiaries, through: :callout_participations
 
     store_accessor :parameters,
                    :contact_filter_params,
@@ -42,18 +41,18 @@ module BatchOperation
 
     private
 
-    def contacts_scope
-      Filter::Resource::Contact.new(
-        { association_chain: account.contacts },
+    def beneficiaries_scope
+      Filter::Resource::Beneficiary.new(
+        { association_chain: account.beneficiaries },
         contact_filter_params.with_indifferent_access
-      ).resources.where.not(id: CalloutParticipation.select(:contact_id).where(callout:))
+      ).resources.where.not(id: CalloutParticipation.select(:beneficiary_id).where(callout:))
     end
 
     def create_callout_participations
-      callout_participations = contacts_scope.find_each.map do |contact|
+      callout_participations = beneficiaries_scope.find_each.map do |beneficiary|
         {
-          contact_id: contact.id,
-          phone_number: contact.phone_number,
+          beneficiary_id: beneficiary.id,
+          phone_number: beneficiary.phone_number,
           callout_id: callout.id,
           callout_population_id: id,
           call_flow_logic: callout.call_flow_logic
@@ -69,7 +68,7 @@ module BatchOperation
         {
           account_id: callout.account_id,
           callout_id:,
-          contact_id: callout_participation.contact_id,
+          beneficiary_id: callout_participation.beneficiary_id,
           call_flow_logic: callout_participation.call_flow_logic,
           callout_participation_id: callout_participation.id,
           phone_number: callout_participation.phone_number,

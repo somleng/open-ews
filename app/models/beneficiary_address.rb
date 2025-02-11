@@ -3,7 +3,7 @@ class BeneficiaryAddress < ApplicationRecord
 
   enumerize :iso_country_code, in: ISO3166::Country.codes.freeze
 
-  belongs_to :beneficiary, class_name: "Contact"
+  belongs_to :beneficiary
 
   validates :iso_region_code,
     :administrative_division_level_2_code,

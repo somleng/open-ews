@@ -46,7 +46,7 @@ module API
       private
 
       def beneficiaries_scope
-        current_account.contacts
+        current_account.beneficiaries
       end
     end
   end

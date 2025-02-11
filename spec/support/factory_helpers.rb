@@ -1,8 +1,8 @@
 module FactoryHelpers
   def create_callout_participation(account:, **options)
     callout = options.delete(:callout) || create(:callout, account:)
-    contact = options.delete(:contact) || create(:contact, account:)
-    create(:callout_participation, { callout:, contact: }.merge(options))
+    beneficiary = options.delete(:beneficiary) || create(:beneficiary, account:)
+    create(:callout_participation, { callout:, beneficiary: }.merge(options))
   end
 
   def create_phone_call(*args)

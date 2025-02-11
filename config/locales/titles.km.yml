@@ -22,6 +22,13 @@ km:
       index: Callout Populations
       queue: ចាប់ផ្ដើម
       show: Callout Population %{id}
+    beneficiaries:
+      create: បង្កើត សមាជិកទំនាក់ទំនង
+      edit: កែប្រែ សមាជិកទំនាក់ទំនង
+      index: សមាជិកទំនាក់ទំនង
+      new: បង្កើត សមាជិកទំនាក់ទំនង
+      show: សមាជិកទំនាក់ទំនង %{id}
+      update: កែប្រែ សមាជិកទំនាក់ទំនង
     callout_participations:
       index: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
       show: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស %{id}
@@ -43,13 +50,6 @@ km:
       stop_callout: បញ្ឈប់
       summary: Callout Summary
       update: កែប្រែ សេចក្ដីប្រកាស
-    contacts:
-      create: បង្កើត សមាជិកទំនាក់ទំនង
-      edit: កែប្រែ សមាជិកទំនាក់ទំនង
-      index: សមាជិកទំនាក់ទំនង
-      new: បង្កើត សមាជិកទំនាក់ទំនង
-      show: សមាជិកទំនាក់ទំនង %{id}
-      update: កែប្រែ សមាជិកទំនាក់ទំនង
     phone_calls:
       index: កំណត់ត្រាការហៅចេញ
       queue: Send

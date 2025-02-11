@@ -30,8 +30,8 @@ RSpec.describe "Callout Participations" do
         href: dashboard_callout_participation_path(callout_participation)
       )
       expect(page).to have_link(
-        callout_participation.contact_id.to_s,
-        href: dashboard_contact_path(callout_participation.contact)
+        callout_participation.beneficiary_id.to_s,
+        href: dashboard_beneficiary_path(callout_participation.beneficiary)
       )
       expect(page).to have_link(
         callout_participation.callout_id.to_s,
@@ -56,13 +56,13 @@ RSpec.describe "Callout Participations" do
     end
   end
 
-  it "can list all the callout participations for a contact" do
+  it "can list all the callout participations for a beneficiary" do
     user = create(:user)
     callout_participation = create_callout_participation(account: user.account)
     other_callout_participation = create_callout_participation(account: user.account)
 
     sign_in(user)
-    visit(dashboard_contact_callout_participations_path(callout_participation.contact))
+    visit(dashboard_beneficiary_callout_participations_path(callout_participation.beneficiary))
 
     expect(page).to have_title("Callout Participations")
 
@@ -102,8 +102,8 @@ RSpec.describe "Callout Participations" do
       )
 
       expect(page).to have_link(
-        callout_participation.contact_id.to_s,
-        href: dashboard_contact_path(callout_participation.contact)
+        callout_participation.beneficiary_id.to_s,
+        href: dashboard_beneficiary_path(callout_participation.beneficiary)
       )
 
       expect(page).to have_link(

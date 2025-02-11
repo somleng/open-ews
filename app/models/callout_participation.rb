@@ -9,7 +9,7 @@ class CalloutParticipation < ApplicationRecord
   attribute :phone_number, :phone_number
 
   belongs_to :callout
-  belongs_to :contact
+  belongs_to :beneficiary
   belongs_to :callout_population,
              optional: true,
              class_name: "BatchOperation::CalloutPopulation"
@@ -22,7 +22,7 @@ class CalloutParticipation < ApplicationRecord
   delegate :call_flow_logic, to: :callout, prefix: true, allow_nil: true
   delegate :account, to: :callout
 
-  before_validation :set_phone_number_from_contact,
+  before_validation :set_phone_number_from_beneficiary,
                     :set_call_flow_logic,
                     on: :create
 
@@ -36,13 +36,14 @@ class CalloutParticipation < ApplicationRecord
   def as_json(*)
     result = super
     result["msisdn"] = result.delete("phone_number")
+    result["contact_id"] = result.delete("beneficiary_id")
     result
   end
 
   private
 
-  def set_phone_number_from_contact
-    self.phone_number ||= contact&.phone_number
+  def set_phone_number_from_beneficiary
+    self.phone_number ||= beneficiary&.phone_number
   end
 
   def set_call_flow_logic

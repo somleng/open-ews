@@ -49,7 +49,7 @@ RSpec.describe CallFlowLogic::Base do
           status: "created",
           callout_participation: callout_participation,
           callout: callout_participation.callout,
-          contact: callout_participation.contact
+          beneficiary: callout_participation.beneficiary
         )
       end
     end
@@ -105,6 +105,6 @@ RSpec.describe CallFlowLogic::Base do
       **phone_call_attributes
     )
     event = create(:remote_phone_call_event, phone_call: phone_call)
-    [phone_call, event]
+    [ phone_call, event ]
   end
 end

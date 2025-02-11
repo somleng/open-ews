@@ -9,8 +9,8 @@
     = f.attribute :id
     = f.attribute :callout do
       = link_to(resource.callout_id, dashboard_callout_path(resource.callout_id))
-    = f.attribute :contact do
-      = link_to(resource.contact_id, dashboard_contact_path(resource.contact_id))
+    = f.attribute :beneficiary do
+      = link_to(resource.beneficiary_id, dashboard_beneficiary_path(resource.beneficiary_id))
     = f.attribute :callout_population do
       - if resource.callout_population_id.present?
         = link_to(resource.callout_population_id, dashboard_batch_operation_path(resource.callout_population_id))
