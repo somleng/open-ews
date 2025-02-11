@@ -29,15 +29,6 @@ km:
       new: បង្កើត សមាជិកទំនាក់ទំនង
       show: សមាជិកទំនាក់ទំនង %{id}
       update: កែប្រែ សមាជិកទំនាក់ទំនង
-    callout_participations:
-      index: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
-      show: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស %{id}
-    callout_populations:
-      create: New Callout Population
-      edit: កែប្រែ Callout Population
-      new: New Callout Population
-      show: Callout Population %{id}
-      update: កែប្រែ Callout Population
     broadcasts:
       create: បង្កើត សេចក្ដីប្រកាស
       edit: កែប្រែ សេចក្ដីប្រកាស
@@ -50,6 +41,15 @@ km:
       stop: បញ្ឈប់
       summary: Callout Summary
       update: កែប្រែ សេចក្ដីប្រកាស
+    callout_participations:
+      index: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
+      show: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស %{id}
+    callout_populations:
+      create: New Callout Population
+      edit: កែប្រែ Callout Population
+      new: New Callout Population
+      show: Callout Population %{id}
+      update: កែប្រែ Callout Population
     phone_calls:
       index: កំណត់ត្រាការហៅចេញ
       queue: Send

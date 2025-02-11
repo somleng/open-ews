@@ -48,10 +48,10 @@ km:
       beneficiary:
         one: សមាជិកទំនាក់ទំនង
         other: សមាជិកទំនាក់ទំនង
-      callout:
+      broadcast:
         one: សេចក្ដីប្រកាស
         other: សេចក្ដីប្រកាស
-      broadcast:
+      callout:
         one: សេចក្ដីប្រកាស
         other: សេចក្ដីប្រកាស
       callout_participation:

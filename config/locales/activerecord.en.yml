@@ -48,10 +48,10 @@ en:
       beneficiary:
         one: Contact
         other: Contacts
-      callout:
+      broadcast:
         one: Callout
         other: Callouts
-      broadcast:
+      callout:
         one: Callout
         other: Callouts
       callout_participation:
