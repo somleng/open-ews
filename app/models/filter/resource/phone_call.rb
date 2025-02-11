@@ -45,6 +45,7 @@ module Filter
       def filter_params
         result = params.slice(
           :callout_id,
+          :broadcast_id,
           :callout_participation_id,
           :beneficiary_id,
           :status,
@@ -55,7 +56,8 @@ module Filter
           :remote_error_message,
           :duration
         )
-        result[:beneficiary_id] ||= result[:contact_id] if result.key?(:contact_id)
+        result[:beneficiary_id] = result.delete(:contact_id) if result.key?(:contact_id)
+        result[:broadcast_id] = result.delete(:callout_id) if result.key?(:callout_id)
         result
       end
     end

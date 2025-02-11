@@ -4,7 +4,7 @@ module BatchOperation
   RSpec.describe CalloutPopulation do
     include_examples("hash_store_accessor", :contact_filter_params)
 
-    it { is_expected.to belong_to(:callout) }
+    it { is_expected.to belong_to(:broadcast) }
     it { is_expected.to have_many(:callout_participations).dependent(:restrict_with_error) }
 
     describe "#run!" do
@@ -13,7 +13,7 @@ module BatchOperation
         beneficiary = create(:beneficiary, account: callout_population.account)
         already_participating_beneficiary = create(:beneficiary, account: callout_population.account)
         create(:callout_participation, beneficiary: already_participating_beneficiary,
-                                       callout: callout_population.callout)
+                                       broadcast: callout_population.broadcast)
         _other_beneficiary = create(:beneficiary)
 
         callout_population.run!
@@ -27,7 +27,7 @@ module BatchOperation
           beneficiary:,
           phone_number: beneficiary.phone_number,
           callout_participation:,
-          callout: callout_population.callout,
+          broadcast: callout_population.broadcast,
           call_flow_logic: callout_participation.call_flow_logic,
           account: callout_population.account,
           status: "created"
@@ -35,11 +35,11 @@ module BatchOperation
       end
 
       it "handles multiple runs" do
-        callout = create(:callout)
-        callout_population = create(:callout_population, callout:)
+        broadcast = create(:broadcast)
+        callout_population = create(:callout_population, broadcast:)
         beneficiary = create(:beneficiary, account: callout_population.account)
         callout_participation = create(
-          :callout_participation, beneficiary:, callout:, callout_population:
+          :callout_participation, beneficiary:, broadcast:, callout_population:
         )
         create(:phone_call, :completed, callout_participation:)
 

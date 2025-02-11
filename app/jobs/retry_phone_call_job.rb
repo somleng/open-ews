@@ -13,7 +13,7 @@ class RetryPhoneCallJob < ApplicationJob
       account: phone_call.account,
       callout_participation:,
       beneficiary: phone_call.beneficiary,
-      callout: phone_call.callout
+      broadcast: phone_call.broadcast
     )
   end
 

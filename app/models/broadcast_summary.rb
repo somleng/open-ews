@@ -1,12 +1,12 @@
-class CalloutSummary
+class BroadcastSummary
   extend ActiveModel::Translation
   extend ActiveModel::Naming
   include ActiveModel::Conversion
 
-  attr_accessor :callout
+  attr_accessor :broadcast
 
-  def initialize(callout)
-    self.callout = callout
+  def initialize(broadcast)
+    self.broadcast = broadcast
   end
 
   def participations
@@ -14,7 +14,7 @@ class CalloutSummary
   end
 
   def participations_still_to_be_called
-    callout_participations.still_trying(callout.account.max_phone_calls_for_callout_participation).count
+    callout_participations.still_trying(broadcast.account.max_phone_calls_for_callout_participation).count
   end
 
   def completed_calls
@@ -40,10 +40,10 @@ class CalloutSummary
   private
 
   def callout_participations
-    callout.callout_participations
+    broadcast.callout_participations
   end
 
   def phone_calls
-    callout.phone_calls
+    broadcast.phone_calls
   end
 end

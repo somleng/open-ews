@@ -18,8 +18,7 @@ class RemotePhoneCallEvent < ApplicationRecord
            to: :phone_call,
            prefix: true
 
-  delegate :callout,
-           to: :phone_call
+  delegate :broadcast, to: :phone_call
 
   accepts_nested_key_value_fields_for :details
 end

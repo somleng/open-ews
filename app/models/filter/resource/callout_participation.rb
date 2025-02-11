@@ -9,7 +9,8 @@ module Filter
 
       def filter_params
         result = params.slice(:call_flow_logic, :callout_id, :beneficiary_id, :callout_population_id)
-        result[:beneficiary_id] ||= result[:contact_id] if result.key?(:contact_id)
+        result[:beneficiary_id] = result.delete(:contact_id) if result.key?(:contact_id)
+        result[:broadcast_id] = result.delete(:callout_id) if result.key?(:callout_id)
         result
       end
 

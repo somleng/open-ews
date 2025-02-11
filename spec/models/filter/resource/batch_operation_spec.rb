@@ -17,15 +17,15 @@ module Filter
         end
       end
 
-      it "filters by callout_id" do
-        callout = create(:callout)
-        callout_population = create(:callout_population, callout: callout)
+      it "filters by broadcast_id" do
+        broadcast = create(:broadcast)
+        callout_population = create(:callout_population, broadcast: broadcast)
         create(:callout_population)
-        filter = build_filter(callout_id: callout.id)
+        filter = build_filter(callout_id: broadcast.id)
 
         results = filter.resources
 
-        expect(results).to match_array([callout_population])
+        expect(results).to match_array([ callout_population ])
       end
 
       it "filters by status" do
@@ -35,7 +35,7 @@ module Filter
 
         results = filter.resources
 
-        expect(results).to match_array([callout_population])
+        expect(results).to match_array([ callout_population ])
       end
 
       def build_filter(params)

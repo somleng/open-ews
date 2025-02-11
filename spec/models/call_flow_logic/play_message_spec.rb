@@ -4,8 +4,8 @@ RSpec.describe CallFlowLogic::PlayMessage do
   describe "#to_xml" do
     it "plays the audio url" do
       audio_url = "https://www.example.com/audio_url"
-      callout = create(:callout, audio_url: audio_url, account: account)
-      event = create_event(account: account, callout: callout)
+      broadcast = create(:broadcast, audio_url: audio_url, account: account)
+      event = create_event(account: account, broadcast:)
       call_flow_logic = described_class.new(event: event)
 
       xml = call_flow_logic.to_xml
@@ -32,9 +32,9 @@ RSpec.describe CallFlowLogic::PlayMessage do
   let(:account) { create(:account) }
 
   def create_event(account:, **options)
-    callout = options.delete(:callout)
-    return create_remote_phone_call_event(account: account) unless callout
-    callout_participation = create_callout_participation(account: account, callout: callout)
+    broadcast = options.delete(:broadcast)
+    return create_remote_phone_call_event(account: account) unless broadcast
+    callout_participation = create_callout_participation(account: account, broadcast:)
     phone_call = create_phone_call(account: account, callout_participation: callout_participation)
     create_remote_phone_call_event(account: account, phone_call: phone_call)
   end

@@ -59,15 +59,15 @@ module Filter
         end
 
         it "filters by callout_id" do
-          callout = create(:callout)
-          callout_participation = create(:callout_participation, callout: callout)
+          broadcast = create(:broadcast)
+          callout_participation = create(:callout_participation, broadcast: broadcast)
           phone_call = create(
             :phone_call,
-            callout: callout,
+            broadcast: broadcast,
             callout_participation: callout_participation
           )
           create(:phone_call)
-          filter = build_filter(callout_id: callout.id)
+          filter = build_filter(callout_id: broadcast.id)
 
           results = filter.resources
 

@@ -1,4 +1,4 @@
-class Callout < ApplicationRecord
+class Broadcast < ApplicationRecord
   extend Enumerize
 
   AUDIO_CONTENT_TYPES = %w[audio/mpeg audio/mp3 audio/wav audio/x-wav].freeze

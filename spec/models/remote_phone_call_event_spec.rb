@@ -11,7 +11,7 @@ RSpec.describe RemotePhoneCallEvent do
   end
 
   describe "delegations" do
-    it { is_expected.to delegate_method(:callout).to(:phone_call) }
+    it { is_expected.to delegate_method(:broadcast).to(:phone_call) }
   end
 
   describe "validations" do

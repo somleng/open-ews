@@ -2,7 +2,7 @@ module BatchOperation
   class CalloutPopulation < Base
     include CustomRoutesHelper["batch_operations"]
 
-    belongs_to :callout
+    belongs_to :broadcast
 
     has_many :callout_participations, dependent: :restrict_with_error
     has_many :beneficiaries, through: :callout_participations
@@ -45,7 +45,7 @@ module BatchOperation
       Filter::Resource::Beneficiary.new(
         { association_chain: account.beneficiaries },
         contact_filter_params.with_indifferent_access
-      ).resources.where.not(id: CalloutParticipation.select(:beneficiary_id).where(callout:))
+      ).resources.where.not(id: CalloutParticipation.select(:beneficiary_id).where(broadcast:))
     end
 
     def create_callout_participations
@@ -53,9 +53,9 @@ module BatchOperation
         {
           beneficiary_id: beneficiary.id,
           phone_number: beneficiary.phone_number,
-          callout_id: callout.id,
+          broadcast_id: broadcast.id,
           callout_population_id: id,
-          call_flow_logic: callout.call_flow_logic
+          call_flow_logic: broadcast.call_flow_logic
         }
       end
       CalloutParticipation.upsert_all(callout_participations) if callout_participations.any?
@@ -66,8 +66,8 @@ module BatchOperation
         next if callout_participation.phone_calls.any?
 
         {
-          account_id: callout.account_id,
-          callout_id:,
+          account_id: broadcast.account_id,
+          broadcast_id:,
           beneficiary_id: callout_participation.beneficiary_id,
           call_flow_logic: callout_participation.call_flow_logic,
           callout_participation_id: callout_participation.id,

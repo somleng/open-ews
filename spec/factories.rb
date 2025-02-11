@@ -37,7 +37,7 @@ FactoryBot.define do
     SecureRandom.uuid
   end
 
-  factory :callout, aliases: [ :broadcast ] do
+  factory :broadcast do
     account
     channel { "voice" }
 
@@ -96,13 +96,13 @@ FactoryBot.define do
     factory :callout_population, aliases: [ :batch_operation, :broadcast_population ],
                                  class: "BatchOperation::CalloutPopulation" do
       after(:build) do |callout_population|
-        callout_population.callout ||= build(:callout, account: callout_population.account)
+        callout_population.broadcast ||= build(:broadcast, account: callout_population.account)
       end
     end
   end
 
   factory :callout_participation do
-    callout
+    broadcast
     beneficiary
   end
 
@@ -112,7 +112,7 @@ FactoryBot.define do
 
     trait :outbound do
       callout_participation
-      callout { callout_participation&.callout }
+      broadcast { callout_participation&.broadcast }
     end
 
     trait :inbound do
