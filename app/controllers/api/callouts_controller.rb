@@ -7,7 +7,7 @@ module API
     end
 
     def association_chain
-      current_account.callouts.all
+      current_account.broadcasts.all
     end
 
     def filter_class
@@ -22,6 +22,14 @@ module API
         metadata: {},
         settings: {}
       )
+    end
+
+    def show_location(resource)
+      api_callout_path(resource)
+    end
+
+    def resources_path
+      api_callouts_path
     end
   end
 end

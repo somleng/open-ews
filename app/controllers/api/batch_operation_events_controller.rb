@@ -19,7 +19,7 @@ module API
     end
 
     def access_token_write_permissions
-      [:batch_operations_write]
+      [ :batch_operations_write ]
     end
   end
 end

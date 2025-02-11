@@ -18,7 +18,7 @@ module API
 
     def nested_resources_association_chain
       if params[:callout_id]
-        association_chain.where(callout_id: params[:callout_id])
+        association_chain.where(broadcast_id: params[:callout_id])
       else
         association_chain
       end

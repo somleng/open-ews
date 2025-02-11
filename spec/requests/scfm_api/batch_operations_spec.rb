@@ -5,12 +5,12 @@ RSpec.resource "Batch Operations" do
 
   get "/api/batch_operations" do
     example "List all Batch Operations" do
-      callout = create(:callout, account:)
+      broadcast = create(:broadcast, account:)
 
       callout_population = create(
         :callout_population,
         account:,
-        callout:
+        broadcast:
       )
       create(:batch_operation, account:)
       create(:batch_operation)
@@ -18,7 +18,7 @@ RSpec.resource "Batch Operations" do
       set_authorization_header_for(account)
       do_request(
         q: {
-          callout_id: callout.id
+          callout_id: broadcast.id
         }
       )
 
@@ -55,10 +55,10 @@ RSpec.resource "Batch Operations" do
         Specify `contact_filter_params` in order to filter which contacts will participate in the callout.
       HEREDOC
 
-      callout = create(:callout, account:)
+      broadcast = create(:broadcast, account:)
       body = build_batch_operation_request_body(
         type: "BatchOperation::CalloutPopulation",
-        callout_id: callout.id,
+        callout_id: broadcast.id,
         parameters: {
           "contact_filter_params" => {
             "metadata" => {
@@ -72,10 +72,10 @@ RSpec.resource "Batch Operations" do
       )
 
       set_authorization_header_for(account)
-      do_request(callout_id: callout.id, **body)
+      do_request(broadcast_id: broadcast.id, **body)
 
       assert_batch_operation_created!(account:, request_body: body)
-      expect(callout.reload.callout_populations.count).to eq(1)
+      expect(broadcast.reload.callout_populations.count).to eq(1)
     end
 
     example "Create a batch operation with an invalid type", document: false do
@@ -90,11 +90,11 @@ RSpec.resource "Batch Operations" do
     end
 
     example "Create a batch operation with an invalid query", document: false do
-      callout = create(:callout, account:)
+      broadcast = create(:broadcast, account:)
 
       body = build_batch_operation_request_body(
         type: "BatchOperation::CalloutPopulation",
-        callout_id: callout.id,
+        callout_id: broadcast.id,
         parameters: {
           "contact_filter_params" => {
             "metadata" => {
