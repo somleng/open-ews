@@ -45,9 +45,9 @@ FactoryBot.define do
       audio_file { nil }
     end
 
-    after(:build) do |callout, evaluator|
+    after(:build) do |broadcast, evaluator|
       if evaluator.audio_file.present?
-        callout.audio_file = Rack::Test::UploadedFile.new(
+        broadcast.audio_file = Rack::Test::UploadedFile.new(
           evaluator.audio_file,
           "audio/mp3"
         )

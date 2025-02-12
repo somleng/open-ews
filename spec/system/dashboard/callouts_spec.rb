@@ -72,7 +72,7 @@ RSpec.describe "Callouts", :aggregate_failures do
     )
   end
 
-  it "can create a callout attaching an audio file" do
+  it "can create a broadcast attaching an audio file" do
     user = create(:user)
 
     sign_in(user)
@@ -85,7 +85,7 @@ RSpec.describe "Callouts", :aggregate_failures do
     expect(page).to have_content("Callout was successfully created.")
   end
 
-  it "can update a callout", :js do
+  it "can update a broadcast", :js do
     user = create(:user)
     broadcast = create(
       :broadcast,
@@ -111,7 +111,7 @@ RSpec.describe "Callouts", :aggregate_failures do
     expect(broadcast.call_flow_logic).to eq(CallFlowLogic::HelloWorld.to_s)
   end
 
-  it "can delete a callout" do
+  it "can delete a broadcast" do
     user = create(:user)
     broadcast = create(:broadcast, account: user.account)
 

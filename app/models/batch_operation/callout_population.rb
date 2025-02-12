@@ -18,10 +18,6 @@ module BatchOperation
 
     validates :contact_filter_params, contact_filter_params: true
 
-    def self.jsonapi_serializer_class
-      BroadcastPopulationSerializer
-    end
-
     def run!
       transaction do
         create_callout_participations

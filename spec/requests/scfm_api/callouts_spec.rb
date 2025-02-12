@@ -64,11 +64,11 @@ RSpec.resource "Callouts" do
 
       expect(response_status).to eq(201)
       parsed_response = JSON.parse(response_body)
-      created_callout = account.broadcasts.find(parsed_response.fetch("id"))
-      expect(created_callout.metadata).to eq(request_body.fetch(:metadata))
-      expect(created_callout.settings).to eq(request_body.fetch(:settings))
-      expect(created_callout.call_flow_logic).to eq(request_body.fetch(:call_flow_logic))
-      expect(created_callout.audio_url).to eq(request_body.fetch(:audio_url))
+      created_broadcast = account.broadcasts.find(parsed_response.fetch("id"))
+      expect(created_broadcast.metadata).to eq(request_body.fetch(:metadata))
+      expect(created_broadcast.settings).to eq(request_body.fetch(:settings))
+      expect(created_broadcast.call_flow_logic).to eq(request_body.fetch(:call_flow_logic))
+      expect(created_broadcast.audio_url).to eq(request_body.fetch(:audio_url))
       expect(parsed_response.fetch("status")).to eq("initialized")
     end
   end
