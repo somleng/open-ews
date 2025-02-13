@@ -33,7 +33,7 @@ class Account < ApplicationRecord
            class_name: "BatchOperation::Base",
            dependent: :restrict_with_error
 
-  has_many :callout_participations, through: :broadcasts
+  has_many :alerts, through: :broadcasts
 
   has_many :phone_calls
 
@@ -97,7 +97,7 @@ class Account < ApplicationRecord
     settings.fetch("from_phone_number")
   end
 
-  def max_phone_calls_for_callout_participation
+  def max_phone_calls_for_alert
     settings.fetch("max_phone_calls_for_callout_participation").to_i
   end
 

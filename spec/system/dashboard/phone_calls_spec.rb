@@ -54,7 +54,7 @@ RSpec.describe "Phone Calls" do
 
   it "can list all phone calls for a broadcast" do
     user = create(:user)
-    callout_participation = create_callout_participation(account: user.account)
+    callout_participation = create_alert(account: user.account)
     phone_call = create_phone_call(
       account: user.account, callout_participation:
     )

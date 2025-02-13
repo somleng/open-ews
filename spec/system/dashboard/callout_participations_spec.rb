@@ -3,11 +3,11 @@ require "rails_helper"
 RSpec.describe "Callout Participations" do
   it "can list all callout participations for an account" do
     user = create(:user)
-    callout_participation = create_callout_participation(account: user.account)
-    running_callout_participation = create_callout_participation(
+    callout_participation = create_alert(account: user.account)
+    running_callout_participation = create_alert(
       account: user.account, broadcast: create(:broadcast, :running, account: user.account)
     )
-    other_callout_participation = create(:callout_participation)
+    other_callout_participation = create(:alert)
 
     sign_in(user)
     visit(
@@ -42,8 +42,8 @@ RSpec.describe "Callout Participations" do
 
   it "can list all callout participations for a callout" do
     user = create(:user)
-    callout_participation = create_callout_participation(account: user.account)
-    other_callout_participation = create_callout_participation(account: user.account)
+    callout_participation = create_alert(account: user.account)
+    other_callout_participation = create_alert(account: user.account)
 
     sign_in(user)
     visit(dashboard_broadcast_callout_participations_path(callout_participation.broadcast))
@@ -58,8 +58,8 @@ RSpec.describe "Callout Participations" do
 
   it "can list all the callout participations for a beneficiary" do
     user = create(:user)
-    callout_participation = create_callout_participation(account: user.account)
-    other_callout_participation = create_callout_participation(account: user.account)
+    callout_participation = create_alert(account: user.account)
+    other_callout_participation = create_alert(account: user.account)
 
     sign_in(user)
     visit(dashboard_beneficiary_callout_participations_path(callout_participation.beneficiary))
@@ -75,7 +75,7 @@ RSpec.describe "Callout Participations" do
   it "can show a callout participation" do
     user = create(:user)
     callout_population = create(:callout_population, account: user.account)
-    callout_participation = create_callout_participation(
+    callout_participation = create_alert(
       account: user.account,
       broadcast: callout_population.broadcast,
       callout_population:
@@ -120,7 +120,7 @@ RSpec.describe "Callout Participations" do
 
   it "can delete a callout participation" do
     user = create(:user)
-    callout_participation = create_callout_participation(account: user.account)
+    callout_participation = create_alert(account: user.account)
 
     sign_in(user)
     visit dashboard_callout_participation_path(callout_participation)

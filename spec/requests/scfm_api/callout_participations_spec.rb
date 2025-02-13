@@ -5,8 +5,8 @@ RSpec.resource "Callout Participations" do
 
   get "/api/callouts/:callout_id/callout_participations" do
     example "List all Callout Participations for a callout", document: false do
-      callout_participation = create_callout_participation(account: account)
-      _other_callout_participation = create_callout_participation(account: account)
+      callout_participation = create_alert(account: account)
+      _other_callout_participation = create_alert(account: account)
 
       set_authorization_header_for(account)
       do_request(callout_id: callout_participation.broadcast_id)

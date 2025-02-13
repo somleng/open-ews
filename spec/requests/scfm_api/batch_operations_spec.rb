@@ -167,7 +167,7 @@ RSpec.resource "Batch Operations" do
 
     example "Delete a callout population with callout participations", document: false do
       callout_population = create(:callout_population, account:)
-      create(:callout_participation, callout_population:)
+      create(:alert, callout_population:)
 
       set_authorization_header_for(account)
       do_request(id: callout_population.id)

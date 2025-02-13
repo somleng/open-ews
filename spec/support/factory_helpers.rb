@@ -1,8 +1,8 @@
 module FactoryHelpers
-  def create_callout_participation(account:, **options)
+  def create_alert(account:, **options)
     broadcast = options.delete(:broadcast) || create(:broadcast, account:)
     beneficiary = options.delete(:beneficiary) || create(:beneficiary, account:)
-    create(:callout_participation, { broadcast:, beneficiary: }.merge(options))
+    create(:alert, { broadcast:, beneficiary: }.merge(options))
   end
 
   def create_phone_call(*args)
@@ -10,10 +10,10 @@ module FactoryHelpers
     account = options.delete(:account)
     raise(ArgumentError, "Missing account") if account.blank?
 
-    callout_participation = options.delete(:callout_participation) || create_callout_participation(account:)
+    alert = options.delete(:alert) || create_alert(account:)
     create(
       :phone_call, *args,
-      account:, callout_participation:,
+      account:, alert:,
       **options
     )
   end

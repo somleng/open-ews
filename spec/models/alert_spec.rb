@@ -1,7 +1,7 @@
 require "rails_helper"
 
-RSpec.describe CalloutParticipation do
-  let(:factory) { :callout_participation }
+RSpec.describe Alert do
+  let(:factory) { :alert }
 
   include_examples "has_metadata"
   include_examples "has_call_flow_logic"
@@ -20,10 +20,10 @@ RSpec.describe CalloutParticipation do
 
   it "sets defaults" do
     beneficiary = create(:beneficiary)
-    callout_participation = build(:callout_participation, beneficiary: beneficiary)
+    alert = build(:alert, beneficiary: beneficiary)
 
-    callout_participation.valid?
+    alert.valid?
 
-    expect(callout_participation.phone_number).to eq(beneficiary.phone_number)
+    expect(alert.phone_number).to eq(beneficiary.phone_number)
   end
 end

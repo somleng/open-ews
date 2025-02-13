@@ -66,10 +66,8 @@ RSpec.describe ScheduledJob do
 
   def create_phone_call(account:, broadcast_status: :running, **attributes)
     broadcast = create(:broadcast, account:, status: broadcast_status)
-    callout_participation = create_callout_participation(
-      account:, broadcast:
-    )
+    alert = create_alert(account:, broadcast:)
 
-    create(:phone_call, account:, broadcast:, callout_participation:, **attributes)
+    create(:phone_call, account:, broadcast:, alert:, **attributes)
   end
 end

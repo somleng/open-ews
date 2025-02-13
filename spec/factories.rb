@@ -101,7 +101,7 @@ FactoryBot.define do
     end
   end
 
-  factory :callout_participation do
+  factory :alert do
     broadcast
     beneficiary
   end
@@ -111,12 +111,12 @@ FactoryBot.define do
     remote_call_id { SecureRandom.uuid }
 
     trait :outbound do
-      callout_participation
-      broadcast { callout_participation&.broadcast }
+      alert
+      broadcast { alert&.broadcast }
     end
 
     trait :inbound do
-      callout_participation { nil }
+      alert { nil }
       phone_number { generate(:phone_number) }
       remote_direction { PhoneCall::TWILIO_DIRECTIONS[:inbound] }
     end

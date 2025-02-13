@@ -28,10 +28,10 @@ RSpec.describe CallFlowLogic::Base do
     it "retries outbound calls" do
       travel_to(Time.current) do
         account = create(:account, settings: { max_phone_calls_for_callout_participation: 3 })
-        callout_participation = create_callout_participation(account: account)
+        alert = create_alert(account: account)
         phone_call, event = create_phone_call_with_event(
-          broadcast: callout_participation.broadcast,
-          callout_participation: callout_participation,
+          broadcast: alert.broadcast,
+          alert:,
           status: :remotely_queued,
           remote_status: "failed"
         )
@@ -43,22 +43,22 @@ RSpec.describe CallFlowLogic::Base do
 
         perform_enqueued_jobs
 
-        new_phone_call = callout_participation.phone_calls.last
-        expect(callout_participation.phone_calls.count).to eq(2)
+        new_phone_call = alert.phone_calls.last
+        expect(alert.phone_calls.count).to eq(2)
         expect(new_phone_call).to have_attributes(
           status: "created",
-          callout_participation: callout_participation,
-          broadcast: callout_participation.broadcast,
-          beneficiary: callout_participation.beneficiary
+          alert: alert,
+          broadcast: alert.broadcast,
+          beneficiary: alert.beneficiary
         )
       end
     end
 
     it "does not retry calls if maximum number of calls is reached" do
       account = create(:account, settings: { max_phone_calls_for_callout_participation: 1 })
-      callout_participation = create_callout_participation(account: account)
+      alert = create_alert(account: account)
       _, event = create_phone_call_with_event(
-        callout_participation: callout_participation,
+        alert: alert,
         status: "remotely_queued",
         remote_status: "failed"
       )
@@ -73,9 +73,9 @@ RSpec.describe CallFlowLogic::Base do
       stub_const("CallFlowLogic::Base::MAX_RETRIES", 1)
       account = create(:account, settings: { max_phone_calls_for_callout_participation: 100 })
 
-      callout_participation = create_callout_participation(account: account)
+      alert = create_alert(account: account)
       _, event = create_phone_call_with_event(
-        callout_participation: callout_participation,
+        alert:,
         status: "remotely_queued",
         remote_status: "failed"
       )

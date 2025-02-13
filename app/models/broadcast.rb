@@ -35,9 +35,8 @@ class Broadcast < ApplicationRecord
   belongs_to :account
   belongs_to :created_by, class_name: "User", optional: true
 
-  has_many :callout_participations, dependent: :restrict_with_error
-  has_many :broadcast_beneficiaries, class_name: "CalloutParticipation", dependent: :restrict_with_error
-  has_many :beneficiaries, through: :broadcast_beneficiaries
+  has_many :alerts, dependent: :restrict_with_error
+  has_many :beneficiaries, through: :alerts
 
   has_many :batch_operations,
            class_name: "BatchOperation::Base",
@@ -50,7 +49,6 @@ class Broadcast < ApplicationRecord
 
   has_many :phone_calls
   has_many :remote_phone_call_events, through: :phone_calls
-  has_many :beneficiaries, through: :callout_participations
 
   has_one_attached :audio_file
 
