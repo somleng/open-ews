@@ -12,13 +12,13 @@ RSpec.describe "Callout Populations" do
     )
 
     sign_in(user)
-    visit(dashboard_callout_batch_operations_path(callout_population.callout))
+    visit(dashboard_broadcast_batch_operations_path(callout_population.broadcast))
 
     within("#page_actions") do
       expect(page).to have_link(
         "New",
-        href: new_dashboard_callout_batch_operation_callout_population_path(
-          callout_population.callout
+        href: new_dashboard_broadcast_batch_operation_callout_population_path(
+          callout_population.broadcast
         )
       )
     end
@@ -38,10 +38,10 @@ RSpec.describe "Callout Populations" do
 
   it "create and start callout population", :js do
     user = create(:user)
-    callout = create(:callout, account: user.account)
+    broadcast = create(:broadcast, account: user.account)
 
     sign_in(user)
-    visit(new_dashboard_callout_batch_operation_callout_population_path(callout))
+    visit(new_dashboard_broadcast_batch_operation_callout_population_path(broadcast))
 
     fill_in_key_values_for(
       :contact_filter_metadata,
@@ -129,7 +129,7 @@ RSpec.describe "Callout Populations" do
     click_on "Delete"
 
     expect(page).to have_current_path(
-      dashboard_callout_batch_operations_path(callout_population.callout), ignore_query: true
+      dashboard_broadcast_batch_operations_path(callout_population.broadcast), ignore_query: true
     )
     expect(page).to have_text("successfully destroyed.")
   end

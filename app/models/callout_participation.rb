@@ -8,7 +8,7 @@ class CalloutParticipation < ApplicationRecord
 
   attribute :phone_number, :phone_number
 
-  belongs_to :callout
+  belongs_to :broadcast
   belongs_to :beneficiary
   belongs_to :callout_population,
              optional: true,
@@ -19,8 +19,8 @@ class CalloutParticipation < ApplicationRecord
 
   has_many :remote_phone_call_events, through: :phone_calls
 
-  delegate :call_flow_logic, to: :callout, prefix: true, allow_nil: true
-  delegate :account, to: :callout
+  delegate :call_flow_logic, to: :broadcast, prefix: true, allow_nil: true
+  delegate :account, to: :broadcast
 
   before_validation :set_phone_number_from_beneficiary,
                     :set_call_flow_logic,
@@ -49,6 +49,6 @@ class CalloutParticipation < ApplicationRecord
   def set_call_flow_logic
     return if call_flow_logic.present?
 
-    self.call_flow_logic = callout_call_flow_logic
+    self.call_flow_logic = broadcast_call_flow_logic
   end
 end

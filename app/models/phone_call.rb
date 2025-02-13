@@ -22,7 +22,7 @@ class PhoneCall < ApplicationRecord
   belongs_to :callout_participation, optional: true, counter_cache: true
   belongs_to :beneficiary, validate: true
   belongs_to :account
-  belongs_to :callout, optional: true
+  belongs_to :broadcast, optional: true
   has_many   :remote_phone_call_events, dependent: :restrict_with_error
 
   include MetadataHelpers

@@ -43,15 +43,15 @@ class StartRapidproFlow < ApplicationWorkflow
   end
 
   def fetch_setting(key)
-    fetch_rapidpro_setting(callout_settings, key) || fetch_rapidpro_setting(account_settings, key)
+    fetch_rapidpro_setting(broadcast_settings, key) || fetch_rapidpro_setting(account_settings, key)
   end
 
   def fetch_rapidpro_setting(settings, key)
     settings.dig("rapidpro", key.to_s)
   end
 
-  def callout_settings
-    phone_call.callout&.settings || {}
+  def broadcast_settings
+    phone_call.broadcast&.settings || {}
   end
 
   def account_settings

@@ -6,7 +6,7 @@ RSpec.describe StartRapidproFlow do
     start_flow_response = build_start_flow_response(flow_id: flow_id)
     workflow = build_workflow(
       account_settings: { "rapidpro" => { "api_token" => "api-token" } },
-      callout_settings: { "rapidpro" => { "flow_id" => flow_id } },
+      broadcast_settings: { "rapidpro" => { "flow_id" => flow_id } },
       rapidpro_client: fake_rapidpro_client(status: 201, response: start_flow_response)
     )
 
@@ -96,11 +96,11 @@ RSpec.describe StartRapidproFlow do
 
   def build_workflow(options = {})
     account_settings = options.delete(:account_settings) || {}
-    callout_settings = options.delete(:callout_settings) || {}
+    broadcast_settings = options.delete(:broadcast_settings) || {}
     rapidpro_client = options.key?(:rapidpro_client) ? options.delete(:rapidpro_client) : fake_rapidpro_client
     account = create(:account, settings: account_settings)
-    callout = create(:callout, settings: callout_settings, account: account)
-    callout_participation = create_callout_participation(account: account, callout: callout)
+    broadcast = create(:broadcast, settings: broadcast_settings, account: account)
+    callout_participation = create_callout_participation(account: account, broadcast:)
     phone_call = create_phone_call(account: account, callout_participation: callout_participation)
     described_class.new(phone_call, { rapidpro_client: rapidpro_client }.compact)
   end

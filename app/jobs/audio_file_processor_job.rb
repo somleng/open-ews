@@ -3,20 +3,20 @@ class AudioFileProcessorJob < ApplicationJob
 
   queue_as Rails.configuration.app_settings.fetch(:aws_sqs_high_priority_queue_name)
 
-  def perform(callout)
+  def perform(broadcast)
     bucket_object_name = [
       generate_object_uuid,
-      callout.audio_file.filename.sanitized
+      broadcast.audio_file.filename.sanitized
     ].join("-")
 
     bucket_object = s3_resource.bucket(
       audio_bucket
     ).object(bucket_object_name)
 
-    audio_file = URI(callout.audio_file.url).open
+    audio_file = URI(broadcast.audio_file.url).open
     bucket_object.put(body: audio_file)
 
-    callout.update!(audio_url: bucket_object.public_url)
+    broadcast.update!(audio_url: bucket_object.public_url)
   end
 
   private

@@ -12,7 +12,7 @@ class ScheduledJob < ApplicationJob
   private
 
   def queue_phone_calls(account)
-    phone_calls = PhoneCall.created.where(callout_id: account.callouts.running.select(:id))
+    phone_calls = PhoneCall.created.where(broadcast_id: account.broadcasts.running.select(:id))
 
     phone_calls.limit(account.phone_call_queue_limit).each do |phone_call|
       phone_call.queue!

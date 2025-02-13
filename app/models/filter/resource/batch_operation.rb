@@ -14,7 +14,9 @@ module Filter
       end
 
       def filter_params
-        params.slice(:callout_id, :status)
+        result = params.slice(:callout_id, :broadcast_id, :status)
+        result[:broadcast_id] = result.delete(:callout_id) if result.key?(:callout_id)
+        result
       end
     end
   end

@@ -52,7 +52,7 @@ RSpec.describe "Phone Calls" do
     end
   end
 
-  it "can list all phone calls for a callout" do
+  it "can list all phone calls for a broadcast" do
     user = create(:user)
     callout_participation = create_callout_participation(account: user.account)
     phone_call = create_phone_call(
@@ -61,7 +61,7 @@ RSpec.describe "Phone Calls" do
     other_phone_call = create_phone_call(account: user.account)
 
     sign_in(user)
-    visit(dashboard_callout_phone_calls_path(callout_participation.callout))
+    visit(dashboard_broadcast_phone_calls_path(callout_participation.broadcast))
 
     within("#resources") do
       expect(page).to have_content_tag_for(phone_call)
@@ -106,8 +106,8 @@ RSpec.describe "Phone Calls" do
       )
 
       expect(page).to have_link(
-        phone_call.callout_id.to_s,
-        href: dashboard_callout_path(phone_call.callout_id)
+        phone_call.broadcast_id.to_s,
+        href: dashboard_broadcast_path(phone_call.broadcast_id)
       )
 
       expect(page).to have_link(

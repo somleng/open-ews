@@ -37,7 +37,7 @@ FactoryBot.define do
     SecureRandom.uuid
   end
 
-  factory :callout, aliases: [ :broadcast ] do
+  factory :broadcast do
     account
     channel { "voice" }
 
@@ -45,9 +45,9 @@ FactoryBot.define do
       audio_file { nil }
     end
 
-    after(:build) do |callout, evaluator|
+    after(:build) do |broadcast, evaluator|
       if evaluator.audio_file.present?
-        callout.audio_file = Rack::Test::UploadedFile.new(
+        broadcast.audio_file = Rack::Test::UploadedFile.new(
           evaluator.audio_file,
           "audio/mp3"
         )
@@ -55,7 +55,7 @@ FactoryBot.define do
     end
 
     trait :pending do
-      status { Callout::STATE_PENDING }
+      status { Broadcast::STATE_PENDING }
     end
 
     trait :can_start do
@@ -74,7 +74,7 @@ FactoryBot.define do
     end
 
     trait :running do
-      status { Callout::STATE_RUNNING }
+      status { Broadcast::STATE_RUNNING }
     end
   end
 
@@ -96,13 +96,13 @@ FactoryBot.define do
     factory :callout_population, aliases: [ :batch_operation, :broadcast_population ],
                                  class: "BatchOperation::CalloutPopulation" do
       after(:build) do |callout_population|
-        callout_population.callout ||= build(:callout, account: callout_population.account)
+        callout_population.broadcast ||= build(:broadcast, account: callout_population.account)
       end
     end
   end
 
   factory :callout_participation do
-    callout
+    broadcast
     beneficiary
   end
 
@@ -112,7 +112,7 @@ FactoryBot.define do
 
     trait :outbound do
       callout_participation
-      callout { callout_participation&.callout }
+      broadcast { callout_participation&.broadcast }
     end
 
     trait :inbound do

@@ -27,15 +27,13 @@ class Account < ApplicationRecord
 
   has_many :beneficiaries, dependent: :restrict_with_error
 
-  has_many :callouts, dependent: :restrict_with_error
-  has_many :broadcasts, class_name: "Callout", dependent: :restrict_with_error
+  has_many :broadcasts, dependent: :restrict_with_error
 
   has_many :batch_operations,
            class_name: "BatchOperation::Base",
            dependent: :restrict_with_error
 
-  has_many :callout_participations,
-           through: :callouts
+  has_many :callout_participations, through: :broadcasts
 
   has_many :phone_calls
 

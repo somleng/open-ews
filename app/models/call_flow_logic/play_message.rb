@@ -2,7 +2,7 @@ module CallFlowLogic
   class PlayMessage < CallFlowLogic::Base
     def to_xml(_options = {})
       Twilio::TwiML::VoiceResponse.new do |response|
-        if (audio_url = event.callout&.audio_url)
+        if (audio_url = event.broadcast&.audio_url)
           response.play(
             url: audio_url
           )

@@ -3,11 +3,11 @@ module Dashboard
     private
 
     def parent_resource
-      callout
+      broadcast
     end
 
-    def callout
-      @callout ||= current_account.callouts.find(params[:callout_id])
+    def broadcast
+      @broadcast ||= current_account.broadcasts.find(params[:broadcast_id])
     end
 
     def event_class

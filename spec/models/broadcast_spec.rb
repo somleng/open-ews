@@ -1,7 +1,7 @@
 require "rails_helper"
 
-RSpec.describe Callout do
-  let(:factory) { :callout }
+RSpec.describe Broadcast do
+  let(:factory) { :broadcast }
   include_examples "has_metadata"
   include_examples "has_call_flow_logic"
 
@@ -15,57 +15,57 @@ RSpec.describe Callout do
 
     context "#audio_file" do
       it "validates the content type" do
-        callout = build(:callout, audio_file: file_fixture("image.jpg"))
+        broadcast = build(:broadcast, audio_file: file_fixture("image.jpg"))
 
-        expect(callout).not_to be_valid
-        expect(callout.errors[:audio_file]).to be_present
+        expect(broadcast).not_to be_valid
+        expect(broadcast.errors[:audio_file]).to be_present
       end
 
       it "validates the file size" do
-        callout = build(:callout, audio_file: file_fixture("big_file.mp3"))
+        broadcast = build(:broadcast, audio_file: file_fixture("big_file.mp3"))
 
-        expect(callout).not_to be_valid
-        expect(callout.errors[:audio_file]).to be_present
+        expect(broadcast).not_to be_valid
+        expect(broadcast.errors[:audio_file]).to be_present
       end
 
       it "allows small audio files" do
         account = create(:account)
-        callout = build(:callout, account: account, audio_file: file_fixture("test.mp3"))
-        expect(callout).to be_valid
+        broadcast = build(:broadcast, account: account, audio_file: file_fixture("test.mp3"))
+        expect(broadcast).to be_valid
       end
 
       it "allows no audio files" do
         account = create(:account)
-        callout = build(:callout, account: account)
+        broadcast = build(:broadcast, account: account)
 
-        expect(callout).to be_valid
+        expect(broadcast).to be_valid
       end
     end
   end
 
   describe "audio_file=" do
     it "tracks changes when attaching a new audio file" do
-      callout = described_class.new
-      callout.audio_file = fixture_file_upload("test.mp3", "audio/mp3")
+      broadcast = described_class.new
+      broadcast.audio_file = fixture_file_upload("test.mp3", "audio/mp3")
 
-      expect(callout.audio_file_blob_changed?).to eq(true)
-      expect(callout.audio_file_blob_was).to eq(nil)
+      expect(broadcast.audio_file_blob_changed?).to eq(true)
+      expect(broadcast.audio_file_blob_was).to eq(nil)
     end
 
     it "tracks changes when updating the audio file" do
-      callout = build(:callout, audio_file: file_fixture("test.mp3"))
-      original_blob = callout.audio_file.blob
-      callout.audio_file = fixture_file_upload("big_file.mp3", "audio/mp3")
+      broadcast = build(:broadcast, audio_file: file_fixture("test.mp3"))
+      original_blob = broadcast.audio_file.blob
+      broadcast.audio_file = fixture_file_upload("big_file.mp3", "audio/mp3")
 
-      expect(callout.audio_file_blob_changed?).to eq(true)
-      expect(callout.audio_file_blob_was).to eq(original_blob)
+      expect(broadcast.audio_file_blob_changed?).to eq(true)
+      expect(broadcast.audio_file_blob_was).to eq(original_blob)
     end
 
     it "tracks changes when not updating the audio file" do
-      callout = create(:callout, audio_file: file_fixture("test.mp3"))
-      callout = Callout.find(callout.id)
+      broadcast = create(:broadcast, audio_file: file_fixture("test.mp3"))
+      broadcast = Broadcast.find(broadcast.id)
 
-      expect(callout.audio_file_blob_changed?).to eq(false)
+      expect(broadcast.audio_file_blob_changed?).to eq(false)
     end
   end
 

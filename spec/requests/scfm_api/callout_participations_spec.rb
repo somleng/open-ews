@@ -9,7 +9,7 @@ RSpec.resource "Callout Participations" do
       _other_callout_participation = create_callout_participation(account: account)
 
       set_authorization_header_for(account)
-      do_request(callout_id: callout_participation.callout.id)
+      do_request(callout_id: callout_participation.broadcast_id)
 
       assert_filtered!(callout_participation)
     end

@@ -4,7 +4,7 @@ module V1
       required(:data).value(:hash).schema do
         required(:type).filled(:str?, eql?: "broadcast")
         required(:attributes).value(:hash).schema do
-          required(:channel).filled(:str?, included_in?: Callout.channel.values)
+          required(:channel).filled(:str?, included_in?: Broadcast.channel.values)
           required(:audio_url).filled(:string)
           required(:beneficiary_filter).filled(:hash).schema(BeneficiaryFilter.schema)
           optional(:metadata).value(:hash)

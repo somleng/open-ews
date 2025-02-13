@@ -29,6 +29,18 @@ en:
       new: New Contact
       show: Contact %{id}
       update: Edit Contact
+    broadcasts:
+      create: New Callout
+      edit: Edit Callout
+      index: Callouts
+      new: New Callout
+      pause: Pause
+      resume: Resume
+      show: Callout %{id}
+      start: Start
+      stop: Stop
+      summary: Callout Summary
+      update: Edit Callout
     callout_participations:
       index: Callout Participations
       show: Callout Participation %{id}
@@ -38,18 +50,6 @@ en:
       new: New Callout Population
       show: Callout Population %{id}
       update: Edit Callout Population
-    callouts:
-      create: New Callout
-      edit: Edit Callout
-      index: Callouts
-      new: New Callout
-      pause_callout: Pause
-      resume_callout: Resume
-      show: Callout %{id}
-      start_callout: Start
-      stop_callout: Stop
-      summary: Callout Summary
-      update: Edit Callout
     phone_calls:
       index: Phone Calls
       queue: Send

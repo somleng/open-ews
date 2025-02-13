@@ -1,6 +1,6 @@
 module V1
   class UpdateBroadcastRequestSchema < JSONAPIRequestSchema
-    STATES = Callout.aasm.states.map { _1.name.to_s } - [ "queued" ]
+    STATES = Broadcast.aasm.states.map { _1.name.to_s } - [ "queued" ]
 
     params do
       required(:data).value(:hash).schema do

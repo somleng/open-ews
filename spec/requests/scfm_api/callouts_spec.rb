@@ -5,15 +5,15 @@ RSpec.resource "Callouts" do
 
   get "/api/callouts" do
     example "List all Callouts" do
-      filtered_callout = create(
-        :callout,
+      filtered_broadcast = create(
+        :broadcast,
         account: account,
         metadata: {
           "foo" => "bar"
         }
       )
-      create(:callout, account: account)
-      create(:callout)
+      create(:broadcast, account: account)
+      create(:broadcast)
 
       set_authorization_header_for(account)
       do_request(
@@ -25,7 +25,7 @@ RSpec.resource "Callouts" do
       expect(response_status).to eq(200)
       parsed_body = JSON.parse(response_body)
       expect(parsed_body.size).to eq(1)
-      expect(parsed_body.first.fetch("id")).to eq(filtered_callout.id)
+      expect(parsed_body.first.fetch("id")).to eq(filtered_broadcast.id)
     end
   end
 
@@ -64,34 +64,34 @@ RSpec.resource "Callouts" do
 
       expect(response_status).to eq(201)
       parsed_response = JSON.parse(response_body)
-      created_callout = account.callouts.find(parsed_response.fetch("id"))
-      expect(created_callout.metadata).to eq(request_body.fetch(:metadata))
-      expect(created_callout.settings).to eq(request_body.fetch(:settings))
-      expect(created_callout.call_flow_logic).to eq(request_body.fetch(:call_flow_logic))
-      expect(created_callout.audio_url).to eq(request_body.fetch(:audio_url))
+      created_broadcast = account.broadcasts.find(parsed_response.fetch("id"))
+      expect(created_broadcast.metadata).to eq(request_body.fetch(:metadata))
+      expect(created_broadcast.settings).to eq(request_body.fetch(:settings))
+      expect(created_broadcast.call_flow_logic).to eq(request_body.fetch(:call_flow_logic))
+      expect(created_broadcast.audio_url).to eq(request_body.fetch(:audio_url))
       expect(parsed_response.fetch("status")).to eq("initialized")
     end
   end
 
   get "/api/callouts/:id" do
     example "Retrieve a Callout" do
-      callout = create(:callout, account: account)
+      broadcast = create(:broadcast, account: account)
 
       set_authorization_header_for(account)
-      do_request(id: callout.id)
+      do_request(id: broadcast.id)
 
       expect(response_status).to eq(200)
       parsed_response = JSON.parse(response_body)
       expect(
-        account.callouts.find(parsed_response.fetch("id"))
-      ).to eq(callout)
+        account.broadcasts.find(parsed_response.fetch("id"))
+      ).to eq(broadcast)
     end
   end
 
   patch "/api/callouts/:id" do
     example "Update a Callout" do
-      callout = create(
-        :callout,
+      broadcast = create(
+        :broadcast,
         account: account,
         metadata: {
           "foo" => "bar"
@@ -101,33 +101,33 @@ RSpec.resource "Callouts" do
       request_body = { metadata: { "bar" => "foo" }, metadata_merge_mode: "replace" }
 
       set_authorization_header_for(account)
-      do_request(id: callout.id, **request_body)
+      do_request(id: broadcast.id, **request_body)
 
       expect(response_status).to eq(204)
-      callout.reload
-      expect(callout.metadata).to eq(request_body.fetch(:metadata))
+      broadcast.reload
+      expect(broadcast.metadata).to eq(request_body.fetch(:metadata))
     end
   end
 
   delete "/api/callouts/:id" do
     example "Delete a Callout" do
-      callout = create(:callout, account: account)
+      broadcast = create(:broadcast, account: account)
 
       set_authorization_header_for(account)
-      do_request(id: callout.id)
+      do_request(id: broadcast.id)
 
       expect(response_status).to eq(204)
-      expect(Callout.find_by_id(callout.id)).to eq(nil)
+      expect(Broadcast.find_by_id(broadcast.id)).to eq(nil)
     end
 
     example "Delete a Callout with callout participations", document: false do
-      callout = create(:callout, account: account)
+      broadcast = create(:broadcast, account: account)
       _callout_participation = create_callout_participation(
-        account: account, callout: callout
+        account: account, broadcast: broadcast
       )
 
       set_authorization_header_for(account)
-      do_request(id: callout.id)
+      do_request(id: broadcast.id)
 
       expect(response_status).to eq(422)
     end
@@ -136,36 +136,36 @@ RSpec.resource "Callouts" do
   post "/api/callouts/:callout_id/callout_events" do
     parameter(
       :event,
-      "One of: " + Callout.aasm.events.map { |event| "`#{event.name}`" }.join(", "),
+      "One of: " + Broadcast.aasm.events.map { |event| "`#{event.name}`" }.join(", "),
       required: true
     )
 
     example "Create a Callout Event" do
-      callout = create(
-        :callout,
+      broadcast = create(
+        :broadcast,
         account: account,
-        status: Callout::STATE_PENDING
+        status: Broadcast::STATE_PENDING
       )
 
       set_authorization_header_for(account)
-      do_request(callout_id: callout.id, event: "start")
+      do_request(callout_id: broadcast.id, event: "start")
 
       expect(response_status).to eq(201)
-      expect(response_headers["Location"]).to eq(api_callout_path(callout))
+      expect(response_headers["Location"]).to eq(api_callout_path(broadcast))
       parsed_body = JSON.parse(response_body)
       expect(parsed_body.fetch("status")).to eq("running")
-      expect(callout.reload).to be_running
+      expect(broadcast.reload).to be_running
     end
 
     example "Start a running Callout", document: false do
-      callout = create(
-        :callout,
+      broadcast = create(
+        :broadcast,
         account: account,
-        status: Callout::STATE_RUNNING
+        status: Broadcast::STATE_RUNNING
       )
 
       set_authorization_header_for(account)
-      do_request(callout_id: callout.id, event: "start")
+      do_request(callout_id: broadcast.id, event: "start")
 
       expect(response_status).to eq(422)
     end
@@ -173,11 +173,11 @@ RSpec.resource "Callouts" do
 
   get "/api/callouts/:callout_id/batch_operations" do
     example "List all Callout Batch Operations", document: false do
-      callout = create(:callout, account: account)
-      callout_population = create(:callout_population, callout: callout, account: account)
+      broadcast = create(:broadcast, account: account)
+      callout_population = create(:callout_population, broadcast: broadcast, account: account)
 
       set_authorization_header_for(account)
-      do_request(callout_id: callout.id)
+      do_request(callout_id: broadcast.id)
 
       expect(response_status).to eq(200)
       parsed_response = JSON.parse(response_body)

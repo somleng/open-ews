@@ -4,7 +4,7 @@ module API
 
     def find_resources_association_chain
       if params[:callout_id]
-        callout.phone_calls
+        broadcast.phone_calls
       else
         association_chain
       end
@@ -18,8 +18,8 @@ module API
       Filter::Resource::PhoneCall
     end
 
-    def callout
-      @callout ||= current_account.callouts.find(params[:callout_id])
+    def broadcast
+      @broadcast ||= current_account.broadcasts.find(params[:callout_id])
     end
   end
 end

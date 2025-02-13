@@ -30,7 +30,7 @@ RSpec.describe CallFlowLogic::Base do
         account = create(:account, settings: { max_phone_calls_for_callout_participation: 3 })
         callout_participation = create_callout_participation(account: account)
         phone_call, event = create_phone_call_with_event(
-          callout: callout_participation.callout,
+          broadcast: callout_participation.broadcast,
           callout_participation: callout_participation,
           status: :remotely_queued,
           remote_status: "failed"
@@ -48,7 +48,7 @@ RSpec.describe CallFlowLogic::Base do
         expect(new_phone_call).to have_attributes(
           status: "created",
           callout_participation: callout_participation,
-          callout: callout_participation.callout,
+          broadcast: callout_participation.broadcast,
           beneficiary: callout_participation.beneficiary
         )
       end

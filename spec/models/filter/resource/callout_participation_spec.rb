@@ -15,10 +15,10 @@ RSpec.describe Filter::Resource::CalloutParticipation do
 
     it "filters by callout_id" do
       _non_matching_callout_participation = create(:callout_participation)
-      callout = create(:callout)
-      callout_participation = create(:callout_participation, callout: callout)
+      broadcast = create(:broadcast)
+      callout_participation = create(:callout_participation, broadcast: broadcast)
 
-      filter = build_filter(callout_id: callout.id)
+      filter = build_filter(callout_id: broadcast.id)
 
       expect(filter.resources).to match_array([ callout_participation ])
     end

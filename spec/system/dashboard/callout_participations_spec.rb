@@ -5,7 +5,7 @@ RSpec.describe "Callout Participations" do
     user = create(:user)
     callout_participation = create_callout_participation(account: user.account)
     running_callout_participation = create_callout_participation(
-      account: user.account, callout: create(:callout, :running, account: user.account)
+      account: user.account, broadcast: create(:broadcast, :running, account: user.account)
     )
     other_callout_participation = create(:callout_participation)
 
@@ -34,8 +34,8 @@ RSpec.describe "Callout Participations" do
         href: dashboard_beneficiary_path(callout_participation.beneficiary)
       )
       expect(page).to have_link(
-        callout_participation.callout_id.to_s,
-        href: dashboard_callout_path(callout_participation.callout)
+        callout_participation.broadcast_id.to_s,
+        href: dashboard_broadcast_path(callout_participation.broadcast)
       )
     end
   end
@@ -46,7 +46,7 @@ RSpec.describe "Callout Participations" do
     other_callout_participation = create_callout_participation(account: user.account)
 
     sign_in(user)
-    visit(dashboard_callout_callout_participations_path(callout_participation.callout))
+    visit(dashboard_broadcast_callout_participations_path(callout_participation.broadcast))
 
     expect(page).to have_title("Callout Participations")
 
@@ -77,7 +77,7 @@ RSpec.describe "Callout Participations" do
     callout_population = create(:callout_population, account: user.account)
     callout_participation = create_callout_participation(
       account: user.account,
-      callout: callout_population.callout,
+      broadcast: callout_population.broadcast,
       callout_population:
     )
 
@@ -97,8 +97,8 @@ RSpec.describe "Callout Participations" do
       expect(page).to have_content(callout_participation.id)
 
       expect(page).to have_link(
-        callout_participation.callout_id.to_s,
-        href: dashboard_callout_path(callout_participation.callout)
+        callout_participation.broadcast_id.to_s,
+        href: dashboard_broadcast_path(callout_participation.broadcast)
       )
 
       expect(page).to have_link(

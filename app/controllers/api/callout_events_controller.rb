@@ -3,15 +3,15 @@ module API
     private
 
     def parent_resource
-      callout
+      broadcast
     end
 
     def path_to_parent
-      api_callout_path(callout)
+      api_callout_path(broadcast)
     end
 
-    def callout
-      @callout ||= current_account.callouts.find(params[:callout_id])
+    def broadcast
+      @broadcast ||= current_account.broadcasts.find(params[:callout_id])
     end
 
     def event_class
@@ -19,7 +19,7 @@ module API
     end
 
     def access_token_write_permissions
-      [:callouts_write]
+      [ :callouts_write ]
     end
   end
 end

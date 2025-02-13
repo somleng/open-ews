@@ -1,6 +1,0 @@
-= page_title(title: title) do
-  = render("shared/new_resource_page_action", path: new_dashboard_callout_path)
-
-.card-body
-  = render("shared/resources_table", resource_class: Callout, columns: [:status, :call_flow_logic, :created_at])
-  = render("shared/pagination", resources: resources)

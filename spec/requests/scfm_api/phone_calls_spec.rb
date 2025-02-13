@@ -32,7 +32,7 @@ RSpec.resource "Phone Calls" do
       _other_phone_call = create_phone_call(account:)
 
       set_authorization_header_for(account)
-      do_request(callout_id: phone_call.callout.id)
+      do_request(callout_id: phone_call.broadcast.id)
 
       assert_filtered!(phone_call)
     end

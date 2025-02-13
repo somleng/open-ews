@@ -3,15 +3,15 @@ module API
     private
 
     def find_resources_association_chain
-      callout.callout_participations
+      broadcast.callout_participations
     end
 
     def filter_class
       Filter::Resource::CalloutParticipation
     end
 
-    def callout
-      @callout ||= current_account.callouts.find(params[:callout_id])
+    def broadcast
+      @broadcast ||= current_account.broadcasts.find(params[:callout_id])
     end
   end
 end

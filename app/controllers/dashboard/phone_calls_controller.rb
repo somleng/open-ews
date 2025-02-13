@@ -13,8 +13,8 @@ module Dashboard
     def parent_resource
       if callout_participation_id
         callout_participation
-      elsif callout_id
-        callout
+      elsif broadcast_id
+        broadcast
       elsif beneficiary_id
         beneficiary
       end
@@ -28,12 +28,12 @@ module Dashboard
       @callout_participation ||= current_account.callout_participations.find(callout_participation_id)
     end
 
-    def callout_id
-      params[:callout_id]
+    def broadcast_id
+      params[:broadcast_id]
     end
 
-    def callout
-      @callout ||= current_account.callouts.find(callout_id)
+    def broadcast
+      @broadcast ||= current_account.broadcasts.find(broadcast_id)
     end
 
     def beneficiary_id
