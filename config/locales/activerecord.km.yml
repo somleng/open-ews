@@ -8,8 +8,8 @@ km:
         errored_calls: Errored calls
         failed_calls: Failed calls
         not_answered_calls: Not answered calls
-        participations: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
-        participations_still_to_be_called: Participants still to be called
+        alerts_count: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
+        alerts_still_to_be_called: Participants still to be called
       key_value_field:
         key: Key
         value: Value
@@ -57,6 +57,9 @@ km:
       callout_participation:
         one: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
         other: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
+      alert:
+        one: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
+        other: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
       phone_call:
         one: កំណត់ត្រាការហៅចេញ
         other: កំណត់ត្រាការហៅចេញ
@@ -71,6 +74,8 @@ km:
     beneficiary_id: សមាជិកទំនាក់ទំនង
     broadcast: សេចក្ដីប្រកាស
     broadcast_id: សេចក្ដីប្រកាស
+    alert: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
+    alert_id: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
     call_flow_logic: វិធីសាស្រ្តការហៅចេញ
     created_at: បង្កើតនៅពេល
     duration: រយៈ (វិនាទី)

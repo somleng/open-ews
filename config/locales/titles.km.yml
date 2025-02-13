@@ -41,7 +41,7 @@ km:
       stop: បញ្ឈប់
       summary: Callout Summary
       update: កែប្រែ សេចក្ដីប្រកាស
-    callout_participations:
+    alerts:
       index: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
       show: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស %{id}
     callout_populations:

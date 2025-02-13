@@ -41,7 +41,7 @@ en:
       stop: Stop
       summary: Callout Summary
       update: Edit Callout
-    callout_participations:
+    alerts:
       index: Callout Participations
       show: Callout Participation %{id}
     callout_populations:

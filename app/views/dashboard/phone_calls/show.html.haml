@@ -11,9 +11,9 @@
     = f.attribute :direction, value: resource.direction.to_s.humanize
     = f.attribute :status, value: resource.status.humanize
     = f.attribute :duration
-    = f.attribute :callout_participation do
-      - if resource.callout_participation_id
-        = link_to(resource.callout_participation_id, dashboard_callout_participation_path(resource.callout_participation_id))
+    = f.attribute :alert do
+      - if resource.alert_id
+        = link_to(resource.alert_id, dashboard_alert_path(resource.alert_id))
     = f.attribute :broadcast do
       - if resource.broadcast_id
         = link_to(resource.broadcast_id, dashboard_broadcast_path(resource.broadcast_id))

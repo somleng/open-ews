@@ -1,8 +1,8 @@
 = page_title(title: title) do
-  = render("shared/destroy_resource_page_action", path: dashboard_callout_participation_path(resource))
+  = render("shared/destroy_resource_page_action", path: dashboard_alert_path(resource))
 
   = render "shared/resource_related_links" do
-    = related_link_to t(:"titles.phone_calls.index"), dashboard_callout_participation_phone_calls_path(resource)
+    = related_link_to t(:"titles.phone_calls.index"), dashboard_alert_phone_calls_path(resource)
 
 .card-body
   = show_for(resource) do |f|

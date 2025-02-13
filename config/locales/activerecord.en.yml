@@ -8,8 +8,8 @@ en:
         errored_calls: Errored calls
         failed_calls: Failed calls
         not_answered_calls: Not answered calls
-        participations: Participants
-        participations_still_to_be_called: Participants still to be called
+        alerts_count: Participants
+        alerts_still_to_be_called: Participants still to be called
       key_value_field:
         key: Key
         value: Value
@@ -54,6 +54,9 @@ en:
       callout:
         one: Callout
         other: Callouts
+      alert:
+        one: Callout participation
+        other: Callout participations
       callout_participation:
         one: Callout participation
         other: Callout participations
@@ -71,6 +74,8 @@ en:
     beneficiary_id: Contact
     broadcast: Callout
     broadcast_id: Callout
+    alert: Callout participation
+    alert_id: Callout participation
     call_flow_logic: Call flow
     created_at: Created at
     duration: Duration (seconds)

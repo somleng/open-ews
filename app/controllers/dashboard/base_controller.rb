@@ -68,19 +68,19 @@ module Dashboard
     end
 
     def respond_with_resource_parts
-      [:dashboard, resource]
+      [ :dashboard, resource ]
     end
 
     def show_location(resource)
-      polymorphic_path([:dashboard, resource])
+      polymorphic_path([ :dashboard, resource ])
     end
 
     def resources_path
-      polymorphic_path([:dashboard, parent_resource, association_chain.model])
+      polymorphic_path([ :dashboard, parent_resource, association_chain.model ])
     end
 
     def parent_resources_path
-      polymorphic_path([:dashboard, parent_resource.class])
+      polymorphic_path([ :dashboard, parent_resource.class ])
     end
 
     def current_account
