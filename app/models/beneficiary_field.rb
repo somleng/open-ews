@@ -1,14 +1,4 @@
-class BeneficiaryField
-  def initialize(name:, column:, relation: nil, description: nil)
-    @name = name
-    @column = column
-    @relation = relation
-    @description = description
-  end
-
-
-  attr_reader :name, :column, :relation, :description
-
+class BeneficiaryField < SimpleColumnField
   def self.all
     @all ||= [
       self.new(name: "status", column: "status", description: "Must be one of #{Beneficiary.status.values.map { |t| "`#{t}`" }.join(", ")}."),
