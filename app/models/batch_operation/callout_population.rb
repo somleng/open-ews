@@ -35,6 +35,13 @@ module BatchOperation
       self.contact_filter_params = { "metadata" => attributes }
     end
 
+  # NOTE: This is for backward compatibility until we moved to the new API
+  def as_json(*)
+    result = super
+    result["callout_id"] = result.delete("broadcast_id")
+    result
+  end
+
     private
 
     def beneficiaries_scope

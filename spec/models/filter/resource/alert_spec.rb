@@ -16,31 +16,31 @@ RSpec.describe Filter::Resource::Alert do
     it "filters by callout_id" do
       _non_matching_callout_participation = create(:alert)
       broadcast = create(:broadcast)
-      callout_participation = create(:alert, broadcast: broadcast)
+      alert = create(:alert, broadcast: broadcast)
 
       filter = build_filter(callout_id: broadcast.id)
 
-      expect(filter.resources).to match_array([ callout_participation ])
+      expect(filter.resources).to match_array([ alert ])
     end
 
     it "filters by beneficiary_id" do
       _non_matching_callout_participation = create(:alert)
       beneficiary = create(:beneficiary)
-      callout_participation = create(:alert, beneficiary: beneficiary)
+      alert = create(:alert, beneficiary: beneficiary)
 
       filter = build_filter(beneficiary_id: beneficiary.id)
 
-      expect(filter.resources).to match_array([ callout_participation ])
+      expect(filter.resources).to match_array([ alert ])
     end
 
     it "filters by callout_population_id" do
       _non_matching_callout_participation = create(:alert)
       callout_population = create(:callout_population)
-      callout_participation = create(:alert, callout_population: callout_population)
+      alert = create(:alert, callout_population: callout_population)
 
       filter = build_filter(callout_population_id: callout_population.id)
 
-      expect(filter.resources).to match_array([ callout_participation ])
+      expect(filter.resources).to match_array([ alert ])
     end
   end
 
