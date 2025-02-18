@@ -45,7 +45,7 @@ module Dashboard
     end
 
     def filter_class
-      Filter::Resource::CalloutParticipation
+      Filter::Resource::Alert
     end
   end
 end

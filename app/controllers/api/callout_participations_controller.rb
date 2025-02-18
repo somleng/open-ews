@@ -7,7 +7,7 @@ module API
     end
 
     def filter_class
-      Filter::Resource::CalloutParticipation
+      Filter::Resource::Alert
     end
 
     def broadcast

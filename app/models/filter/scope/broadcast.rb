@@ -1,6 +1,6 @@
 module Filter
   module Scope
-    class Callout < Filter::Base
+    class Broadcast < Filter::Base
       def apply
         association_chain.joins(:broadcast).merge(broadcast_filter.resources)
       end
@@ -12,7 +12,7 @@ module Filter
       private
 
       def broadcast_filter
-        Filter::Resource::Callout.new({ association_chain: ::Broadcast }, callout_filter_params)
+        Filter::Resource::Broadcast.new({ association_chain: ::Broadcast }, callout_filter_params)
       end
 
       def callout_filter_params

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Filter::Resource::CalloutParticipation do
+RSpec.describe Filter::Resource::Alert do
   let(:filterable_factory) { :alert }
   let(:association_chain) { Alert.all }
 
@@ -46,7 +46,7 @@ RSpec.describe Filter::Resource::CalloutParticipation do
 
   def build_filter(filter_params = {})
     described_class.new(
-      { association_chain: CalloutParticipation },
+      { association_chain: Alert },
       filter_params
     )
   end

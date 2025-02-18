@@ -11,7 +11,7 @@ module API
     end
 
     def filter_class
-      Filter::Resource::Callout
+      Filter::Resource::Broadcast
     end
 
     def permitted_params
