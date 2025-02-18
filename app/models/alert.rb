@@ -2,10 +2,6 @@ class Alert < ApplicationRecord
   include MetadataHelpers
   include HasCallFlowLogic
 
-  DEFAULT_RETRY_STATUSES = [
-    "failed"
-  ].freeze
-
   attribute :phone_number, :phone_number
 
   belongs_to :broadcast
@@ -37,6 +33,11 @@ class Alert < ApplicationRecord
     result["msisdn"] = result.delete("phone_number")
     result["contact_id"] = result.delete("beneficiary_id")
     result
+  end
+
+  # TODO: Should introduce status (queued/pending, completed, failed)
+  def status
+    answered? ? "completed" : "queued"
   end
 
   private
