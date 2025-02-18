@@ -3,13 +3,13 @@ en:
   activemodel:
     attributes:
       broadcast_summary:
+        alerts_count: Participants
+        alerts_still_to_be_called: Participants still to be called
         busy_calls: Busy calls
         completed_calls: Completed calls
         errored_calls: Errored calls
         failed_calls: Failed calls
         not_answered_calls: Not answered calls
-        alerts_count: Participants
-        alerts_still_to_be_called: Participants still to be called
       key_value_field:
         key: Key
         value: Value
@@ -30,6 +30,9 @@ en:
       access_token:
         one: API key
         other: API keys
+      alert:
+        one: Callout participation
+        other: Callout participations
       batch_operation/base:
         one: Batch operation
         other: Batch operations
@@ -54,9 +57,6 @@ en:
       callout:
         one: Callout
         other: Callouts
-      alert:
-        one: Callout participation
-        other: Callout participations
       callout_participation:
         one: Callout participation
         other: Callout participations
@@ -70,12 +70,12 @@ en:
         one: User
         other: Users
   attributes:
+    alert: Callout participation
+    alert_id: Callout participation
     beneficiary: Contact
     beneficiary_id: Contact
     broadcast: Callout
     broadcast_id: Callout
-    alert: Callout participation
-    alert_id: Callout participation
     call_flow_logic: Call flow
     created_at: Created at
     duration: Duration (seconds)
