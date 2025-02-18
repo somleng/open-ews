@@ -5,30 +5,30 @@ module BatchOperation
     include_examples("hash_store_accessor", :contact_filter_params)
 
     it { is_expected.to belong_to(:broadcast) }
-    it { is_expected.to have_many(:callout_participations).dependent(:restrict_with_error) }
+    it { is_expected.to have_many(:alerts).dependent(:restrict_with_error) }
 
     describe "#run!" do
       it "populates the callout" do
         callout_population = create(:callout_population)
         beneficiary = create(:beneficiary, account: callout_population.account)
         already_participating_beneficiary = create(:beneficiary, account: callout_population.account)
-        create(:callout_participation, beneficiary: already_participating_beneficiary,
+        create(:alert, beneficiary: already_participating_beneficiary,
                                        broadcast: callout_population.broadcast)
         _other_beneficiary = create(:beneficiary)
 
         callout_population.run!
 
-        expect(callout_population.callout_participations.count).to eq(1)
-        callout_participation = callout_population.callout_participations.first
-        expect(callout_participation.beneficiary).to eq(beneficiary)
-        expect(callout_participation.phone_calls_count).to eq(1)
-        phone_call = callout_participation.phone_calls.first
+        expect(callout_population.alerts.count).to eq(1)
+        alert = callout_population.alerts.first
+        expect(alert.beneficiary).to eq(beneficiary)
+        expect(alert.phone_calls_count).to eq(1)
+        phone_call = alert.phone_calls.first
         expect(phone_call).to have_attributes(
           beneficiary:,
           phone_number: beneficiary.phone_number,
-          callout_participation:,
+          alert:,
           broadcast: callout_population.broadcast,
-          call_flow_logic: callout_participation.call_flow_logic,
+          call_flow_logic: alert.call_flow_logic,
           account: callout_population.account,
           status: "created"
         )
@@ -38,17 +38,17 @@ module BatchOperation
         broadcast = create(:broadcast)
         callout_population = create(:callout_population, broadcast:)
         beneficiary = create(:beneficiary, account: callout_population.account)
-        callout_participation = create(
-          :callout_participation, beneficiary:, broadcast:, callout_population:
+        alert = create(
+          :alert, beneficiary:, broadcast:, callout_population:
         )
-        create(:phone_call, :completed, callout_participation:)
+        create(:phone_call, :completed, alert:)
 
         callout_population.run!
         callout_population.run!
 
-        expect(callout_population.callout_participations.count).to eq(1)
-        callout_participation = callout_population.callout_participations.first
-        expect(callout_participation.phone_calls_count).to eq(1)
+        expect(callout_population.alerts.count).to eq(1)
+        alert = callout_population.alerts.first
+        expect(alert.phone_calls_count).to eq(1)
       end
     end
 

@@ -38,9 +38,9 @@ module CallFlowLogic
 
     def retry_call
       return unless phone_call.status.in?(RETRY_CALL_STATUSES + ALWAYS_RETRY_CALL_STATUSES)
-      return if callout_participation.blank?
-      return if phone_call.status.in?(RETRY_CALL_STATUSES) && callout_participation.phone_calls_count >= phone_call.account.max_phone_calls_for_callout_participation
-      return if callout_participation.phone_calls_count >= MAX_RETRIES
+      return if alert.blank?
+      return if phone_call.status.in?(RETRY_CALL_STATUSES) && alert.phone_calls_count >= phone_call.account.max_phone_calls_for_alert
+      return if alert.phone_calls_count >= MAX_RETRIES
 
       RetryPhoneCallJob.set(wait: 15.minutes).perform_later(phone_call)
     end
@@ -49,8 +49,8 @@ module CallFlowLogic
       event.phone_call
     end
 
-    def callout_participation
-      phone_call.callout_participation
+    def alert
+      phone_call.alert
     end
   end
 end

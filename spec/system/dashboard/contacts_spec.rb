@@ -63,7 +63,7 @@ RSpec.describe "Beneficiaries", :aggregate_failures do
     within("#related_links") do
       expect(page).to have_link(
         "Callout Participations",
-        href: dashboard_beneficiary_callout_participations_path(beneficiary)
+        href: dashboard_beneficiary_alerts_path(beneficiary)
       )
 
       expect(page).to have_link(

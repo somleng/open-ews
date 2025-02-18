@@ -122,7 +122,7 @@ RSpec.resource "Callouts" do
 
     example "Delete a Callout with callout participations", document: false do
       broadcast = create(:broadcast, account: account)
-      _callout_participation = create_callout_participation(
+      _alert = create_alert(
         account: account, broadcast: broadcast
       )
 

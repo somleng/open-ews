@@ -1,12 +1,12 @@
 module Dashboard
-  class CalloutParticipationsController < Dashboard::BaseController
+  class AlertsController < Dashboard::BaseController
     private
 
     def association_chain
       if parent_resource
-        parent_resource.callout_participations
+        parent_resource.alerts
       else
-        current_account.callout_participations
+        current_account.alerts
       end
     end
 
@@ -45,7 +45,7 @@ module Dashboard
     end
 
     def filter_class
-      Filter::Resource::CalloutParticipation
+      Filter::Resource::Alert
     end
   end
 end

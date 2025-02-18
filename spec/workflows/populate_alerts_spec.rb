@@ -1,7 +1,7 @@
 require "rails_helper"
 
-RSpec.describe PopulateBroadcastBeneficiaries do
-  it "populates broadcast beneficiaries" do
+RSpec.describe PopulateAlerts do
+  it "populates alerts" do
     account = create(:account)
     _male_beneficiary = create(:beneficiary, account:, gender: "M")
     female_beneficiary = create(:beneficiary, account:, gender: "F")
@@ -19,18 +19,18 @@ RSpec.describe PopulateBroadcastBeneficiaries do
       }
     )
 
-    PopulateBroadcastBeneficiaries.new(broadcast).call
+    PopulateAlerts.new(broadcast).call
 
     expect(broadcast.status).to eq("running")
     expect(broadcast.beneficiaries.count).to eq(1)
-    expect(broadcast.broadcast_beneficiaries.first).to have_attributes(
+    expect(broadcast.alerts.first).to have_attributes(
       beneficiary: female_beneficiary,
       phone_number: female_beneficiary.phone_number,
       phone_calls_count: 1
     )
     expect(broadcast.phone_calls.count).to eq(1)
     expect(broadcast.phone_calls.first).to have_attributes(
-      callout_participation: broadcast.broadcast_beneficiaries.first,
+      alert: broadcast.alerts.first,
       phone_number: female_beneficiary.phone_number,
       status: "created"
     )

@@ -137,7 +137,7 @@ RSpec.describe "Callout Populations" do
   it "cannot delete a callout population with callout participations" do
     user = create(:user)
     callout_population = create(:callout_population, account: user.account)
-    create(:callout_participation, callout_population:)
+    create(:alert, callout_population:)
 
     sign_in(user)
     visit dashboard_batch_operation_path(callout_population)

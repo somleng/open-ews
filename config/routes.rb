@@ -34,7 +34,7 @@ Rails.application.routes.draw do
     end
 
     resources :beneficiaries, only: %i[index show destroy] do
-      resources :callout_participations, only: :index
+      resources :alerts, only: :index
       resources :phone_calls, only: :index
     end
 
@@ -44,11 +44,11 @@ Rails.application.routes.draw do
       end
       resources :batch_operations, only: %i[index destroy]
       resources :callout_events, only: :create
-      resources :callout_participations, only: :index
+      resources :alerts, only: :index
       resources :phone_calls, only: :index
     end
 
-    resources :callout_participations, only: %i[index show destroy] do
+    resources :alerts, only: %i[index show destroy] do
       resources :phone_calls, only: :index
     end
 

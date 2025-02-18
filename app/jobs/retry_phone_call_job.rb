@@ -3,15 +3,15 @@ class RetryPhoneCallJob < ApplicationJob
   IN_PROGRESS_CALL_STATUSES = %i[created queued remotely_queued in_progress].freeze
 
   def perform(phone_call)
-    callout_participation = phone_call.callout_participation
+    alert = phone_call.alert
 
-    return if callout_participation.answered?
-    return if max_calls_reached?(callout_participation)
-    return if in_progress_calls?(callout_participation)
+    return if alert.answered?
+    return if max_calls_reached?(alert)
+    return if in_progress_calls?(alert)
 
     PhoneCall.create!(
       account: phone_call.account,
-      callout_participation:,
+      alert:,
       beneficiary: phone_call.beneficiary,
       broadcast: phone_call.broadcast
     )
@@ -19,12 +19,11 @@ class RetryPhoneCallJob < ApplicationJob
 
   private
 
-  def max_calls_reached?(callout_participation)
-    callout_participation.phone_calls.where(status: RETRY_CALL_STATUSES).count >=
-      callout_participation.account.max_phone_calls_for_callout_participation
+  def max_calls_reached?(alert)
+    alert.phone_calls.where(status: RETRY_CALL_STATUSES).count >= alert.account.max_phone_calls_for_alert
   end
 
-  def in_progress_calls?(callout_participation)
-    callout_participation.phone_calls.where(status: IN_PROGRESS_CALL_STATUSES).any?
+  def in_progress_calls?(alert)
+    alert.phone_calls.where(status: IN_PROGRESS_CALL_STATUSES).any?
   end
 end

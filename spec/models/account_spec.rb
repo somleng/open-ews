@@ -11,7 +11,7 @@ RSpec.describe Account do
     it { is_expected.to have_many(:beneficiaries).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:broadcasts).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:batch_operations).dependent(:restrict_with_error) }
-    it { is_expected.to have_many(:callout_participations) }
+    it { is_expected.to have_many(:alerts) }
     it { is_expected.to have_many(:phone_calls) }
     it { is_expected.to have_many(:remote_phone_call_events) }
     it { is_expected.to have_many(:access_tokens).dependent(:restrict_with_error) }

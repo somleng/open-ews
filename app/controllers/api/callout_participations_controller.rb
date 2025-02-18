@@ -3,11 +3,11 @@ module API
     private
 
     def find_resources_association_chain
-      broadcast.callout_participations
+      broadcast.alerts
     end
 
     def filter_class
-      Filter::Resource::CalloutParticipation
+      Filter::Resource::Alert
     end
 
     def broadcast

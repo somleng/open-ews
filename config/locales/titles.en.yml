@@ -17,6 +17,9 @@ en:
       preview: Preview
       refresh: Refresh
       update: Edit
+    alerts:
+      index: Callout Participations
+      show: Callout Participation %{id}
     app_name: Somleng SCFM
     batch_operations:
       index: Callout Populations
@@ -41,9 +44,6 @@ en:
       stop: Stop
       summary: Callout Summary
       update: Edit Callout
-    callout_participations:
-      index: Callout Participations
-      show: Callout Participation %{id}
     callout_populations:
       create: New Callout Population
       edit: Edit Callout Population

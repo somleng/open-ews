@@ -6,7 +6,7 @@ RSpec.describe Broadcast do
   include_examples "has_call_flow_logic"
 
   describe "associations" do
-    it { is_expected.to have_many(:callout_participations).dependent(:restrict_with_error) }
+    it { is_expected.to have_many(:alerts).dependent(:restrict_with_error) }
     it { is_expected.to have_many(:batch_operations).dependent(:restrict_with_error) }
   end
 

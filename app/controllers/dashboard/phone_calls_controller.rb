@@ -11,8 +11,8 @@ module Dashboard
     end
 
     def parent_resource
-      if callout_participation_id
-        callout_participation
+      if alert_id
+        broadcast_alert
       elsif broadcast_id
         broadcast
       elsif beneficiary_id
@@ -20,12 +20,13 @@ module Dashboard
       end
     end
 
-    def callout_participation_id
-      params[:callout_participation_id]
+    def alert_id
+      params[:alert_id]
     end
 
-    def callout_participation
-      @callout_participation ||= current_account.callout_participations.find(callout_participation_id)
+    # NOTE: conflict with alert helper method
+    def broadcast_alert
+      @alert ||= current_account.alerts.find(alert_id)
     end
 
     def broadcast_id

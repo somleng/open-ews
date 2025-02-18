@@ -3,13 +3,13 @@ km:
   activemodel:
     attributes:
       broadcast_summary:
+        alerts_count: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
+        alerts_still_to_be_called: Participants still to be called
         busy_calls: Busy calls
         completed_calls: Completed calls
         errored_calls: Errored calls
         failed_calls: Failed calls
         not_answered_calls: Not answered calls
-        participations: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
-        participations_still_to_be_called: Participants still to be called
       key_value_field:
         key: Key
         value: Value
@@ -30,6 +30,9 @@ km:
       access_token:
         one: API key
         other: API keys
+      alert:
+        one: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
+        other: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
       batch_operation/base:
         one: Batch operation
         other: Batch operations
@@ -67,6 +70,8 @@ km:
         one: អ្នកប្រីប្រាស់
         other: អ្នកប្រីប្រាស់
   attributes:
+    alert: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
+    alert_id: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
     beneficiary: សមាជិកទំនាក់ទំនង
     beneficiary_id: សមាជិកទំនាក់ទំនង
     broadcast: សេចក្ដីប្រកាស

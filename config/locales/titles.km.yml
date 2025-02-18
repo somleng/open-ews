@@ -17,6 +17,9 @@ km:
       preview: ការឃើញជាមុន
       refresh: Refresh
       update: កែប្រែ
+    alerts:
+      index: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
+      show: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស %{id}
     app_name: សំឡេង SCFM
     batch_operations:
       index: Callout Populations
@@ -41,9 +44,6 @@ km:
       stop: បញ្ឈប់
       summary: Callout Summary
       update: កែប្រែ សេចក្ដីប្រកាស
-    callout_participations:
-      index: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
-      show: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស %{id}
     callout_populations:
       create: New Callout Population
       edit: កែប្រែ Callout Population

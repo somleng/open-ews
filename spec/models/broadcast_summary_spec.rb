@@ -1,20 +1,20 @@
 require "rails_helper"
 
 RSpec.describe BroadcastSummary do
-  describe "#participations" do
-    it "returns the number of callout participations" do
+  describe "#alerts_count" do
+    it "returns the number of alerts" do
       broadcast = create(:broadcast)
-      create_callout_participation(account: broadcast.account, broadcast:)
+      create_alert(account: broadcast.account, broadcast:)
       broadcast_summary = BroadcastSummary.new(broadcast)
 
-      result = broadcast_summary.participations
+      result = broadcast_summary.alerts_count
 
       expect(result).to eq(1)
     end
   end
 
-  describe "#participations_still_to_be_called" do
-    it "returns the number of callout participations still to be called" do
+  describe "#alerts_still_to_be_called" do
+    it "returns the number of alerts still to be called" do
       account = create(
         :account,
         settings: {
@@ -22,13 +22,13 @@ RSpec.describe BroadcastSummary do
         }
       )
       broadcast = create(:broadcast, account: account)
-      create_callout_participation(account: account, broadcast: broadcast, answered: true)
-      create_callout_participation(account: account, broadcast: broadcast, answered: false, phone_calls_count: 3)
-      create_callout_participation(account: account, broadcast: broadcast, answered: false, phone_calls_count: 1)
+      create_alert(account: account, broadcast: broadcast, answered: true)
+      create_alert(account: account, broadcast: broadcast, answered: false, phone_calls_count: 3)
+      create_alert(account: account, broadcast: broadcast, answered: false, phone_calls_count: 1)
 
       broadcast_summary = BroadcastSummary.new(broadcast)
 
-      result = broadcast_summary.participations_still_to_be_called
+      result = broadcast_summary.alerts_still_to_be_called
 
       expect(result).to eq(1)
     end
@@ -100,7 +100,7 @@ RSpec.describe BroadcastSummary do
   end
 
   def create_phone_call_for_broadcast(broadcast, attributes = {})
-    callout_participation = create_callout_participation(account: broadcast.account, broadcast:)
-    create_phone_call(account: broadcast.account, callout_participation: callout_participation, **attributes)
+    alert = create_alert(account: broadcast.account, broadcast:)
+    create_phone_call(account: broadcast.account, alert:, **attributes)
   end
 end

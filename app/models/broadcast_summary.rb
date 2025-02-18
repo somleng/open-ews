@@ -9,12 +9,12 @@ class BroadcastSummary
     self.broadcast = broadcast
   end
 
-  def participations
-    callout_participations.count
+  def alerts_count
+    alerts.count
   end
 
-  def participations_still_to_be_called
-    callout_participations.still_trying(broadcast.account.max_phone_calls_for_callout_participation).count
+  def alerts_still_to_be_called
+    alerts.still_trying(broadcast.account.max_phone_calls_for_alert).count
   end
 
   def completed_calls
@@ -39,8 +39,8 @@ class BroadcastSummary
 
   private
 
-  def callout_participations
-    broadcast.callout_participations
+  def alerts
+    broadcast.alerts
   end
 
   def phone_calls

@@ -60,11 +60,11 @@ module Filter
 
         it "filters by callout_id" do
           broadcast = create(:broadcast)
-          callout_participation = create(:callout_participation, broadcast: broadcast)
+          alert = create(:alert, broadcast: broadcast)
           phone_call = create(
             :phone_call,
             broadcast: broadcast,
-            callout_participation: callout_participation
+            alert:
           )
           create(:phone_call)
           filter = build_filter(callout_id: broadcast.id)
@@ -75,10 +75,10 @@ module Filter
         end
 
         it "filters by callout_participation_id" do
-          callout_participation = create(:callout_participation)
-          phone_call = create(:phone_call, callout_participation: callout_participation)
+          alert = create(:alert)
+          phone_call = create(:phone_call, alert:)
           create(:phone_call)
-          filter = build_filter(callout_participation_id: callout_participation.id)
+          filter = build_filter(callout_participation_id: alert.id)
 
           results = filter.resources
 

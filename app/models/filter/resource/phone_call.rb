@@ -47,6 +47,7 @@ module Filter
           :callout_id,
           :broadcast_id,
           :callout_participation_id,
+          :alert_id,
           :beneficiary_id,
           :status,
           :call_flow_logic,
@@ -58,6 +59,7 @@ module Filter
         )
         result[:beneficiary_id] = result.delete(:contact_id) if result.key?(:contact_id)
         result[:broadcast_id] = result.delete(:callout_id) if result.key?(:callout_id)
+        result[:alert_id] = result.delete(:callout_participation_id) if result.key?(:callout_participation_id)
         result
       end
     end

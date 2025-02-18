@@ -1,0 +1,9 @@
+= content_tag_for(:tr, alert) do
+  %td
+    = link_to(alert.id, show_location(alert))
+  %td
+    = link_to(alert.beneficiary_id, dashboard_beneficiary_path(alert.beneficiary_id))
+  %td
+    = link_to(alert.broadcast_id, dashboard_broadcast_path(alert.broadcast_id))
+  %td
+    = alert.created_at

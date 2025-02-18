@@ -1,4 +1,4 @@
-class PopulateBroadcastBeneficiaries < ApplicationWorkflow
+class PopulateAlerts < ApplicationWorkflow
   attr_reader :broadcast
 
   delegate :account, :beneficiary_filter, to: :broadcast, private: true
@@ -9,7 +9,7 @@ class PopulateBroadcastBeneficiaries < ApplicationWorkflow
 
   def call
     ApplicationRecord.transaction do
-      create_broadcast_beneficiaries
+      create_alerts
       create_phone_calls
 
       broadcast.start!
@@ -18,8 +18,8 @@ class PopulateBroadcastBeneficiaries < ApplicationWorkflow
 
   private
 
-  def create_broadcast_beneficiaries
-    broadcast_beneficiaries = beneficiaries_scope.find_each.map do |beneficiary|
+  def create_alerts
+    alerts = beneficiaries_scope.find_each.map do |beneficiary|
       {
         broadcast_id: broadcast.id,
         beneficiary_id: beneficiary.id,
@@ -29,18 +29,18 @@ class PopulateBroadcastBeneficiaries < ApplicationWorkflow
       }
     end
 
-    CalloutParticipation.upsert_all(broadcast_beneficiaries) if broadcast_beneficiaries.any?
+    Alert.upsert_all(alerts) if alerts.any?
   end
 
   def create_phone_calls
-    phone_calls = broadcast.broadcast_beneficiaries.find_each.map do |broadcast_beneficiary|
+    phone_calls = broadcast.alerts.find_each.map do |alert|
       {
         account_id: account.id,
         broadcast_id: broadcast.id,
-        beneficiary_id: broadcast_beneficiary.beneficiary_id,
-        call_flow_logic: broadcast_beneficiary.call_flow_logic,
-        callout_participation_id: broadcast_beneficiary.id,
-        phone_number: broadcast_beneficiary.phone_number,
+        beneficiary_id: alert.beneficiary_id,
+        call_flow_logic: alert.call_flow_logic,
+        alert_id: alert.id,
+        phone_number: alert.phone_number,
         status: :created
       }
     end

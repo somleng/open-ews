@@ -155,7 +155,7 @@ RSpec.describe "Callouts", :aggregate_failures do
 
       expect(page).to have_link(
         "Callout Participations",
-        href: dashboard_broadcast_callout_participations_path(broadcast)
+        href: dashboard_broadcast_alerts_path(broadcast)
       )
       expect(page).to have_link(
         "Phone Calls",

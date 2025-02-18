@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Filter::Resource::Callout do
+RSpec.describe Filter::Resource::Broadcast do
   it "filters by metadata" do
     broadcast = create(
       :broadcast,
@@ -43,7 +43,7 @@ RSpec.describe Filter::Resource::Callout do
   end
 
   def build_filter(filter_attributes)
-    Filter::Resource::Callout.new(
+    Filter::Resource::Broadcast.new(
       { association_chain: Broadcast.all },
       filter_attributes
     )

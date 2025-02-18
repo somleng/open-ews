@@ -27,8 +27,8 @@
   <%= render "shared/resource_related_links" do %>
     <%= related_link_to t(:"titles.batch_operations.index"),
     dashboard_broadcast_batch_operations_path(resource) %>
-    <%= related_link_to t(:"titles.callout_participations.index"),
-    dashboard_broadcast_callout_participations_path(resource) %>
+    <%= related_link_to t(:"titles.alerts.index"),
+    dashboard_broadcast_alerts_path(resource) %>
     <%= related_link_to t(:"titles.phone_calls.index"),
     dashboard_broadcast_phone_calls_path(resource) %>
   <% end %>

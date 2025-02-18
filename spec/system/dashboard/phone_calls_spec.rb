@@ -44,7 +44,7 @@ RSpec.describe "Phone Calls" do
     other_phone_call = create_phone_call(account: user.account)
 
     sign_in(user)
-    visit(dashboard_callout_participation_phone_calls_path(phone_call.callout_participation))
+    visit(dashboard_alert_phone_calls_path(phone_call.alert))
 
     within("#resources") do
       expect(page).to have_content_tag_for(phone_call)
@@ -54,14 +54,14 @@ RSpec.describe "Phone Calls" do
 
   it "can list all phone calls for a broadcast" do
     user = create(:user)
-    callout_participation = create_callout_participation(account: user.account)
+    alert = create_alert(account: user.account)
     phone_call = create_phone_call(
-      account: user.account, callout_participation:
+      account: user.account, alert:
     )
     other_phone_call = create_phone_call(account: user.account)
 
     sign_in(user)
-    visit(dashboard_broadcast_phone_calls_path(callout_participation.broadcast))
+    visit(dashboard_broadcast_phone_calls_path(alert.broadcast))
 
     within("#resources") do
       expect(page).to have_content_tag_for(phone_call)
@@ -101,8 +101,8 @@ RSpec.describe "Phone Calls" do
       expect(page).to have_content(phone_call.id.to_s)
 
       expect(page).to have_link(
-        phone_call.callout_participation_id.to_s,
-        href: dashboard_callout_participation_path(phone_call.callout_participation)
+        phone_call.alert_id.to_s,
+        href: dashboard_alert_path(phone_call.alert)
       )
 
       expect(page).to have_link(

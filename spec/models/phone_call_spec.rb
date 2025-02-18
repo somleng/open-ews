@@ -19,18 +19,18 @@ RSpec.describe PhoneCall do
   describe "validations" do
     it { is_expected.to validate_presence_of(:phone_number) }
 
-    it "allows multiple phone calls for the one callout participation" do
+    it "allows multiple phone calls for the one alert" do
       account = create(:account)
-      callout_participation = create_callout_participation(account: account)
+      alert = create_alert(account: account)
       _existing_failed_phone_call = create_phone_call(
         account: account,
-        callout_participation: callout_participation,
+        alert: alert,
         status: PhoneCall::STATE_FAILED
       )
 
       phone_call = build(
         :phone_call,
-        callout_participation: callout_participation,
+        alert: alert,
         status: PhoneCall::STATE_CREATED
       )
 
@@ -49,8 +49,8 @@ RSpec.describe PhoneCall do
 
     phone_call.valid?
 
-    expect(phone_call.beneficiary).to eq(phone_call.callout_participation.beneficiary)
-    expect(phone_call.phone_number).to eq(phone_call.callout_participation.phone_number)
+    expect(phone_call.beneficiary).to eq(phone_call.alert.beneficiary)
+    expect(phone_call.phone_number).to eq(phone_call.alert.phone_number)
   end
 
   it "can destroy a new phone call" do

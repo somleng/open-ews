@@ -19,7 +19,7 @@ class PhoneCall < ApplicationRecord
 
   attribute :phone_number, :phone_number
 
-  belongs_to :callout_participation, optional: true, counter_cache: true
+  belongs_to :alert, optional: true, counter_cache: true
   belongs_to :beneficiary, validate: true
   belongs_to :account
   belongs_to :broadcast, optional: true
@@ -29,12 +29,12 @@ class PhoneCall < ApplicationRecord
   include HasCallFlowLogic
   include AASM
 
-  delegate :call_flow_logic, to: :callout_participation, prefix: true, allow_nil: true
+  delegate :call_flow_logic, to: :alert, prefix: true, allow_nil: true
   delegate :call_flow_logic, to: :beneficiary, prefix: true, allow_nil: true
 
   delegate :beneficiary,
            :phone_number,
-           to: :callout_participation,
+           to: :alert,
            prefix: true,
            allow_nil: true
 
@@ -107,7 +107,7 @@ class PhoneCall < ApplicationRecord
 
       transitions from: %i[created remotely_queued in_progress expired],
                   to: :completed,
-                  after: :mark_callout_participation_answered!,
+                  after: :mark_alert_answered!,
                   if: :remote_status_completed?
     end
   end
@@ -130,7 +130,7 @@ class PhoneCall < ApplicationRecord
   def set_call_flow_logic
     return if call_flow_logic.present?
 
-    self.call_flow_logic = callout_participation_call_flow_logic || beneficiary_call_flow_logic
+    self.call_flow_logic = alert_call_flow_logic || beneficiary_call_flow_logic
   end
 
   def remote_call_expired?
@@ -165,8 +165,8 @@ class PhoneCall < ApplicationRecord
   end
 
   def set_defaults
-    self.beneficiary ||= callout_participation_beneficiary
-    self.phone_number  ||= callout_participation_phone_number
+    self.beneficiary ||= alert_beneficiary
+    self.phone_number  ||= alert_phone_number
     self.account ||= beneficiary&.account
     set_call_flow_logic
   end
@@ -178,9 +178,9 @@ class PhoneCall < ApplicationRecord
     throw(:abort)
   end
 
-  def mark_callout_participation_answered!
-    return true if callout_participation.blank?
+  def mark_alert_answered!
+    return true if alert.blank?
 
-    callout_participation.update!(answered: true)
+    alert.update!(answered: true)
   end
 end
