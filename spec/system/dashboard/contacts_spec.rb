@@ -68,7 +68,7 @@ RSpec.describe "Beneficiaries", :aggregate_failures do
 
       expect(page).to have_link(
         "Phone Calls",
-        href: dashboard_beneficiary_phone_calls_path(beneficiary)
+        href: dashboard_beneficiary_delivery_attempts_path(beneficiary)
       )
     end
 

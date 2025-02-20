@@ -7,7 +7,7 @@ RSpec.describe Alert do
   include_examples "has_call_flow_logic"
 
   describe "associations" do
-    it { is_expected.to have_many(:phone_calls).dependent(:restrict_with_error) }
+    it { is_expected.to have_many(:delivery_attempts).dependent(:restrict_with_error) }
     it { is_expected.to belong_to(:callout_population).optional }
   end
 

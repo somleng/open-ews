@@ -1,8 +1,8 @@
 class StartRapidproFlow < ApplicationWorkflow
-  attr_accessor :phone_call, :rapidpro_client
+  attr_accessor :delivery_attempt, :rapidpro_client
 
-  def initialize(phone_call, options = {})
-    self.phone_call = phone_call
+  def initialize(delivery_attempt, options = {})
+    self.delivery_attempt = delivery_attempt
     self.rapidpro_client = options.fetch(:rapidpro_client) {
       Rapidpro::Client.new(api_token: api_token)
     }
@@ -11,7 +11,7 @@ class StartRapidproFlow < ApplicationWorkflow
   def call
     return if api_token.blank?
     return if flow_id.blank?
-    return if phone_call.metadata.dig("rapidpro", "flow_started_at").present?
+    return if delivery_attempt.metadata.dig("rapidpro", "flow_started_at").present?
 
     start_flow
   end
@@ -19,19 +19,19 @@ class StartRapidproFlow < ApplicationWorkflow
   private
 
   def start_flow
-    phone_call.metadata["rapidpro"] ||= {}
-    phone_call.metadata["rapidpro"]["flow_started_at"] = Time.current.utc
-    phone_call.save!
+    delivery_attempt.metadata["rapidpro"] ||= {}
+    delivery_attempt.metadata["rapidpro"]["flow_started_at"] = Time.current.utc
+    delivery_attempt.save!
 
     response = rapidpro_client.start_flow(
       flow: flow_id,
-      urns: [ "tel:#{phone_call.phone_number}" ]
+      urns: [ "tel:#{delivery_attempt.phone_number}" ]
     )
 
-    phone_call.metadata["rapidpro"]["start_flow_response_status"] = response.status
-    phone_call.metadata["rapidpro"]["start_flow_response_body"] = JSON.parse(response.body)
+    delivery_attempt.metadata["rapidpro"]["start_flow_response_status"] = response.status
+    delivery_attempt.metadata["rapidpro"]["start_flow_response_body"] = JSON.parse(response.body)
 
-    phone_call.save!
+    delivery_attempt.save!
   end
 
   def flow_id
@@ -51,10 +51,10 @@ class StartRapidproFlow < ApplicationWorkflow
   end
 
   def broadcast_settings
-    phone_call.broadcast&.settings || {}
+    delivery_attempt.broadcast&.settings || {}
   end
 
   def account_settings
-    phone_call.account.settings
+    delivery_attempt.account.settings
   end
 end

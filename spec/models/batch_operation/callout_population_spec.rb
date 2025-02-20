@@ -21,9 +21,9 @@ module BatchOperation
         expect(callout_population.alerts.count).to eq(1)
         alert = callout_population.alerts.first
         expect(alert.beneficiary).to eq(beneficiary)
-        expect(alert.phone_calls_count).to eq(1)
-        phone_call = alert.phone_calls.first
-        expect(phone_call).to have_attributes(
+        expect(alert.delivery_attempts_count).to eq(1)
+        delivery_attempt = alert.delivery_attempts.first
+        expect(delivery_attempt).to have_attributes(
           beneficiary:,
           phone_number: beneficiary.phone_number,
           alert:,
@@ -41,14 +41,14 @@ module BatchOperation
         alert = create(
           :alert, beneficiary:, broadcast:, callout_population:
         )
-        create(:phone_call, :completed, alert:)
+        create(:delivery_attempt, :completed, alert:)
 
         callout_population.run!
         callout_population.run!
 
         expect(callout_population.alerts.count).to eq(1)
         alert = callout_population.alerts.first
-        expect(alert.phone_calls_count).to eq(1)
+        expect(alert.delivery_attempts_count).to eq(1)
       end
     end
 

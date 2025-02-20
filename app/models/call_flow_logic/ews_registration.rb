@@ -164,7 +164,7 @@ module CallFlowLogic
     private
 
     def read_status
-      aasm.current_state = phone_call.metadata.fetch("status", INITIAL_STATUS).to_sym
+      aasm.current_state = delivery_attempt.metadata.fetch("status", INITIAL_STATUS).to_sym
     end
 
     def initialize_voice_response
@@ -183,7 +183,7 @@ module CallFlowLogic
     end
 
     def persist_status
-      update_phone_call!(status: aasm.to_state)
+      update_delivery_attempt!(status: aasm.to_state)
     end
 
     def play_introduction
@@ -217,7 +217,7 @@ module CallFlowLogic
         play(
           :select_province,
           response,
-          language_code: phone_call_metadata(:language_code)
+          language_code: delivery_attempt_metadata(:language_code)
         )
       end
     end
@@ -225,9 +225,9 @@ module CallFlowLogic
     def gather_district
       @voice_response = gather do |response|
         play(
-          phone_call_metadata(:province_code),
+          delivery_attempt_metadata(:province_code),
           response,
-          language_code: phone_call_metadata(:language_code)
+          language_code: delivery_attempt_metadata(:language_code)
         )
       end
     end
@@ -235,9 +235,9 @@ module CallFlowLogic
     def gather_commune
       @voice_response = gather do |response|
         play(
-          phone_call_metadata(:district_code),
+          delivery_attempt_metadata(:district_code),
           response,
-          language_code: phone_call_metadata(:language_code)
+          language_code: delivery_attempt_metadata(:language_code)
         )
       end
     end
@@ -251,7 +251,7 @@ module CallFlowLogic
 
     def play_conclusion
       @voice_response = Twilio::TwiML::VoiceResponse.new do |response|
-        play(:registration_successful, response, language_code: phone_call_metadata(:language_code))
+        play(:registration_successful, response, language_code: delivery_attempt_metadata(:language_code))
         response.redirect(current_url)
       end
     end
@@ -286,7 +286,7 @@ module CallFlowLogic
     end
 
     def feedback_enabled?
-      FEEDBACK_FEATURE_FLAG_PHONE_NUMBERS.include?(phone_call.beneficiary.phone_number)
+      FEEDBACK_FEATURE_FLAG_PHONE_NUMBERS.include?(delivery_attempt.beneficiary.phone_number)
     end
 
     def language_gathered?
@@ -316,7 +316,7 @@ module CallFlowLogic
 
       province = PROVINCE_MENU[pressed_digits - 1]
       return if province.blank?
-      return if province.available_languages.exclude?(phone_call_metadata(:language_code))
+      return if province.available_languages.exclude?(delivery_attempt_metadata(:language_code))
 
       Pumi::Province.find_by_id(province.code)
     end
@@ -324,7 +324,7 @@ module CallFlowLogic
     def selected_district
       return if pressed_digits.zero?
 
-      province_code = phone_call_metadata(:province_code)
+      province_code = delivery_attempt_metadata(:province_code)
       districts = Pumi::District.where(province_id: province_code).sort_by(&:id)
       districts[pressed_digits - 1]
     end
@@ -332,41 +332,41 @@ module CallFlowLogic
     def selected_commune
       return if pressed_digits.zero?
 
-      district_code = phone_call_metadata(:district_code)
+      district_code = delivery_attempt_metadata(:district_code)
       communes = Pumi::Commune.where(district_id: district_code).sort_by(&:id)
       communes[pressed_digits - 1]
     end
 
     def persist_language
-      update_phone_call!(
+      update_delivery_attempt!(
         language_code: selected_language.code
       )
     end
 
     def persist_province
-      update_phone_call!(
+      update_delivery_attempt!(
         province_code: selected_province.id,
         province_name_en: selected_province.name_en
       )
     end
 
     def persist_district
-      update_phone_call!(
+      update_delivery_attempt!(
         district_code: selected_district.id,
         district_name_en: selected_district.name_en
       )
     end
 
     def persist_commune
-      update_phone_call!(
+      update_delivery_attempt!(
         commune_code: selected_commune.id,
         commune_name_en: selected_commune.name_en
       )
     end
 
     def update_beneficiary
-      beneficiary = phone_call.beneficiary
-      commune = Pumi::Commune.find_by_id(phone_call_metadata(:commune_code))
+      beneficiary = delivery_attempt.beneficiary
+      commune = Pumi::Commune.find_by_id(delivery_attempt_metadata(:commune_code))
 
       beneficiary.addresses.find_or_create_by!(
         iso_region_code: commune.province.iso3166_2,
@@ -378,10 +378,10 @@ module CallFlowLogic
 
       commune_ids = beneficiary.metadata.fetch("commune_ids", [])
       commune_ids << commune.id
-      beneficiary.language_code = phone_call_metadata(:language_code)
+      beneficiary.language_code = delivery_attempt_metadata(:language_code)
       beneficiary.metadata = {
         "commune_ids" => commune_ids.uniq,
-        "language_code" => phone_call_metadata(:language_code),
+        "language_code" => delivery_attempt_metadata(:language_code),
         "latest_commune_id" => commune.id,
         "latest_address_km" => commune.address_km,
         "latest_address_en" => commune.address_en
@@ -390,13 +390,13 @@ module CallFlowLogic
       beneficiary.save!
     end
 
-    def phone_call_metadata(key)
-      phone_call.metadata.fetch(key.to_s)
+    def delivery_attempt_metadata(key)
+      delivery_attempt.metadata.fetch(key.to_s)
     end
 
-    def update_phone_call!(data)
-      phone_call.update!(
-        metadata: phone_call.metadata.deep_merge(data)
+    def update_delivery_attempt!(data)
+      delivery_attempt.update!(
+        metadata: delivery_attempt.metadata.deep_merge(data)
       )
     end
 

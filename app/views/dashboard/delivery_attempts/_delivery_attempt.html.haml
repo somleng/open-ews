@@ -1,0 +1,13 @@
+= content_tag_for(:tr, delivery_attempt) do
+  %td
+    = link_to(delivery_attempt.id, show_location(delivery_attempt))
+  %td
+    = delivery_attempt.phone_number
+  %td
+    = delivery_attempt.direction.to_s.humanize
+  %td
+    = delivery_attempt.status.humanize
+  %td
+    = delivery_attempt.duration
+  %td
+    = local_time(delivery_attempt.created_at)

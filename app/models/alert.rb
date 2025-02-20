@@ -14,9 +14,9 @@ class Alert < ApplicationRecord
              optional: true,
              class_name: "BatchOperation::CalloutPopulation"
 
-  has_many :phone_calls, dependent: :restrict_with_error
+  has_many :delivery_attempts, dependent: :restrict_with_error
 
-  has_many :remote_phone_call_events, through: :phone_calls
+  has_many :remote_phone_call_events, through: :delivery_attempts
 
   delegate :call_flow_logic, to: :broadcast, prefix: true, allow_nil: true
   delegate :account, to: :broadcast
@@ -27,8 +27,8 @@ class Alert < ApplicationRecord
 
   validates :phone_number, presence: true
 
-  def self.still_trying(max_phone_calls)
-    where(answered: false).where(arel_table[:phone_calls_count].lt(max_phone_calls))
+  def self.still_trying(max_delivery_attempts)
+    where(answered: false).where(arel_table[:delivery_attempts_count].lt(max_delivery_attempts))
   end
 
   # NOTE: This is for backward compatibility until we moved to the new API
@@ -36,6 +36,7 @@ class Alert < ApplicationRecord
     result = super
     result["msisdn"] = result.delete("phone_number")
     result["contact_id"] = result.delete("beneficiary_id")
+    result["phone_calls_count"] = result.delete("delivery_attempts_count")
     result
   end
 

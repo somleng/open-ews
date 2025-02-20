@@ -35,10 +35,10 @@ class Account < ApplicationRecord
 
   has_many :alerts, through: :broadcasts
 
-  has_many :phone_calls
+  has_many :delivery_attempts
 
   has_many :remote_phone_call_events,
-           through: :phone_calls
+           through: :delivery_attempts
 
   has_many :recordings
 
@@ -89,7 +89,7 @@ class Account < ApplicationRecord
     access_tokens.with_permissions(:batch_operations_write).last
   end
 
-  def phone_call_queue_limit
+  def delivery_attempt_queue_limit
     [ settings.fetch("phone_call_queue_limit").to_i, 1000 ].max
   end
 
@@ -97,7 +97,7 @@ class Account < ApplicationRecord
     settings.fetch("from_phone_number")
   end
 
-  def max_phone_calls_for_alert
+  def max_delivery_attempts_for_alert
     settings.fetch("max_phone_calls_for_callout_participation").to_i
   end
 

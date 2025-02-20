@@ -141,11 +141,11 @@ module CallFlowLogic
     private
 
     def read_status
-      aasm.current_state = phone_call.metadata.fetch("status", INITIAL_STATUS).to_sym
+      aasm.current_state = delivery_attempt.metadata.fetch("status", INITIAL_STATUS).to_sym
     end
 
     def persist_status
-      update_phone_call!(status: aasm.to_state)
+      update_delivery_attempt!(status: aasm.to_state)
     end
 
     def play_introduction
@@ -163,7 +163,7 @@ module CallFlowLogic
 
     def gather_district
       @voice_response = gather do |response|
-        play(phone_call_metadata(:province_code), response)
+        play(delivery_attempt_metadata(:province_code), response)
       end
     end
 
@@ -216,28 +216,28 @@ module CallFlowLogic
     def selected_district
       return if pressed_digits.zero?
 
-      districts = DISTRICTS.find_all { |d| d.province.code == phone_call_metadata(:province_code) }
+      districts = DISTRICTS.find_all { |d| d.province.code == delivery_attempt_metadata(:province_code) }
       districts.sort_by!(&:code)
       districts[pressed_digits - 1]
     end
 
     def persist_province
-      update_phone_call!(
+      update_delivery_attempt!(
         province_code: selected_province.code,
         province_name_en: selected_province.name_en
       )
     end
 
     def persist_district
-      update_phone_call!(
+      update_delivery_attempt!(
         district_code: selected_district.code,
         district_name_en: selected_district.name_en
       )
     end
 
     def update_beneficiary
-      beneficiary = phone_call.beneficiary
-      district = DISTRICTS.find { |d| d.code == phone_call_metadata(:district_code) }
+      beneficiary = delivery_attempt.beneficiary
+      district = DISTRICTS.find { |d| d.code == delivery_attempt_metadata(:district_code) }
 
       beneficiary.addresses.find_or_create_by!(
         iso_region_code: district.province.iso3166,
@@ -257,13 +257,13 @@ module CallFlowLogic
       beneficiary.save!
     end
 
-    def phone_call_metadata(key)
-      phone_call.metadata.fetch(key.to_s)
+    def delivery_attempt_metadata(key)
+      delivery_attempt.metadata.fetch(key.to_s)
     end
 
-    def update_phone_call!(data)
-      phone_call.update!(
-        metadata: phone_call.metadata.deep_merge(data)
+    def update_delivery_attempt!(data)
+      delivery_attempt.update!(
+        metadata: delivery_attempt.metadata.deep_merge(data)
       )
     end
 

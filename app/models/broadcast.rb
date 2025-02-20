@@ -47,8 +47,8 @@ class Broadcast < ApplicationRecord
   has_many :populations,
            class_name: "BatchOperation::CalloutPopulation"
 
-  has_many :phone_calls
-  has_many :remote_phone_call_events, through: :phone_calls
+  has_many :delivery_attempts
+  has_many :remote_phone_call_events, through: :delivery_attempts
 
   has_one_attached :audio_file
 

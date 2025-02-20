@@ -106,7 +106,7 @@ FactoryBot.define do
     beneficiary
   end
 
-  factory :phone_call do
+  factory :delivery_attempt do
     outbound
     remote_call_id { SecureRandom.uuid }
 
@@ -118,7 +118,7 @@ FactoryBot.define do
     trait :inbound do
       alert { nil }
       phone_number { generate(:phone_number) }
-      remote_direction { PhoneCall::TWILIO_DIRECTIONS[:inbound] }
+      remote_direction { DeliveryAttempt::TWILIO_DIRECTIONS[:inbound] }
     end
 
     traits_for_enum :status, %i[
@@ -149,8 +149,8 @@ FactoryBot.define do
 
     after(:build) do |remote_phone_call_event, evaluator|
       if evaluator.build_phone_call
-        remote_phone_call_event.phone_call ||= create(
-          :phone_call,
+        remote_phone_call_event.delivery_attempt ||= create(
+          :delivery_attempt,
           phone_number: remote_phone_call_event.details[:From],
           remote_call_id: remote_phone_call_event.remote_call_id,
           remote_direction: remote_phone_call_event.remote_direction
@@ -210,9 +210,9 @@ FactoryBot.define do
   end
 
   factory :recording do
-    phone_call
-    account { phone_call.account }
-    beneficiary { phone_call.beneficiary }
+    delivery_attempt
+    account { delivery_attempt.account }
+    beneficiary { delivery_attempt.beneficiary }
     external_recording_id { SecureRandom.uuid }
     external_recording_url { "https://api.somleng.org/2010-04-01/Accounts/#{SecureRandom.uuid}/Calls/#{SecureRandom.uuid}/Recordings/#{external_recording_id}" }
     duration { 15 }

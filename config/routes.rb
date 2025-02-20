@@ -35,7 +35,7 @@ Rails.application.routes.draw do
 
     resources :beneficiaries, only: %i[index show destroy] do
       resources :alerts, only: :index
-      resources :phone_calls, only: :index
+      resources :delivery_attempts, only: :index
     end
 
     resources :broadcasts do
@@ -45,14 +45,14 @@ Rails.application.routes.draw do
       resources :batch_operations, only: %i[index destroy]
       resources :callout_events, only: :create
       resources :alerts, only: :index
-      resources :phone_calls, only: :index
+      resources :delivery_attempts, only: :index
     end
 
     resources :alerts, only: %i[index show destroy] do
-      resources :phone_calls, only: :index
+      resources :delivery_attempts, only: :index
     end
 
-    resources :phone_calls, only: %i[index show] do
+    resources :delivery_attempts, only: %i[index show] do
       resources :remote_phone_call_events, only: :index
     end
 

@@ -5,15 +5,15 @@ RSpec.resource "Phone Calls" do
 
   get "/api/phone_calls" do
     example "List all Phone Calls" do
-      phone_call = create_phone_call(
+      delivery_attempt = create_delivery_attempt(
         account:,
         metadata: {
           "foo" => "bar"
         }
       )
 
-      create_phone_call(account:)
-      create(:phone_call)
+      create_delivery_attempt(account:)
+      create(:delivery_attempt)
 
       set_authorization_header_for(account)
       do_request(
@@ -22,42 +22,42 @@ RSpec.resource "Phone Calls" do
         }
       )
 
-      assert_filtered!(phone_call)
+      assert_filtered!(delivery_attempt)
     end
   end
 
   get "/api/callouts/:callout_id/phone_calls" do
     example "List phone calls for a callout", document: false do
-      phone_call = create_phone_call(account:)
-      _other_phone_call = create_phone_call(account:)
+      delivery_attempt = create_delivery_attempt(account:)
+      _other_delivery_attempt = create_delivery_attempt(account:)
 
       set_authorization_header_for(account)
-      do_request(callout_id: phone_call.broadcast.id)
+      do_request(callout_id: delivery_attempt.broadcast.id)
 
-      assert_filtered!(phone_call)
+      assert_filtered!(delivery_attempt)
     end
   end
 
   get "/api/phone_calls/:id" do
     example "Retrieve a Phone Call" do
-      phone_call = create_phone_call(account:)
+      delivery_attempt = create_delivery_attempt(account:)
 
       set_authorization_header_for(account)
-      do_request(id: phone_call.id)
+      do_request(id: delivery_attempt.id)
 
       expect(response_status).to eq(200)
       parsed_response = JSON.parse(response_body)
       expect(
-        account.phone_calls.find(parsed_response.fetch("id"))
-      ).to eq(phone_call)
+        account.delivery_attempts.find(parsed_response.fetch("id"))
+      ).to eq(delivery_attempt)
     end
   end
 
-  def assert_filtered!(phone_call)
+  def assert_filtered!(delivery_attempt)
     expect(response_status).to eq(200)
     parsed_body = JSON.parse(response_body)
     expect(parsed_body.size).to eq(1)
-    expect(parsed_body.first.fetch("id")).to eq(phone_call.id)
+    expect(parsed_body.first.fetch("id")).to eq(delivery_attempt.id)
   end
 
   let(:account) { create(:account) }

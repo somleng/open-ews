@@ -10,8 +10,8 @@ RSpec.describe QueueRemoteCallJob do
           from_phone_number: "1234"
         }
       )
-      phone_call = create(
-        :phone_call,
+      delivery_attempt = create(
+        :delivery_attempt,
         :queued,
         account: account,
         phone_number: "855715100860"
@@ -26,7 +26,7 @@ RSpec.describe QueueRemoteCallJob do
         }
       )
 
-      QueueRemoteCallJob.new.perform(phone_call)
+      QueueRemoteCallJob.new.perform(delivery_attempt)
 
       expect(WebMock).to have_requested(
         :post,
@@ -40,7 +40,7 @@ RSpec.describe QueueRemoteCallJob do
         }
       )
 
-      expect(phone_call.reload).to have_attributes(
+      expect(delivery_attempt.reload).to have_attributes(
         remote_status: "queued",
         remote_call_id: "1234",
         remote_direction: "outbound-api",
@@ -50,12 +50,12 @@ RSpec.describe QueueRemoteCallJob do
 
     it "handles remote errors" do
       account = create(:account, :with_twilio_provider)
-      phone_call = create(:phone_call, :queued, account: account)
+      delivery_attempt = create(:delivery_attempt, :queued, account: account)
       stub_twilio_request(response: { status: 422 })
 
-      QueueRemoteCallJob.new.perform(phone_call)
+      QueueRemoteCallJob.new.perform(delivery_attempt)
 
-      expect(phone_call.reload).to have_attributes(
+      expect(delivery_attempt.reload).to have_attributes(
         remote_error_message: be_present,
         status: "errored"
       )

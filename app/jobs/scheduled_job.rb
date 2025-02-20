@@ -3,7 +3,7 @@ class ScheduledJob < ApplicationJob
 
   def perform
     Account.find_each do |account|
-      queue_phone_calls(account)
+      queue_delivery_attempts(account)
     end
 
     fetch_unknown_call_statuses
@@ -11,19 +11,19 @@ class ScheduledJob < ApplicationJob
 
   private
 
-  def queue_phone_calls(account)
-    phone_calls = PhoneCall.created.where(broadcast_id: account.broadcasts.running.select(:id))
+  def queue_delivery_attempts(account)
+    delivery_attempts = DeliveryAttempt.created.where(broadcast_id: account.broadcasts.running.select(:id))
 
-    phone_calls.limit(account.phone_call_queue_limit).each do |phone_call|
-      phone_call.queue!
-      QueueRemoteCallJob.perform_later(phone_call)
+    delivery_attempts.limit(account.delivery_attempt_queue_limit).each do |delivery_attempt|
+      delivery_attempt.queue!
+      QueueRemoteCallJob.perform_later(delivery_attempt)
     end
   end
 
   def fetch_unknown_call_statuses
-    PhoneCall.to_fetch_remote_status.find_each do |phone_call|
-      FetchRemoteCallJob.perform_later(phone_call)
-      phone_call.touch(:remote_status_fetch_queued_at)
+    DeliveryAttempt.to_fetch_remote_status.find_each do |delivery_attempt|
+      FetchRemoteCallJob.perform_later(delivery_attempt)
+      delivery_attempt.touch(:remote_status_fetch_queued_at)
     end
   end
 end

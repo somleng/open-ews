@@ -60,7 +60,7 @@ km:
       callout_participation:
         one: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
         other: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
-      phone_call:
+      delivery_attempt:
         one: កំណត់ត្រាការហៅចេញ
         other: កំណត់ត្រាការហៅចេញ
       remote_phone_call_event:
@@ -78,6 +78,8 @@ km:
     broadcast_id: សេចក្ដីប្រកាស
     call_flow_logic: វិធីសាស្រ្តការហៅចេញ
     created_at: បង្កើតនៅពេល
+    delivery_attempt: កំណត់ត្រាការហៅចេញ
+    delivery_attempt_id: កំណត់ត្រាការហៅចេញ
     duration: រយៈ (វិនាទី)
     metadata: ទិន្នន័យបន្ថែម
     msisdn: លេខទូរស័ព្ទ

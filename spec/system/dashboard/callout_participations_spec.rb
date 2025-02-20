@@ -87,7 +87,7 @@ RSpec.describe "Alerts" do
     within("#related_links") do
       expect(page).to have_link(
         "Phone Calls",
-        href: dashboard_alert_phone_calls_path(alert)
+        href: dashboard_alert_delivery_attempts_path(alert)
       )
     end
 
