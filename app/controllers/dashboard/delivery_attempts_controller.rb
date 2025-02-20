@@ -1,12 +1,12 @@
 module Dashboard
-  class PhoneCallsController < Dashboard::BaseController
+  class DeliveryAttemptsController < Dashboard::BaseController
     private
 
     def association_chain
       if parent_resource
-        parent_resource.phone_calls
+        parent_resource.delivery_attempts
       else
-        current_account.phone_calls
+        current_account.delivery_attempts
       end
     end
 
@@ -46,7 +46,7 @@ module Dashboard
     end
 
     def filter_class
-      Filter::Resource::PhoneCall
+      Filter::Resource::DeliveryAttempt
     end
   end
 end

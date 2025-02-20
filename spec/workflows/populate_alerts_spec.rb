@@ -26,10 +26,10 @@ RSpec.describe PopulateAlerts do
     expect(broadcast.alerts.first).to have_attributes(
       beneficiary: female_beneficiary,
       phone_number: female_beneficiary.phone_number,
-      phone_calls_count: 1
+      delivery_attempts_count: 1
     )
-    expect(broadcast.phone_calls.count).to eq(1)
-    expect(broadcast.phone_calls.first).to have_attributes(
+    expect(broadcast.delivery_attempts.count).to eq(1)
+    expect(broadcast.delivery_attempts.first).to have_attributes(
       alert: broadcast.alerts.first,
       phone_number: female_beneficiary.phone_number,
       status: "created"

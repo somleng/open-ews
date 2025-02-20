@@ -21,8 +21,8 @@ RSpec.describe "Remote Phone Call Events" do
         href: dashboard_remote_phone_call_event_path(remote_phone_call_event)
       )
       expect(page).to have_link(
-        remote_phone_call_event.phone_call_id.to_s,
-        href: dashboard_phone_call_path(remote_phone_call_event.phone_call_id)
+        remote_phone_call_event.delivery_attempt_id.to_s,
+        href: dashboard_delivery_attempt_path(remote_phone_call_event.delivery_attempt_id)
       )
     end
   end
@@ -33,7 +33,7 @@ RSpec.describe "Remote Phone Call Events" do
     other_remote_phone_call_event = create_remote_phone_call_event(account: user.account)
 
     sign_in(user)
-    visit(dashboard_phone_call_remote_phone_call_events_path(remote_phone_call_event.phone_call))
+    visit(dashboard_delivery_attempt_remote_phone_call_events_path(remote_phone_call_event.delivery_attempt))
 
     within("#resources") do
       expect(page).to have_content_tag_for(remote_phone_call_event)
@@ -54,8 +54,8 @@ RSpec.describe "Remote Phone Call Events" do
       expect(page).to have_content(remote_phone_call_event.id)
 
       expect(page).to have_link(
-        remote_phone_call_event.phone_call_id.to_s,
-        href: dashboard_phone_call_path(remote_phone_call_event.phone_call_id)
+        remote_phone_call_event.delivery_attempt_id.to_s,
+        href: dashboard_delivery_attempt_path(remote_phone_call_event.delivery_attempt_id)
       )
     end
   end

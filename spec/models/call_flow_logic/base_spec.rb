@@ -16,20 +16,20 @@ RSpec.describe CallFlowLogic::Base do
   end
 
   describe "#run!" do
-    it "tries to complete the phone call" do
-      phone_call, event = create_phone_call_with_event(status: :remotely_queued, remote_status: "in-progress")
+    it "tries to complete the delivery attempt" do
+      delivery_attempt, event = create_delivery_attempt_with_event(status: :remotely_queued, remote_status: "in-progress")
       call_flow_logic = described_class.new(event: event)
 
       call_flow_logic.run!
 
-      expect(phone_call.reload.status).to eq("in_progress")
+      expect(delivery_attempt.reload.status).to eq("in_progress")
     end
 
     it "retries outbound calls" do
       travel_to(Time.current) do
         account = create(:account, settings: { max_phone_calls_for_callout_participation: 3 })
         alert = create_alert(account: account)
-        phone_call, event = create_phone_call_with_event(
+        delivery_attempt, event = create_delivery_attempt_with_event(
           broadcast: alert.broadcast,
           alert:,
           status: :remotely_queued,
@@ -39,13 +39,13 @@ RSpec.describe CallFlowLogic::Base do
 
         call_flow_logic.run!
 
-        expect(RetryPhoneCallJob).to have_been_enqueued.at(15.minutes.from_now).with(phone_call)
+        expect(RetryDeliveryAttemptJob).to have_been_enqueued.at(15.minutes.from_now).with(delivery_attempt)
 
         perform_enqueued_jobs
 
-        new_phone_call = alert.phone_calls.last
-        expect(alert.phone_calls.count).to eq(2)
-        expect(new_phone_call).to have_attributes(
+        new_delivery_attempt = alert.delivery_attempts.last
+        expect(alert.delivery_attempts.count).to eq(2)
+        expect(new_delivery_attempt).to have_attributes(
           status: "created",
           alert: alert,
           broadcast: alert.broadcast,
@@ -57,7 +57,7 @@ RSpec.describe CallFlowLogic::Base do
     it "does not retry calls if maximum number of calls is reached" do
       account = create(:account, settings: { max_phone_calls_for_callout_participation: 1 })
       alert = create_alert(account: account)
-      _, event = create_phone_call_with_event(
+      _, event = create_delivery_attempt_with_event(
         alert: alert,
         status: "remotely_queued",
         remote_status: "failed"
@@ -66,7 +66,7 @@ RSpec.describe CallFlowLogic::Base do
 
       call_flow_logic.run!
 
-      expect(RetryPhoneCallJob).not_to have_been_enqueued
+      expect(RetryDeliveryAttemptJob).not_to have_been_enqueued
     end
 
     it "does not retry calls past the global max retries limit" do
@@ -74,7 +74,7 @@ RSpec.describe CallFlowLogic::Base do
       account = create(:account, settings: { max_phone_calls_for_callout_participation: 100 })
 
       alert = create_alert(account: account)
-      _, event = create_phone_call_with_event(
+      _, event = create_delivery_attempt_with_event(
         alert:,
         status: "remotely_queued",
         remote_status: "failed"
@@ -83,28 +83,28 @@ RSpec.describe CallFlowLogic::Base do
 
       call_flow_logic.run!
 
-      expect(RetryPhoneCallJob).not_to have_been_enqueued
+      expect(RetryDeliveryAttemptJob).not_to have_been_enqueued
     end
 
     it "retries ActiveRecord::StaleObjectError" do
-      phone_call, event = create_phone_call_with_event(status: :remotely_queued, remote_status: "in-progress")
+      delivery_attempt, event = create_delivery_attempt_with_event(status: :remotely_queued, remote_status: "in-progress")
       call_flow_logic = described_class.new(event: event)
-      PhoneCall.find(phone_call.id).touch
+      DeliveryAttempt.find(delivery_attempt.id).touch
 
       call_flow_logic.run!
 
-      expect(phone_call.reload.status).to eq("in_progress")
+      expect(delivery_attempt.reload.status).to eq("in_progress")
     end
   end
 
-  def create_phone_call_with_event(status: :in_progress, remote_status: "in-progress", **phone_call_attributes)
-    phone_call = create(
-      :phone_call,
+  def create_delivery_attempt_with_event(status: :in_progress, remote_status: "in-progress", **delivery_attempt_attributes)
+    delivery_attempt = create(
+      :delivery_attempt,
       status: status,
       remote_status: remote_status,
-      **phone_call_attributes
+      **delivery_attempt_attributes
     )
-    event = create(:remote_phone_call_event, phone_call: phone_call)
-    [ phone_call, event ]
+    event = create(:remote_phone_call_event, delivery_attempt: delivery_attempt)
+    [ delivery_attempt, event ]
   end
 end

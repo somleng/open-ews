@@ -11,15 +11,15 @@ module Dashboard
     end
 
     def parent_resource
-      phone_call if phone_call_id
+      delivery_attempt if delivery_attempt_id
     end
 
-    def phone_call_id
-      params[:phone_call_id]
+    def delivery_attempt_id
+      params[:delivery_attempt_id]
     end
 
-    def phone_call
-      @phone_call ||= current_account.phone_calls.find(phone_call_id)
+    def delivery_attempt
+      @delivery_attempt ||= current_account.delivery_attempts.find(delivery_attempt_id)
     end
   end
 end

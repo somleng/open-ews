@@ -5,8 +5,8 @@
     = f.attribute :id
     = f.attribute :audio_file do
       = link_to(resource.audio_file.filename, rails_blob_path(resource.audio_file, disposition: "attachment"))
-    = f.attribute :phone_call do
-      = link_to(resource.phone_call_id, dashboard_phone_call_path(resource.phone_call_id))
+    = f.attribute :delivery_attempt do
+      = link_to(resource.delivery_attempt_id, dashboard_delivery_attempt_path(resource.delivery_attempt_id))
     = f.attribute :beneficiary do
       = link_to(resource.beneficiary_id, dashboard_beneficiary_path(resource.beneficiary_id))
     = f.attribute :duration

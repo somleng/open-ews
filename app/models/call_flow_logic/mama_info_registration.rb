@@ -287,7 +287,7 @@ module CallFlowLogic
     end
 
     def play_registered_date_of_birth
-      date_of_birth = Date.parse(metadata(phone_call.beneficiary, :date_of_birth))
+      date_of_birth = Date.parse(metadata(delivery_attempt.beneficiary, :date_of_birth))
 
       @voice_response = Twilio::TwiML::VoiceResponse.new do |response|
         play(date_of_birth.past? ? :confirm_age : :confirm_pregnancy_status, response)
@@ -305,7 +305,7 @@ module CallFlowLogic
     end
 
     def confirm_date_of_birth(&_block)
-      unconfirmed_date_of_birth = metadata(phone_call, :unconfirmed_date_of_birth).to_date
+      unconfirmed_date_of_birth = metadata(delivery_attempt, :unconfirmed_date_of_birth).to_date
 
       @voice_response = gather do |response|
         yield(response)
@@ -335,7 +335,7 @@ module CallFlowLogic
     end
 
     def registered?
-      phone_call.beneficiary.metadata["date_of_birth"].present?
+      delivery_attempt.beneficiary.metadata["date_of_birth"].present?
     end
 
     def update_details?
@@ -416,18 +416,18 @@ module CallFlowLogic
 
     def persist_unconfirmed_expected_date_of_birth
       estimated_date_of_birth = (PREGNANCY_TERM - pressed_digits.months).from_now.beginning_of_month
-      update_metadata!(phone_call, unconfirmed_date_of_birth: estimated_date_of_birth.to_date)
+      update_metadata!(delivery_attempt, unconfirmed_date_of_birth: estimated_date_of_birth.to_date)
     end
 
     def persist_unconfirmed_date_of_birth
       estimated_date_of_birth = pressed_digits.months.ago.beginning_of_month
-      update_metadata!(phone_call, unconfirmed_date_of_birth: estimated_date_of_birth.to_date)
+      update_metadata!(delivery_attempt, unconfirmed_date_of_birth: estimated_date_of_birth.to_date)
     end
 
     def persist_date_of_birth
-      beneficiary = phone_call.beneficiary
-      date_of_birth = metadata(phone_call, :unconfirmed_date_of_birth)
-      update_metadata!(phone_call, date_of_birth: date_of_birth)
+      beneficiary = delivery_attempt.beneficiary
+      date_of_birth = metadata(delivery_attempt, :unconfirmed_date_of_birth)
+      update_metadata!(delivery_attempt, date_of_birth: date_of_birth)
       update_metadata!(beneficiary, date_of_birth: date_of_birth)
       beneficiary.metadata.delete("deregistered_at")
       beneficiary.date_of_birth = date_of_birth
@@ -436,9 +436,9 @@ module CallFlowLogic
     end
 
     def persist_deregistered
-      beneficiary = phone_call.beneficiary
-      update_metadata!(phone_call.beneficiary, deregistered_at: Time.current)
-      phone_call.beneficiary.metadata.delete("date_of_birth")
+      beneficiary = delivery_attempt.beneficiary
+      update_metadata!(delivery_attempt.beneficiary, deregistered_at: Time.current)
+      delivery_attempt.beneficiary.metadata.delete("date_of_birth")
       beneficiary.status = :disabled
       beneficiary.save!
     end
@@ -456,11 +456,11 @@ module CallFlowLogic
     end
 
     def read_status
-      aasm.current_state = phone_call.metadata.fetch("status", INITIAL_STATUS).to_sym
+      aasm.current_state = delivery_attempt.metadata.fetch("status", INITIAL_STATUS).to_sym
     end
 
     def persist_status
-      update_metadata!(phone_call, status: aasm.to_state)
+      update_metadata!(delivery_attempt, status: aasm.to_state)
     end
 
     def update_metadata!(object, data)

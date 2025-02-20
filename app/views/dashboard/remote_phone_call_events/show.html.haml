@@ -3,8 +3,8 @@
 .card-body
   = show_for(resource) do |f|
     = f.attribute :id
-    = f.attribute :phone_call do
-      = link_to(resource.phone_call_id, dashboard_phone_call_path(resource.phone_call_id))
+    = f.attribute :delivery_attempt do
+      = link_to(resource.delivery_attempt_id, dashboard_delivery_attempt_path(resource.delivery_attempt_id))
     = f.attribute :call_flow_logic, value: translate("simple_form.options.defaults.call_flow_logic.#{resource.call_flow_logic}")
 
     = f.attribute :created_at, value: local_time(resource.created_at)

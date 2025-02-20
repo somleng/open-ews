@@ -4,8 +4,8 @@ RSpec.describe FetchRemoteCallJob do
   describe "#perform" do
     it "updates the remote status of the call" do
       account = create(:account, :with_twilio_provider)
-      phone_call = create(
-        :phone_call,
+      delivery_attempt = create(
+        :delivery_attempt,
         :in_progress,
         account: account,
         remote_status_fetch_queued_at: Time.current
@@ -14,15 +14,15 @@ RSpec.describe FetchRemoteCallJob do
         response: { body: { "status" => "in-progress" }.to_json }
       )
 
-      FetchRemoteCallJob.new.perform(phone_call)
+      FetchRemoteCallJob.new.perform(delivery_attempt)
 
-      phone_call.reload
+      delivery_attempt.reload
       expect(WebMock).to have_requested(
         :get,
-        "https://api.twilio.com/2010-04-01/Accounts/#{account.twilio_account_sid}/Calls/#{phone_call.remote_call_id}.json"
+        "https://api.twilio.com/2010-04-01/Accounts/#{account.twilio_account_sid}/Calls/#{delivery_attempt.remote_call_id}.json"
       )
 
-      expect(phone_call).to have_attributes(
+      expect(delivery_attempt).to have_attributes(
         remote_response: {
           "status" => "in-progress"
         },
@@ -34,16 +34,16 @@ RSpec.describe FetchRemoteCallJob do
 
     it "completes a call" do
       account = create(:account, :with_twilio_provider)
-      phone_call = create(:phone_call, :in_progress, account: account)
+      delivery_attempt = create(:delivery_attempt, :in_progress, account: account)
       stub_twilio_request(
         response: { body: { "status" => "completed", "duration" => "87" }.to_json }
       )
 
-      FetchRemoteCallJob.new.perform(phone_call)
+      FetchRemoteCallJob.new.perform(delivery_attempt)
 
-      phone_call.reload
+      delivery_attempt.reload
 
-      expect(phone_call).to have_attributes(
+      expect(delivery_attempt).to have_attributes(
         remote_response: {
           "status" => "completed",
           "duration" => "87"
@@ -53,11 +53,11 @@ RSpec.describe FetchRemoteCallJob do
       )
     end
 
-    it "returns if the phone call is already finished" do
+    it "returns if the delivery attempt is already finished" do
       account = create(:account, :with_twilio_provider)
-      phone_call = create(:phone_call, :completed, account: account)
+      delivery_attempt = create(:delivery_attempt, :completed, account: account)
 
-      FetchRemoteCallJob.new.perform(phone_call)
+      FetchRemoteCallJob.new.perform(delivery_attempt)
 
       expect(WebMock).not_to have_requested(:get, %r{https://api.twilio.com})
     end

@@ -1,4 +1,4 @@
-class PhoneCall < ApplicationRecord
+class DeliveryAttempt < ApplicationRecord
   TWILIO_CALL_STATUSES = {
     queued: "queued",
     ringing: "ringing",

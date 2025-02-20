@@ -60,7 +60,7 @@ en:
       callout_participation:
         one: Callout participation
         other: Callout participations
-      phone_call:
+      delivery_attempt:
         one: Phone call
         other: Phone calls
       remote_phone_call_event:
@@ -78,6 +78,8 @@ en:
     broadcast_id: Callout
     call_flow_logic: Call flow
     created_at: Created at
+    delivery_attempt: Phone call
+    delivery_attempt_id: Phone call
     duration: Duration (seconds)
     metadata: Metadata
     msisdn: Phone number

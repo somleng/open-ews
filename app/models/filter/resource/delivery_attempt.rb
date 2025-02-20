@@ -1,6 +1,6 @@
 module Filter
   module Resource
-    class PhoneCall < Filter::Resource::Msisdn
+    class DeliveryAttempt < Filter::Resource::Msisdn
       def self.attribute_filters
         super <<
           :remote_response_attribute_filter <<

@@ -11,7 +11,7 @@ RSpec.describe Filter::Resource::RemotePhoneCallEvent do
       "string_attribute_filter",
       call_flow_logic: CallFlowLogic::HelloWorld.to_s,
       remote_call_id: SecureRandom.uuid,
-      remote_direction: PhoneCall::TWILIO_DIRECTIONS[:inbound]
+      remote_direction: DeliveryAttempt::TWILIO_DIRECTIONS[:inbound]
     )
 
     it "filters by json" do
@@ -20,7 +20,7 @@ RSpec.describe Filter::Resource::RemotePhoneCallEvent do
 
       expect(
         build_filter(details: event_details.slice(event_details.keys.first)).resources
-      ).to match_array([remote_phone_call_event])
+      ).to match_array([ remote_phone_call_event ])
 
       expect(
         build_filter(details: { "foo" => "baz" }).resources
@@ -37,7 +37,7 @@ RSpec.describe Filter::Resource::RemotePhoneCallEvent do
 
       results = filter.resources
 
-      expect(results).to match_array([event])
+      expect(results).to match_array([ event ])
     end
 
     it "filters by lt, lteq, gt, gteq call_duration" do
@@ -48,17 +48,17 @@ RSpec.describe Filter::Resource::RemotePhoneCallEvent do
 
       results = filter.resources
 
-      expect(results).to match_array([event])
+      expect(results).to match_array([ event ])
     end
 
     it "filters by phone_call_id" do
       event = create(:remote_phone_call_event)
       create(:remote_phone_call_event)
-      filter = build_filter(phone_call_id: event.phone_call.id)
+      filter = build_filter(phone_call_id: event.delivery_attempt.id)
 
       results = filter.resources
 
-      expect(results).to match_array([event])
+      expect(results).to match_array([ event ])
     end
   end
 

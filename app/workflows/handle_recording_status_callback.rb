@@ -19,12 +19,12 @@ class HandleRecordingStatusCallback < ApplicationWorkflow
   private
 
   def create_recording
-    phone_call = PhoneCall.find_by!(remote_call_id: recording_params.fetch(:call_sid))
+    delivery_attempt = DeliveryAttempt.find_by!(remote_call_id: recording_params.fetch(:call_sid))
 
     Recording.create!(
-      phone_call:,
-      beneficiary: phone_call.beneficiary,
-      account: phone_call.account,
+      delivery_attempt:,
+      beneficiary: delivery_attempt.beneficiary,
+      account: delivery_attempt.account,
       external_recording_id: recording_params.fetch(:recording_sid),
       external_recording_url: recording_params.fetch(:recording_url),
       duration: recording_params.fetch(:recording_duration)

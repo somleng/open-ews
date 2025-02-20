@@ -15,8 +15,8 @@ class Beneficiary < ApplicationRecord
   has_many :addresses, class_name: "BeneficiaryAddress", foreign_key: :beneficiary_id
   has_many :alerts
   has_many :callouts, through: :alerts
-  has_many :phone_calls
-  has_many :remote_phone_call_events, through: :phone_calls
+  has_many :delivery_attempts
+  has_many :remote_phone_call_events, through: :delivery_attempts
 
   validates :phone_number, presence: true
 

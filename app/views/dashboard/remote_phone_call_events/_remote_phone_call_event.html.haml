@@ -2,6 +2,6 @@
   %td
     = link_to(remote_phone_call_event.id, show_location(remote_phone_call_event))
   %td
-    = link_to(remote_phone_call_event.phone_call_id, dashboard_phone_call_path(remote_phone_call_event.phone_call_id))
+    = link_to(remote_phone_call_event.delivery_attempt_id, dashboard_delivery_attempt_path(remote_phone_call_event.delivery_attempt_id))
   %td
     = local_time(remote_phone_call_event.created_at)

@@ -24,7 +24,7 @@ RSpec.describe "Phone Call Events" do
     expect(RemotePhoneCallEvent.last!).to have_attributes(
       details: request_body.stringify_keys,
       call_flow_logic: CallFlowLogic::HelloWorld.to_s,
-      phone_call: have_attributes(
+      delivery_attempt: have_attributes(
         call_flow_logic: CallFlowLogic::HelloWorld.to_s,
         status: "in_progress",
         remote_call_id: request_body.fetch(:CallSid),
@@ -40,15 +40,15 @@ RSpec.describe "Phone Call Events" do
 
   it "Creates a phone call event for an outbound call" do
     account = create(:account, :with_twilio_provider)
-    phone_call = create_phone_call(:remotely_queued, account:)
+    delivery_attempt = create_delivery_attempt(:remotely_queued, account:)
 
     request_body = build_request_body(
-      call_sid: phone_call.remote_call_id,
+      call_sid: delivery_attempt.remote_call_id,
       account_sid: account.twilio_account_sid,
       direction: "outbound-api",
       call_status: "completed",
       from: "1294",
-      to: phone_call.phone_number,
+      to: delivery_attempt.phone_number,
       call_duration: "87"
     )
 
@@ -68,7 +68,7 @@ RSpec.describe "Phone Call Events" do
     created_event = RemotePhoneCallEvent.last!
     expect(created_event).to have_attributes(
       call_duration: 87,
-      phone_call: have_attributes(
+      delivery_attempt: have_attributes(
         status: "completed",
         call_flow_logic: CallFlowLogic::HelloWorld.to_s,
         remote_status: request_body.fetch(:CallStatus),

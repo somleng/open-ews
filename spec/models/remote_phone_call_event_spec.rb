@@ -7,11 +7,11 @@ RSpec.describe RemotePhoneCallEvent do
   include_examples("has_call_flow_logic")
 
   describe "associations" do
-    it { is_expected.to belong_to(:phone_call).validate(true).autosave(true) }
+    it { is_expected.to belong_to(:delivery_attempt).validate(true).autosave(true) }
   end
 
   describe "delegations" do
-    it { is_expected.to delegate_method(:broadcast).to(:phone_call) }
+    it { is_expected.to delegate_method(:broadcast).to(:delivery_attempt) }
   end
 
   describe "validations" do

@@ -3,12 +3,12 @@ require "rails_helper"
 RSpec.describe "Recoding Status Callbacks" do
   it "creates a recording" do
     account = create(:account, :with_twilio_provider)
-    phone_call = create(:phone_call, account:)
+    delivery_attempt = create(:delivery_attempt, account:)
 
     # https://www.twilio.com/docs/voice/api/recording#recordingstatuscallback
 
     request_body = build_request_body(
-      call_sid: phone_call.remote_call_id,
+      call_sid: delivery_attempt.remote_call_id,
       account_sid: account.twilio_account_sid
     )
 
@@ -28,9 +28,9 @@ RSpec.describe "Recoding Status Callbacks" do
 
     expect(response.code).to eq("200")
     expect(account.recordings.last).to have_attributes(
-      phone_call:,
+      delivery_attempt:,
       account:,
-      beneficiary: phone_call.beneficiary,
+      beneficiary: delivery_attempt.beneficiary,
       audio_file: be_attached,
       external_recording_id: request_body.fetch(:RecordingSid),
       external_recording_url: request_body.fetch(:RecordingUrl),
