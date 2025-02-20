@@ -53,7 +53,7 @@ RSpec.describe FetchRemoteCallJob do
       )
     end
 
-    it "returns if the phone call is already finished" do
+    it "returns if the delivery attempt is already finished" do
       account = create(:account, :with_twilio_provider)
       delivery_attempt = create(:delivery_attempt, :completed, account: account)
 

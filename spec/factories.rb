@@ -139,7 +139,7 @@ FactoryBot.define do
 
   factory :remote_phone_call_event do
     transient do
-      build_phone_call { true }
+      build_delivery_attempt { true }
     end
 
     details { generate(:twilio_remote_call_event_details) }
@@ -148,7 +148,7 @@ FactoryBot.define do
     call_flow_logic { Account::DEFAULT_CALL_FLOW_LOGIC }
 
     after(:build) do |remote_phone_call_event, evaluator|
-      if evaluator.build_phone_call
+      if evaluator.build_delivery_attempt
         remote_phone_call_event.delivery_attempt ||= create(
           :delivery_attempt,
           phone_number: remote_phone_call_event.details[:From],

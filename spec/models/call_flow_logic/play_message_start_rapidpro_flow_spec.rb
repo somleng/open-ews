@@ -13,7 +13,7 @@ RSpec.describe CallFlowLogic::PlayMessageStartRapidproFlow do
       expect(ExecuteWorkflowJob).to have_been_enqueued.with(StartRapidproFlow.to_s, delivery_attempt)
     end
 
-    it "does not enqueue the job if the phone call is not completed" do
+    it "does not enqueue the job if the delivery attempt is not completed" do
       delivery_attempt = create(:delivery_attempt, :in_progress, remote_status: "in-progress")
       event = create(:remote_phone_call_event, delivery_attempt: delivery_attempt)
       call_flow_logic = described_class.new(event: event)

@@ -16,7 +16,7 @@ RSpec.describe CallFlowLogic::Base do
   end
 
   describe "#run!" do
-    it "tries to complete the phone call" do
+    it "tries to complete the delivery attempt" do
       delivery_attempt, event = create_delivery_attempt_with_event(status: :remotely_queued, remote_status: "in-progress")
       call_flow_logic = described_class.new(event: event)
 

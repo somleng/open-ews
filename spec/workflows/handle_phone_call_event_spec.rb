@@ -5,7 +5,7 @@ RSpec.describe HandlePhoneCallEvent do
 
   class MyCallFlowLogic < CallFlowLogic::Base; end
 
-  it "handles new phone calls" do
+  it "handles new delivery attempts" do
     account = create_account(call_flow_logic: MyCallFlowLogic)
     event_details = generate_event_details(
       account: account,
@@ -41,7 +41,7 @@ RSpec.describe HandlePhoneCallEvent do
     )
   end
 
-  it "handles existing phone calls" do
+  it "handles existing delivery attempts" do
     account = create_account(call_flow_logic: MyCallFlowLogic)
     delivery_attempt = create_delivery_attempt(
       :remotely_queued,
@@ -68,7 +68,7 @@ RSpec.describe HandlePhoneCallEvent do
     expect(event.delivery_attempt.duration).to eq(87)
   end
 
-  it "does not override the phone call's duration" do
+  it "does not override the delivery attempt's duration" do
     account = create_account
     delivery_attempt = create_delivery_attempt(
       :remotely_queued, account: account, duration: 87

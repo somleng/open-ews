@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe ScheduledJob do
-  it "queues phone calls per account" do
+  it "queues delivery attempts per account" do
     account = create(:account)
 
     created_delivery_attempt_from_running_broadcast = create_delivery_attempt(
