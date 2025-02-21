@@ -4,8 +4,14 @@ class AddStatusToAlerts < ActiveRecord::Migration[8.0]
 
     reversible do |dir|
       dir.up do
-        Alert.where(answered: true).update_all(status: "completed")
-        Alert.where(answered: false).update_all(status: "failed")
+        execute <<~SQL
+          UPDATE alerts
+          SET status = CASE
+              WHEN answered = true THEN 'completed'
+              WHEN answered = false AND delivery_attempts_count >= 3 THEN 'failed'
+              ELSE 'queued'
+          END
+        SQL
       end
     end
 
