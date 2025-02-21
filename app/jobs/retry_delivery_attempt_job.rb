@@ -5,16 +5,20 @@ class RetryDeliveryAttemptJob < ApplicationJob
   def perform(delivery_attempt)
     alert = delivery_attempt.alert
 
-    return if alert.answered?
-    return if max_calls_reached?(alert)
+    return if alert.completed?
     return if in_progress_calls?(alert)
 
-    DeliveryAttempt.create!(
-      account: delivery_attempt.account,
-      alert:,
-      beneficiary: delivery_attempt.beneficiary,
-      broadcast: delivery_attempt.broadcast
-    )
+    if max_calls_reached?(alert)
+      alert.fail!
+    else
+      DeliveryAttempt.create!(
+        account: delivery_attempt.account,
+        alert:,
+        beneficiary: delivery_attempt.beneficiary,
+        broadcast: delivery_attempt.broadcast
+      )
+      alert.retry!
+    end
   end
 
   private

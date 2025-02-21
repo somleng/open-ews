@@ -22,15 +22,16 @@ RSpec.describe BroadcastSummary do
         }
       )
       broadcast = create(:broadcast, account: account)
-      create_alert(account: account, broadcast: broadcast, answered: true)
-      create_alert(account: account, broadcast: broadcast, answered: false, delivery_attempts_count: 3)
-      create_alert(account: account, broadcast: broadcast, answered: false, delivery_attempts_count: 1)
+      create_alert(account: account, broadcast: broadcast, status: :completed)
+      create_alert(account: account, broadcast: broadcast, status: :failed, delivery_attempts_count: 3)
+      create_alert(account: account, broadcast: broadcast, status: :failed, delivery_attempts_count: 1)
+      create_alert(account: account, broadcast: broadcast, status: :queued, delivery_attempts_count: 0)
 
       broadcast_summary = BroadcastSummary.new(broadcast)
 
       result = broadcast_summary.alerts_still_to_be_called
 
-      expect(result).to eq(1)
+      expect(result).to eq(2)
     end
   end
 

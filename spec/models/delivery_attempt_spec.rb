@@ -101,6 +101,7 @@ RSpec.describe DeliveryAttempt do
         delivery_attempt.queue_remote!
 
         expect(delivery_attempt).to be_errored
+        expect(delivery_attempt.alert).to be_failed
       end
 
       it "transitions to remotely_queued if there is a remote call id" do
