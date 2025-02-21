@@ -31,7 +31,7 @@ RSpec.describe BroadcastSummary do
 
       result = broadcast_summary.alerts_still_to_be_called
 
-      expect(result).to eq(2)
+      expect(result).to eq(1)
     end
   end
 

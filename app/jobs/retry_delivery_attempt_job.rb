@@ -17,7 +17,6 @@ class RetryDeliveryAttemptJob < ApplicationJob
         beneficiary: delivery_attempt.beneficiary,
         broadcast: delivery_attempt.broadcast
       )
-      alert.retry!
     end
   end
 

@@ -33,13 +33,6 @@ class Alert < ApplicationRecord
     state :failed
     state :completed
 
-    event :retry do
-      transitions(
-        from: :failed,
-        to: :queued
-      )
-    end
-
     event :fail do
       transitions(
         from: [ :queued, :failed ],
@@ -56,7 +49,7 @@ class Alert < ApplicationRecord
   end
 
   def self.still_trying(max_delivery_attempts)
-    where.not(status: :completed).where(arel_table[:delivery_attempts_count].lt(max_delivery_attempts))
+    where.not(status: [ :failed, :completed ]).where(arel_table[:delivery_attempts_count].lt(max_delivery_attempts))
   end
 
   # NOTE: This is for backward compatibility until we moved to the new API

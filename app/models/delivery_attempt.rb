@@ -76,7 +76,6 @@ class DeliveryAttempt < ApplicationRecord
 
       transitions(
         from: :queued,
-        after: :mark_alert_failed!,
         to: :errored
       )
     end
@@ -183,11 +182,5 @@ class DeliveryAttempt < ApplicationRecord
     return true if alert.blank?
 
     alert.complete!
-  end
-
-  def mark_alert_failed!
-    return true if alert.blank?
-
-    alert.fail!
   end
 end
