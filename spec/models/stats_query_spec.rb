@@ -71,9 +71,15 @@ RSpec.describe StatsQuery, type: :model do
       )
 
     result = StatsQuery.new(
-      filter_fields: {
-        BeneficiaryField.find("address.iso_region_code") => "KH-12"
-      },
+      filter_fields: [
+        FilterField.new(
+          field: "address.iso_region_code",
+          column: "iso_region_code",
+          relation: :addresses,
+          operator: "eq",
+          value: "KH-12"
+        )
+      ],
       group_by_fields: [
         BeneficiaryField.find("iso_country_code"),
         BeneficiaryField.find("address.iso_region_code"),

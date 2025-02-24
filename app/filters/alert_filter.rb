@@ -1,6 +1,6 @@
 class AlertFilter < ApplicationFilter
   params do
-    optional(:status).filled(:hash?).schema(FilterTypes::ListType.define(Alert.aasm.states.map { |s| s.name.to_s }))
+    optional(:status).schema(FilterTypes::ListType.define(Alert.aasm.states.map { |s| s.name.to_s }))
   end
 
   def output

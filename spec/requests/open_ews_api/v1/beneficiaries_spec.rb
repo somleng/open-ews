@@ -15,7 +15,7 @@ RSpec.resource "Beneficiaries"  do
       _other_account_beneficiary = create(:beneficiary)
 
       set_authorization_header_for(account)
-      do_request(filter: { status: "active" })
+      do_request(filter: { status: { eq: "active" } })
 
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_collection_schema("beneficiary")
@@ -30,7 +30,7 @@ RSpec.resource "Beneficiaries"  do
       disabled_beneficiary = create(:beneficiary, :disabled, account:, status: "disabled")
 
       set_authorization_header_for(account)
-      do_request(filter: { status: "disabled" })
+      do_request(filter: { status: { eq: "disabled" } })
 
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_collection_schema("beneficiary")
@@ -340,7 +340,7 @@ RSpec.resource "Beneficiaries"  do
 
       set_authorization_header_for(account)
       do_request(
-        filter: { "gender": "M", "address.iso_region_code": "KH-12" },
+        filter: { "gender": { eq: "M" }, "address.iso_region_code": { eq: "KH-12" } },
         group_by: [
           "iso_country_code",
           "address.iso_region_code",

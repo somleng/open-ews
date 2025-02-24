@@ -14,8 +14,8 @@ RSpec.describe PopulateAlerts do
       status: :pending,
       account:,
       beneficiary_filter: {
-        gender: "F",
-        "address.iso_region_code": "KH-12"
+        gender: { eq: "F" },
+        "address.iso_region_code": { eq: "KH-12" }
       }
     )
 
