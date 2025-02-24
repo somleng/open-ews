@@ -58,7 +58,8 @@ module BatchOperation
           phone_number: beneficiary.phone_number,
           broadcast_id: broadcast.id,
           callout_population_id: id,
-          call_flow_logic: broadcast.call_flow_logic
+          call_flow_logic: broadcast.call_flow_logic,
+          status: :queued
         }
       end
       Alert.upsert_all(alerts) if alerts.any?

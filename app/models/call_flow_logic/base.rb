@@ -39,8 +39,8 @@ module CallFlowLogic
     def retry_call
       return unless delivery_attempt.status.in?(RETRY_CALL_STATUSES + ALWAYS_RETRY_CALL_STATUSES)
       return if alert.blank?
-      return if delivery_attempt.status.in?(RETRY_CALL_STATUSES) && alert.delivery_attempts_count >= delivery_attempt.account.max_delivery_attempts_for_alert
-      return if alert.delivery_attempts_count >= MAX_RETRIES
+      return alert.fail! if delivery_attempt.status.in?(RETRY_CALL_STATUSES) && alert.delivery_attempts_count >= delivery_attempt.account.max_delivery_attempts_for_alert
+      return alert.fail! if alert.delivery_attempts_count >= MAX_RETRIES
 
       RetryDeliveryAttemptJob.set(wait: 15.minutes).perform_later(delivery_attempt)
     end

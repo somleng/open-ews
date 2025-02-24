@@ -67,6 +67,7 @@ RSpec.describe CallFlowLogic::Base do
       call_flow_logic.run!
 
       expect(RetryDeliveryAttemptJob).not_to have_been_enqueued
+      expect(alert).to be_failed
     end
 
     it "does not retry calls past the global max retries limit" do
@@ -84,6 +85,7 @@ RSpec.describe CallFlowLogic::Base do
       call_flow_logic.run!
 
       expect(RetryDeliveryAttemptJob).not_to have_been_enqueued
+      expect(alert).to be_failed
     end
 
     it "retries ActiveRecord::StaleObjectError" do

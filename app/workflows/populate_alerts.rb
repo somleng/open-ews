@@ -25,7 +25,8 @@ class PopulateAlerts < ApplicationWorkflow
         beneficiary_id: beneficiary.id,
         phone_number: beneficiary.phone_number,
         call_flow_logic: broadcast.call_flow_logic,
-        delivery_attempts_count: 1
+        delivery_attempts_count: 1,
+        status: :queued
       }
     end
 

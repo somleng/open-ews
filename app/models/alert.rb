@@ -1,6 +1,7 @@
 class Alert < ApplicationRecord
   include MetadataHelpers
   include HasCallFlowLogic
+  include AASM
 
   DEFAULT_RETRY_STATUSES = [
     "failed"
@@ -27,8 +28,28 @@ class Alert < ApplicationRecord
 
   validates :phone_number, presence: true
 
+  aasm column: :status, whiny_transitions: false do
+    state :queued, initial: true
+    state :failed
+    state :completed
+
+    event :fail do
+      transitions(
+        from: [ :queued, :failed ],
+        to: :failed
+      )
+    end
+
+    event :complete do
+      transitions(
+        from: :queued,
+        to: :completed
+      )
+    end
+  end
+
   def self.still_trying(max_delivery_attempts)
-    where(answered: false).where(arel_table[:delivery_attempts_count].lt(max_delivery_attempts))
+    where.not(status: [ :failed, :completed ]).where(arel_table[:delivery_attempts_count].lt(max_delivery_attempts))
   end
 
   # NOTE: This is for backward compatibility until we moved to the new API
@@ -37,6 +58,7 @@ class Alert < ApplicationRecord
     result["msisdn"] = result.delete("phone_number")
     result["contact_id"] = result.delete("beneficiary_id")
     result["phone_calls_count"] = result.delete("delivery_attempts_count")
+    result["answered"] = result.delete("status") == "completed"
     result
   end
 

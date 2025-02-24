@@ -181,6 +181,6 @@ class DeliveryAttempt < ApplicationRecord
   def mark_alert_answered!
     return true if alert.blank?
 
-    alert.update!(answered: true)
+    alert.complete!
   end
 end
