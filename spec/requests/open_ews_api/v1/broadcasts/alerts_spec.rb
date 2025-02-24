@@ -25,8 +25,8 @@ RSpec.resource "Broadcasts"  do
     example "List all alerts for a broadcast with filters", document: false do
       account = create(:account)
       broadcast = create(:broadcast, account:)
-      completed_alerts = create_list(:alert, 2, answered: true, broadcast: broadcast)
-      _queued_alerts = create(:alert, answered: false, broadcast: broadcast)
+      completed_alerts = create_list(:alert, 2, status: :completed, broadcast: broadcast)
+      _queued_alerts = create(:alert, status: :queued, broadcast: broadcast)
       _other_alert = create(:alert)
 
       set_authorization_header_for(account)

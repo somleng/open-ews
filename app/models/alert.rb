@@ -58,11 +58,6 @@ class Alert < ApplicationRecord
     result
   end
 
-  # TODO: Should introduce status (queued/pending, completed, failed)
-  def status
-    answered? ? "completed" : "queued"
-  end
-
   private
 
   def set_phone_number_from_beneficiary
