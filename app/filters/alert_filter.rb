@@ -1,14 +1,21 @@
 class AlertFilter < ApplicationFilter
   params do
-    optional(:status).filled(included_in?: Alert.aasm.states.map { |s| s.name.to_s })
+    optional(:status).filled(:hash?).schema(FilterTypes::ListType.define(Alert.aasm.states.map { |s| s.name.to_s }))
   end
 
   def output
     result = super
     return {} if result.blank?
 
-    result.each_with_object({}) do |(filter, value), filters|
-      filters[SimpleColumnField.new(name: filter, column: filter)] = value
+    result.map do |(filter, condition)|
+      operator, value = condition.first
+
+      FilterField.new(
+        field: filter,
+        column: filter,
+        operator: operator,
+        value: value
+      )
     end
   end
 end

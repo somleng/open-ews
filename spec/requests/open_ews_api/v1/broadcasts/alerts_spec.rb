@@ -30,7 +30,7 @@ RSpec.resource "Broadcasts"  do
       _other_alert = create(:alert)
 
       set_authorization_header_for(account)
-      do_request(broadcast_id: broadcast.id, filter: { status: "completed" })
+      do_request(broadcast_id: broadcast.id, filter: { status: { eq: "completed" } })
 
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_collection_schema("alert")
