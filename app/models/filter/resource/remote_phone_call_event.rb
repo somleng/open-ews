@@ -21,13 +21,17 @@ module Filter
       end
 
       def filter_params
-        params.slice(
+        result = params.slice(
           :phone_call_id,
+          :delivery_attempt_id,
           :call_flow_logic,
           :remote_call_id,
           :remote_direction,
           :call_duration
         )
+
+        result[:delivery_attempt_id] = result.delete(:phone_call_id) if result.key?(:phone_call_id)
+        result
       end
     end
   end

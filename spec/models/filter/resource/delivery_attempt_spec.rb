@@ -2,9 +2,9 @@ require "rails_helper"
 
 module Filter
   module Resource
-    RSpec.describe PhoneCall do
-      let(:filterable_factory) { :phone_call }
-      let(:association_chain) { ::PhoneCall.all }
+    RSpec.describe DeliveryAttempt do
+      let(:filterable_factory) { :delivery_attempt }
+      let(:association_chain) { ::DeliveryAttempt.all }
 
       describe "#resources" do
         include_examples "metadata_attribute_filter"
@@ -17,11 +17,11 @@ module Filter
         )
         include_examples(
           "string_attribute_filter",
-          "status" => ::PhoneCall::STATE_COMPLETED,
+          "status" => ::DeliveryAttempt::STATE_COMPLETED,
           :call_flow_logic => CallFlowLogic::HelloWorld.to_s,
           :remote_call_id => SecureRandom.uuid,
-          :remote_status => ::PhoneCall::TWILIO_CALL_STATUSES[:not_answered],
-          :remote_direction => ::PhoneCall::TWILIO_DIRECTIONS[:inbound],
+          :remote_status => ::DeliveryAttempt::TWILIO_CALL_STATUSES[:not_answered],
+          :remote_direction => ::DeliveryAttempt::TWILIO_DIRECTIONS[:inbound],
           :remote_error_message => "Some Error"
         )
 
@@ -38,67 +38,67 @@ module Filter
         end
 
         it "filters by duration" do
-          phone_call = create(:phone_call, duration: 10)
-          create(:phone_call, duration: 0)
+          delivery_attempt = create(:delivery_attempt, duration: 10)
+          create(:delivery_attempt, duration: 0)
           filter = build_filter(duration: "10")
 
           results = filter.resources
 
-          expect(results).to match_array([ phone_call ])
+          expect(results).to match_array([ delivery_attempt ])
         end
 
         it "filters by gt, gteq, lt, lteq" do
-          phone_call = create(:phone_call, duration: 9)
-          create(:phone_call, duration: 10)
-          create(:phone_call, duration: 8)
+          delivery_attempt = create(:delivery_attempt, duration: 9)
+          create(:delivery_attempt, duration: 10)
+          create(:delivery_attempt, duration: 8)
           filter = build_filter(duration_lt: "10", duration_gt: "8")
 
           results = filter.resources
 
-          expect(results).to match_array([ phone_call ])
+          expect(results).to match_array([ delivery_attempt ])
         end
 
         it "filters by callout_id" do
           broadcast = create(:broadcast)
           alert = create(:alert, broadcast: broadcast)
-          phone_call = create(
-            :phone_call,
+          delivery_attempt = create(
+            :delivery_attempt,
             broadcast: broadcast,
             alert:
           )
-          create(:phone_call)
+          create(:delivery_attempt)
           filter = build_filter(callout_id: broadcast.id)
 
           results = filter.resources
 
-          expect(results).to match_array([ phone_call ])
+          expect(results).to match_array([ delivery_attempt ])
         end
 
         it "filters by callout_participation_id" do
           alert = create(:alert)
-          phone_call = create(:phone_call, alert:)
-          create(:phone_call)
+          delivery_attempt = create(:delivery_attempt, alert:)
+          create(:delivery_attempt)
           filter = build_filter(callout_participation_id: alert.id)
 
           results = filter.resources
 
-          expect(results).to match_array([ phone_call ])
+          expect(results).to match_array([ delivery_attempt ])
         end
 
         it "filters by beneficiary_id" do
           beneficiary = create(:beneficiary)
-          phone_call = create(:phone_call, beneficiary: beneficiary)
-          create(:phone_call)
+          delivery_attempt = create(:delivery_attempt, beneficiary: beneficiary)
+          create(:delivery_attempt)
           filter = build_filter(beneficiary_id: beneficiary.id)
 
           results = filter.resources
 
-          expect(results).to match_array([ phone_call ])
+          expect(results).to match_array([ delivery_attempt ])
         end
       end
 
       def build_filter(params)
-        described_class.new({ association_chain: ::PhoneCall }, params)
+        described_class.new({ association_chain: ::DeliveryAttempt }, params)
       end
     end
   end

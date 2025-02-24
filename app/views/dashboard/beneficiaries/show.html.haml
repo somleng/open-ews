@@ -5,7 +5,7 @@
 
   = render "shared/resource_related_links" do
     = related_link_to t(:"titles.alerts.index"), dashboard_beneficiary_alerts_path(resource)
-    = related_link_to t(:"titles.phone_calls.index"), dashboard_beneficiary_phone_calls_path(resource)
+    = related_link_to t(:"titles.delivery_attempts.index"), dashboard_beneficiary_delivery_attempts_path(resource)
 
 .card-body
   = show_for(resource) do |f|

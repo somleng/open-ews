@@ -3,9 +3,9 @@ require "rails_helper"
 module CallFlowLogic
   RSpec.describe EWSLaosRegistration do
     it "plays an introduction in Lao" do
-      event = create_phone_call_event(phone_call_metadata: { status: nil })
+      event = create_delivery_attempt_event(delivery_attempt_metadata: { status: nil })
       call_flow_logic = EWSLaosRegistration.new(
-        phone_call: event.phone_call,
+        delivery_attempt: event.delivery_attempt,
         event:,
         current_url: "https://scfm.somleng.org/twilio_webhooks/phone_call_events"
       )
@@ -13,16 +13,16 @@ module CallFlowLogic
       call_flow_logic.run!
 
       response = parse_response(call_flow_logic.to_xml)
-      expect(event.phone_call.metadata.fetch("status")).to eq("playing_introduction")
+      expect(event.delivery_attempt.metadata.fetch("status")).to eq("playing_introduction")
       assert_play("introduction-lao.mp3", response)
     end
 
     it "prompts for the province" do
-      event = create_phone_call_event(
-        phone_call_metadata: { status: :playing_introduction }
+      event = create_delivery_attempt_event(
+        delivery_attempt_metadata: { status: :playing_introduction }
       )
       call_flow_logic = EWSLaosRegistration.new(
-        phone_call: event.phone_call,
+        delivery_attempt: event.delivery_attempt,
         event:
       )
 
@@ -30,17 +30,17 @@ module CallFlowLogic
 
       response = parse_response(call_flow_logic.to_xml)
       assert_gather("select_province-lao.mp3", response)
-      expect(event.phone_call.metadata.fetch("status")).to eq("gathering_province")
+      expect(event.delivery_attempt.metadata.fetch("status")).to eq("gathering_province")
     end
 
     it "prompts for the province again if no input is received" do
-      event = create_phone_call_event(
-        phone_call_metadata: {
+      event = create_delivery_attempt_event(
+        delivery_attempt_metadata: {
           status: :gathering_province
         }
       )
       call_flow_logic = EWSLaosRegistration.new(
-        phone_call: event.phone_call,
+        delivery_attempt: event.delivery_attempt,
         event:
       )
 
@@ -48,19 +48,19 @@ module CallFlowLogic
 
       response = parse_response(call_flow_logic.to_xml)
       assert_gather("select_province-lao.mp3", response)
-      expect(event.phone_call.metadata["province_code"]).to eq(nil)
-      expect(event.phone_call.metadata.fetch("status")).to eq("gathering_province")
+      expect(event.delivery_attempt.metadata["province_code"]).to eq(nil)
+      expect(event.delivery_attempt.metadata.fetch("status")).to eq("gathering_province")
     end
 
     it "saves the province then prompts for the district" do
-      event = create_phone_call_event(
-        phone_call_metadata: {
+      event = create_delivery_attempt_event(
+        delivery_attempt_metadata: {
           status: :gathering_province
         },
         event_details: { Digits: "1" }
       )
       call_flow_logic = EWSLaosRegistration.new(
-        phone_call: event.phone_call,
+        delivery_attempt: event.delivery_attempt,
         event:
       )
 
@@ -68,20 +68,20 @@ module CallFlowLogic
 
       response = parse_response(call_flow_logic.to_xml)
       assert_gather("14-lao.mp3", response)
-      expect(event.phone_call.metadata.fetch("province_code")).to eq("14")
-      expect(event.phone_call.metadata.fetch("status")).to eq("gathering_district")
+      expect(event.delivery_attempt.metadata.fetch("province_code")).to eq("14")
+      expect(event.delivery_attempt.metadata.fetch("status")).to eq("gathering_district")
     end
 
     it "prompts for the district again if 0 is pressed" do
-      event = create_phone_call_event(
-        phone_call_metadata: {
+      event = create_delivery_attempt_event(
+        delivery_attempt_metadata: {
           status: :gathering_district,
           province_code: "14"
         },
         event_details: { Digits: "0" }
       )
       call_flow_logic = EWSLaosRegistration.new(
-        phone_call: event.phone_call,
+        delivery_attempt: event.delivery_attempt,
         event:
       )
 
@@ -89,27 +89,27 @@ module CallFlowLogic
 
       response = parse_response(call_flow_logic.to_xml)
       assert_gather("14-lao.mp3", response)
-      expect(event.phone_call.metadata["district_code"]).to eq(nil)
-      expect(event.phone_call.metadata.fetch("status")).to eq("gathering_district")
+      expect(event.delivery_attempt.metadata["district_code"]).to eq(nil)
+      expect(event.delivery_attempt.metadata.fetch("status")).to eq("gathering_district")
     end
 
     it "starts over if * is pressed" do
-      event = create_phone_call_event(
-        phone_call_metadata: {
+      event = create_delivery_attempt_event(
+        delivery_attempt_metadata: {
           status: :gathering_district,
           province_code: "14"
         },
         event_details: { Digits: "*" }
       )
       call_flow_logic = EWSLaosRegistration.new(
-        phone_call: event.phone_call,
+        delivery_attempt: event.delivery_attempt,
         event:
       )
 
       call_flow_logic.run!
 
       response = parse_response(call_flow_logic.to_xml)
-      expect(event.phone_call.metadata.fetch("status")).to eq("gathering_province")
+      expect(event.delivery_attempt.metadata.fetch("status")).to eq("gathering_province")
       assert_gather("select_province-lao.mp3", response)
     end
 
@@ -121,8 +121,8 @@ module CallFlowLogic
           registered_districts: %w[1603 1604]
         }
       )
-      phone_call = create(
-        :phone_call,
+      delivery_attempt = create(
+        :delivery_attempt,
         :inbound,
         beneficiary:,
         metadata: {
@@ -130,9 +130,9 @@ module CallFlowLogic
           province_code: "16"
         }
       )
-      event = create_phone_call_event(phone_call:, event_details: { Digits: "4" })
+      event = create_delivery_attempt_event(delivery_attempt:, event_details: { Digits: "4" })
       call_flow_logic = EWSLaosRegistration.new(
-        phone_call:,
+        delivery_attempt:,
         event:,
         current_url: "https://scfm.somleng.org/twilio_webhooks/phone_call_events"
       )
@@ -140,8 +140,8 @@ module CallFlowLogic
       call_flow_logic.run!
 
       response = parse_response(call_flow_logic.to_xml)
-      expect(phone_call.metadata.fetch("district_code")).to eq("1604")
-      expect(phone_call.metadata.fetch("status")).to eq("playing_conclusion")
+      expect(delivery_attempt.metadata.fetch("district_code")).to eq("1604")
+      expect(delivery_attempt.metadata.fetch("status")).to eq("playing_conclusion")
       expect(beneficiary.metadata).to eq(
         "name" => "John Doe",
         "registered_districts" => %w[1603 1604],
@@ -158,11 +158,11 @@ module CallFlowLogic
     end
 
     it "hangs up the call" do
-      event = create_phone_call_event(
-        phone_call_metadata: { status: :playing_conclusion }
+      event = create_delivery_attempt_event(
+        delivery_attempt_metadata: { status: :playing_conclusion }
       )
       call_flow_logic = EWSLaosRegistration.new(
-        phone_call: event.phone_call,
+        delivery_attempt: event.delivery_attempt,
         event:
       )
 
@@ -176,13 +176,13 @@ module CallFlowLogic
       Hash.from_xml(xml).fetch("Response")
     end
 
-    def create_phone_call_event(options)
-      phone_call = options.fetch(:phone_call) do
-        create(:phone_call, metadata: options.fetch(:phone_call_metadata).compact)
+    def create_delivery_attempt_event(options)
+      delivery_attempt = options.fetch(:delivery_attempt) do
+        create(:delivery_attempt, metadata: options.fetch(:delivery_attempt_metadata).compact)
       end
       default_event_details = attributes_for(:remote_phone_call_event).fetch(:details)
       details = options.fetch(:event_details, {}).reverse_merge(default_event_details)
-      create(:remote_phone_call_event, phone_call:, details:)
+      create(:remote_phone_call_event, delivery_attempt:, details:)
     end
 
     def assert_gather(filename, response)

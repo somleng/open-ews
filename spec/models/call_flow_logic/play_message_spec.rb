@@ -35,7 +35,7 @@ RSpec.describe CallFlowLogic::PlayMessage do
     broadcast = options.delete(:broadcast)
     return create_remote_phone_call_event(account: account) unless broadcast
     alert = create_alert(account: account, broadcast:)
-    phone_call = create_phone_call(account: account, alert: alert)
-    create_remote_phone_call_event(account: account, phone_call: phone_call)
+    delivery_attempt = create_delivery_attempt(account: account, alert: alert)
+    create_remote_phone_call_event(account: account, delivery_attempt: delivery_attempt)
   end
 end

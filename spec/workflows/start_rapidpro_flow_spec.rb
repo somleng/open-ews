@@ -13,14 +13,14 @@ RSpec.describe StartRapidproFlow do
     workflow.call
 
     expect(workflow.rapidpro_client).to have_received(:start_flow).with(
-      flow: flow_id, urns: [ "tel:#{workflow.phone_call.phone_number}" ]
+      flow: flow_id, urns: [ "tel:#{workflow.delivery_attempt.phone_number}" ]
     )
 
     expect(
-      workflow.phone_call.metadata.dig("rapidpro", "flow_started_at")
+      workflow.delivery_attempt.metadata.dig("rapidpro", "flow_started_at")
     ).to be_present
 
-    expect(workflow.phone_call.metadata.fetch("rapidpro")).to include(
+    expect(workflow.delivery_attempt.metadata.fetch("rapidpro")).to include(
       "start_flow_response_status" => 201,
       "start_flow_response_body" => start_flow_response
     )
@@ -58,7 +58,7 @@ RSpec.describe StartRapidproFlow do
       account_settings: { rapidpro_api_token: "api-token" },
       callout_settings: { rapidpro_flow_id: "flow-id" }
     )
-    workflow.phone_call.update!(
+    workflow.delivery_attempt.update!(
       metadata: {
         "rapidpro_flow_started_at" => Time.current.utc
       }
@@ -101,7 +101,7 @@ RSpec.describe StartRapidproFlow do
     account = create(:account, settings: account_settings)
     broadcast = create(:broadcast, settings: broadcast_settings, account: account)
     alert = create_alert(account: account, broadcast:)
-    phone_call = create_phone_call(account: account, alert: alert)
-    described_class.new(phone_call, { rapidpro_client: rapidpro_client }.compact)
+    delivery_attempt = create_delivery_attempt(account: account, alert: alert)
+    described_class.new(delivery_attempt, { rapidpro_client: rapidpro_client }.compact)
   end
 end

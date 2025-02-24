@@ -21,7 +21,7 @@ module BatchOperation
     def run!
       transaction do
         create_alerts
-        create_phone_calls
+        create_delivery_attempts
       end
     end
 
@@ -58,15 +58,16 @@ module BatchOperation
           phone_number: beneficiary.phone_number,
           broadcast_id: broadcast.id,
           callout_population_id: id,
-          call_flow_logic: broadcast.call_flow_logic
+          call_flow_logic: broadcast.call_flow_logic,
+          status: :queued
         }
       end
       Alert.upsert_all(alerts) if alerts.any?
     end
 
-    def create_phone_calls
-      phone_calls = alerts.includes(:phone_calls).find_each.map do |alert|
-        next if alert.phone_calls.any?
+    def create_delivery_attempts
+      delivery_attempts = alerts.includes(:delivery_attempts).find_each.map do |alert|
+        next if alert.delivery_attempts.any?
 
         {
           account_id: broadcast.account_id,
@@ -79,9 +80,9 @@ module BatchOperation
         }
       end
 
-      if phone_calls.any?
-        PhoneCall.upsert_all(phone_calls)
-        Alert.where(id: phone_calls.pluck(:alert_id)).update_all(phone_calls_count: 1)
+      if delivery_attempts.any?
+        DeliveryAttempt.upsert_all(delivery_attempts)
+        Alert.where(id: delivery_attempts.pluck(:alert_id)).update_all(delivery_attempts_count: 1)
       end
     end
 

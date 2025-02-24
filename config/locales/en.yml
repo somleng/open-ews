@@ -7,7 +7,7 @@ en:
           attributes:
             base:
               restrict_destroy_status: Cannot delete record because the destroyer is not the creator
-        phone_call:
+        delivery_attempt:
           attributes:
             base:
               restrict_destroy_status: Cannot delete record because status is %{status}

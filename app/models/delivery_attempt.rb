@@ -1,4 +1,4 @@
-class PhoneCall < ApplicationRecord
+class DeliveryAttempt < ApplicationRecord
   TWILIO_CALL_STATUSES = {
     queued: "queued",
     ringing: "ringing",
@@ -181,6 +181,6 @@ class PhoneCall < ApplicationRecord
   def mark_alert_answered!
     return true if alert.blank?
 
-    alert.update!(answered: true)
+    alert.complete!
   end
 end

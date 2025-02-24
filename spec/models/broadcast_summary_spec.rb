@@ -22,9 +22,10 @@ RSpec.describe BroadcastSummary do
         }
       )
       broadcast = create(:broadcast, account: account)
-      create_alert(account: account, broadcast: broadcast, answered: true)
-      create_alert(account: account, broadcast: broadcast, answered: false, phone_calls_count: 3)
-      create_alert(account: account, broadcast: broadcast, answered: false, phone_calls_count: 1)
+      create_alert(account: account, broadcast: broadcast, status: :completed)
+      create_alert(account: account, broadcast: broadcast, status: :failed, delivery_attempts_count: 3)
+      create_alert(account: account, broadcast: broadcast, status: :failed, delivery_attempts_count: 1)
+      create_alert(account: account, broadcast: broadcast, status: :queued, delivery_attempts_count: 0)
 
       broadcast_summary = BroadcastSummary.new(broadcast)
 
@@ -37,8 +38,8 @@ RSpec.describe BroadcastSummary do
   describe "#completed_calls" do
     it "returns the number of calls" do
       broadcast = create(:broadcast)
-      create_phone_call_for_broadcast(broadcast, status: PhoneCall::STATE_COMPLETED)
-      create_phone_call_for_broadcast(broadcast)
+      create_delivery_attempt_for_broadcast(broadcast, status: DeliveryAttempt::STATE_COMPLETED)
+      create_delivery_attempt_for_broadcast(broadcast)
       broadcast_summary = BroadcastSummary.new(broadcast)
 
       result = broadcast_summary.completed_calls
@@ -50,8 +51,8 @@ RSpec.describe BroadcastSummary do
   describe "#not_answered_calls" do
     it "returns the number of calls" do
       broadcast = create(:broadcast)
-      create_phone_call_for_broadcast(broadcast, status: PhoneCall::STATE_NOT_ANSWERED)
-      create_phone_call_for_broadcast(broadcast)
+      create_delivery_attempt_for_broadcast(broadcast, status: DeliveryAttempt::STATE_NOT_ANSWERED)
+      create_delivery_attempt_for_broadcast(broadcast)
       broadcast_summary = BroadcastSummary.new(broadcast)
 
       result = broadcast_summary.not_answered_calls
@@ -63,8 +64,8 @@ RSpec.describe BroadcastSummary do
   describe "#busy_calls" do
     it "returns the number of calls" do
       broadcast = create(:broadcast)
-      create_phone_call_for_broadcast(broadcast, status: PhoneCall::STATE_BUSY)
-      create_phone_call_for_broadcast(broadcast)
+      create_delivery_attempt_for_broadcast(broadcast, status: DeliveryAttempt::STATE_BUSY)
+      create_delivery_attempt_for_broadcast(broadcast)
       broadcast_summary = BroadcastSummary.new(broadcast)
 
       result = broadcast_summary.busy_calls
@@ -76,8 +77,8 @@ RSpec.describe BroadcastSummary do
   describe "#failed_calls" do
     it "returns the number of calls" do
       broadcast = create(:broadcast)
-      create_phone_call_for_broadcast(broadcast, status: PhoneCall::STATE_FAILED)
-      create_phone_call_for_broadcast(broadcast)
+      create_delivery_attempt_for_broadcast(broadcast, status: DeliveryAttempt::STATE_FAILED)
+      create_delivery_attempt_for_broadcast(broadcast)
       broadcast_summary = BroadcastSummary.new(broadcast)
 
       result = broadcast_summary.failed_calls
@@ -89,8 +90,8 @@ RSpec.describe BroadcastSummary do
   describe "#errored_calls" do
     it "returns the number of calls" do
       broadcast = create(:broadcast)
-      create_phone_call_for_broadcast(broadcast, status: PhoneCall::STATE_ERRORED)
-      create_phone_call_for_broadcast(broadcast)
+      create_delivery_attempt_for_broadcast(broadcast, status: DeliveryAttempt::STATE_ERRORED)
+      create_delivery_attempt_for_broadcast(broadcast)
       broadcast_summary = BroadcastSummary.new(broadcast)
 
       result = broadcast_summary.errored_calls
@@ -99,8 +100,8 @@ RSpec.describe BroadcastSummary do
     end
   end
 
-  def create_phone_call_for_broadcast(broadcast, attributes = {})
+  def create_delivery_attempt_for_broadcast(broadcast, attributes = {})
     alert = create_alert(account: broadcast.account, broadcast:)
-    create_phone_call(account: broadcast.account, alert:, **attributes)
+    create_delivery_attempt(account: broadcast.account, alert:, **attributes)
   end
 end

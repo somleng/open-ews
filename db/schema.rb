@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_13_090508) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_21_100342) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -70,9 +70,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_13_090508) do
     t.jsonb "metadata", default: {}, null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.boolean "answered", default: false, null: false
-    t.integer "phone_calls_count", default: 0, null: false
+    t.integer "delivery_attempts_count", default: 0, null: false
     t.string "phone_number", null: false
+    t.string "status", null: false
     t.index ["beneficiary_id"], name: "index_alerts_on_beneficiary_id"
     t.index ["broadcast_id", "beneficiary_id"], name: "index_alerts_on_broadcast_id_and_beneficiary_id", unique: true
     t.index ["broadcast_id"], name: "index_alerts_on_broadcast_id"
@@ -152,6 +152,40 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_13_090508) do
     t.index ["status"], name: "index_broadcasts_on_status"
   end
 
+  create_table "delivery_attempts", force: :cascade do |t|
+    t.bigint "alert_id"
+    t.bigint "beneficiary_id"
+    t.string "status", null: false
+    t.string "phone_number", null: false
+    t.string "remote_call_id"
+    t.string "remote_status"
+    t.string "remote_direction"
+    t.text "remote_error_message"
+    t.jsonb "metadata", default: {}, null: false
+    t.jsonb "remote_response", default: {}, null: false
+    t.jsonb "remote_queue_response", default: {}, null: false
+    t.string "call_flow_logic", null: false
+    t.datetime "remotely_queued_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.integer "duration", default: 0, null: false
+    t.integer "lock_version", default: 0, null: false
+    t.bigint "account_id", null: false
+    t.datetime "remote_status_fetch_queued_at", precision: nil
+    t.bigint "broadcast_id"
+    t.index ["account_id"], name: "index_delivery_attempts_on_account_id"
+    t.index ["alert_id"], name: "index_delivery_attempts_on_alert_id"
+    t.index ["beneficiary_id"], name: "index_delivery_attempts_on_beneficiary_id"
+    t.index ["broadcast_id", "status"], name: "index_delivery_attempts_on_broadcast_id_and_status"
+    t.index ["broadcast_id"], name: "index_delivery_attempts_on_broadcast_id"
+    t.index ["created_at"], name: "index_delivery_attempts_on_created_at"
+    t.index ["phone_number"], name: "index_delivery_attempts_on_phone_number"
+    t.index ["remote_call_id"], name: "index_delivery_attempts_on_remote_call_id", unique: true
+    t.index ["remote_status_fetch_queued_at"], name: "index_delivery_attempts_on_remote_status_fetch_queued_at"
+    t.index ["remotely_queued_at"], name: "index_delivery_attempts_on_remotely_queued_at"
+    t.index ["status"], name: "index_delivery_attempts_on_status"
+  end
+
   create_table "oauth_access_grants", force: :cascade do |t|
     t.bigint "resource_owner_id", null: false
     t.bigint "application_id", null: false
@@ -211,42 +245,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_13_090508) do
     t.index ["database", "captured_at"], name: "index_pghero_query_stats_on_database_and_captured_at"
   end
 
-  create_table "phone_calls", force: :cascade do |t|
-    t.bigint "alert_id"
-    t.bigint "beneficiary_id"
-    t.string "status", null: false
-    t.string "phone_number", null: false
-    t.string "remote_call_id"
-    t.string "remote_status"
-    t.string "remote_direction"
-    t.text "remote_error_message"
-    t.jsonb "metadata", default: {}, null: false
-    t.jsonb "remote_response", default: {}, null: false
-    t.jsonb "remote_queue_response", default: {}, null: false
-    t.string "call_flow_logic", null: false
-    t.datetime "remotely_queued_at", precision: nil
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.integer "duration", default: 0, null: false
-    t.integer "lock_version", default: 0, null: false
-    t.bigint "account_id", null: false
-    t.datetime "remote_status_fetch_queued_at", precision: nil
-    t.bigint "broadcast_id"
-    t.index ["account_id"], name: "index_phone_calls_on_account_id"
-    t.index ["alert_id"], name: "index_phone_calls_on_alert_id"
-    t.index ["beneficiary_id"], name: "index_phone_calls_on_beneficiary_id"
-    t.index ["broadcast_id", "status"], name: "index_phone_calls_on_broadcast_id_and_status"
-    t.index ["broadcast_id"], name: "index_phone_calls_on_broadcast_id"
-    t.index ["created_at"], name: "index_phone_calls_on_created_at"
-    t.index ["phone_number"], name: "index_phone_calls_on_phone_number"
-    t.index ["remote_call_id"], name: "index_phone_calls_on_remote_call_id", unique: true
-    t.index ["remote_status_fetch_queued_at"], name: "index_phone_calls_on_remote_status_fetch_queued_at"
-    t.index ["remotely_queued_at"], name: "index_phone_calls_on_remotely_queued_at"
-    t.index ["status"], name: "index_phone_calls_on_status"
-  end
-
   create_table "recordings", force: :cascade do |t|
-    t.bigint "phone_call_id", null: false
+    t.bigint "delivery_attempt_id", null: false
     t.bigint "account_id", null: false
     t.bigint "beneficiary_id", null: false
     t.string "external_recording_id", null: false
@@ -257,11 +257,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_13_090508) do
     t.index ["account_id"], name: "index_recordings_on_account_id"
     t.index ["beneficiary_id"], name: "index_recordings_on_beneficiary_id"
     t.index ["created_at"], name: "index_recordings_on_created_at"
-    t.index ["phone_call_id"], name: "index_recordings_on_phone_call_id"
+    t.index ["delivery_attempt_id"], name: "index_recordings_on_delivery_attempt_id"
   end
 
   create_table "remote_phone_call_events", force: :cascade do |t|
-    t.bigint "phone_call_id", null: false
+    t.bigint "delivery_attempt_id", null: false
     t.jsonb "details", default: {}, null: false
     t.jsonb "metadata", default: {}, null: false
     t.string "remote_call_id", null: false
@@ -270,7 +270,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_13_090508) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.integer "call_duration", default: 0, null: false
-    t.index ["phone_call_id"], name: "index_remote_phone_call_events_on_phone_call_id"
+    t.index ["delivery_attempt_id"], name: "index_remote_phone_call_events_on_delivery_attempt_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -322,20 +322,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_13_090508) do
   add_foreign_key "beneficiary_addresses", "beneficiaries", on_delete: :cascade
   add_foreign_key "broadcasts", "accounts"
   add_foreign_key "broadcasts", "users", column: "created_by_id"
+  add_foreign_key "delivery_attempts", "accounts"
+  add_foreign_key "delivery_attempts", "alerts"
+  add_foreign_key "delivery_attempts", "beneficiaries", on_delete: :nullify
+  add_foreign_key "delivery_attempts", "broadcasts"
   add_foreign_key "oauth_access_grants", "accounts", column: "resource_owner_id"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "accounts", column: "created_by_id"
   add_foreign_key "oauth_access_tokens", "accounts", column: "resource_owner_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_applications", "accounts", column: "owner_id"
-  add_foreign_key "phone_calls", "accounts"
-  add_foreign_key "phone_calls", "alerts"
-  add_foreign_key "phone_calls", "beneficiaries", on_delete: :nullify
-  add_foreign_key "phone_calls", "broadcasts"
   add_foreign_key "recordings", "accounts"
   add_foreign_key "recordings", "beneficiaries"
-  add_foreign_key "recordings", "phone_calls"
-  add_foreign_key "remote_phone_call_events", "phone_calls"
+  add_foreign_key "recordings", "delivery_attempts"
+  add_foreign_key "remote_phone_call_events", "delivery_attempts"
   add_foreign_key "users", "accounts"
   add_foreign_key "users", "users", column: "invited_by_id"
 end

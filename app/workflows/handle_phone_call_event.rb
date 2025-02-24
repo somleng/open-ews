@@ -52,24 +52,24 @@ class HandlePhoneCallEvent < ApplicationWorkflow
     event.remote_call_id = params.fetch(:CallSid)
     event.remote_direction = params.fetch(:Direction)
     event.call_duration = call_duration
-    event.phone_call ||= create_or_find_phone_call!(event)
-    event.phone_call.remote_status = params.fetch(:CallStatus)
-    event.phone_call.duration = call_duration if event.phone_call.duration.zero?
-    event.call_flow_logic ||= event.phone_call.call_flow_logic
+    event.delivery_attempt ||= create_or_find_delivery_attempt!(event)
+    event.delivery_attempt.remote_status = params.fetch(:CallStatus)
+    event.delivery_attempt.duration = call_duration if event.delivery_attempt.duration.zero?
+    event.call_flow_logic ||= event.delivery_attempt.call_flow_logic
     event
   end
 
   def resolve_call_flow_logic(event)
     event.call_flow_logic.constantize.new(
-      event: event, current_url: url, phone_call: event.phone_call
+      event: event, current_url: url, delivery_attempt: event.delivery_attempt
     )
   end
 
-  def create_or_find_phone_call!(event)
-    PhoneCall.find_or_create_by!(remote_call_id: event.remote_call_id) do |phone_call|
-      phone_call.remote_direction = event.remote_direction
-      phone_call.phone_number = phone_call.inbound? ? params.fetch(:From) : params.fetch(:To)
-      phone_call.beneficiary = create_or_find_beneficiary!(params.fetch(:AccountSid), phone_call.phone_number)
+  def create_or_find_delivery_attempt!(event)
+    DeliveryAttempt.find_or_create_by!(remote_call_id: event.remote_call_id) do |delivery_attempt|
+      delivery_attempt.remote_direction = event.remote_direction
+      delivery_attempt.phone_number = delivery_attempt.inbound? ? params.fetch(:From) : params.fetch(:To)
+      delivery_attempt.beneficiary = create_or_find_beneficiary!(params.fetch(:AccountSid), delivery_attempt.phone_number)
     end
   end
 

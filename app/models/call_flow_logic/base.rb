@@ -27,30 +27,30 @@ module CallFlowLogic
     end
 
     def run!
-      phone_call.complete!
+      delivery_attempt.complete!
       retry_call
     rescue ActiveRecord::StaleObjectError
-      event.phone_call.reload
+      event.delivery_attempt.reload
       retry
     end
 
     private
 
     def retry_call
-      return unless phone_call.status.in?(RETRY_CALL_STATUSES + ALWAYS_RETRY_CALL_STATUSES)
+      return unless delivery_attempt.status.in?(RETRY_CALL_STATUSES + ALWAYS_RETRY_CALL_STATUSES)
       return if alert.blank?
-      return if phone_call.status.in?(RETRY_CALL_STATUSES) && alert.phone_calls_count >= phone_call.account.max_phone_calls_for_alert
-      return if alert.phone_calls_count >= MAX_RETRIES
+      return alert.fail! if delivery_attempt.status.in?(RETRY_CALL_STATUSES) && alert.delivery_attempts_count >= delivery_attempt.account.max_delivery_attempts_for_alert
+      return alert.fail! if alert.delivery_attempts_count >= MAX_RETRIES
 
-      RetryPhoneCallJob.set(wait: 15.minutes).perform_later(phone_call)
+      RetryDeliveryAttemptJob.set(wait: 15.minutes).perform_later(delivery_attempt)
     end
 
-    def phone_call
-      event.phone_call
+    def delivery_attempt
+      event.delivery_attempt
     end
 
     def alert
-      phone_call.alert
+      delivery_attempt.alert
     end
   end
 end

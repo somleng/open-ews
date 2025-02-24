@@ -1,25 +1,25 @@
 class QueueRemoteCallJob < ApplicationJob
   include Rails.application.routes.url_helpers
 
-  def perform(phone_call)
-    return if phone_call.remote_call_id.present?
+  def perform(delivery_attempt)
+    return if delivery_attempt.remote_call_id.present?
 
     begin
-      somleng_client = Somleng::Client.new(provider: phone_call.platform_provider)
+      somleng_client = Somleng::Client.new(provider: delivery_attempt.platform_provider)
       response = somleng_client.api.account.calls.create(
-        to: phone_call.phone_number,
-        from: phone_call.account.from_phone_number,
+        to: delivery_attempt.phone_number,
+        from: delivery_attempt.account.from_phone_number,
         url: twilio_webhooks_phone_call_events_url(protocol: :https),
         status_callback: twilio_webhooks_phone_call_events_url(protocol: :https)
       )
-      phone_call.remote_queue_response = response.instance_variable_get(:@properties).compact
-      phone_call.remote_status = response.status
-      phone_call.remote_call_id = response.sid
-      phone_call.remote_direction = response.direction
+      delivery_attempt.remote_queue_response = response.instance_variable_get(:@properties).compact
+      delivery_attempt.remote_status = response.status
+      delivery_attempt.remote_call_id = response.sid
+      delivery_attempt.remote_direction = response.direction
     rescue Twilio::REST::RestError => e
-      phone_call.remote_error_message = e.message
+      delivery_attempt.remote_error_message = e.message
     end
 
-    phone_call.queue_remote!
+    delivery_attempt.queue_remote!
   end
 end

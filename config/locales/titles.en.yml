@@ -50,7 +50,7 @@ en:
       new: New Callout Population
       show: Callout Population %{id}
       update: Edit Callout Population
-    phone_calls:
+    delivery_attempts:
       index: Phone Calls
       queue: Send
       queue_remote_fetch: Fetch Remote Status

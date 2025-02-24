@@ -5,7 +5,7 @@ RSpec.describe HandlePhoneCallEvent do
 
   class MyCallFlowLogic < CallFlowLogic::Base; end
 
-  it "handles new phone calls" do
+  it "handles new delivery attempts" do
     account = create_account(call_flow_logic: MyCallFlowLogic)
     event_details = generate_event_details(
       account: account,
@@ -26,24 +26,24 @@ RSpec.describe HandlePhoneCallEvent do
     expect(event.remote_direction).to eq("inbound")
     expect(event.call_flow_logic).to eq(MyCallFlowLogic.to_s)
 
-    phone_call = event.phone_call
-    expect(phone_call).to be_persisted
-    expect(phone_call).to be_in_progress
-    expect(phone_call.remote_call_id).to eq(event.remote_call_id)
-    expect(phone_call.remote_direction).to eq("inbound")
-    expect(phone_call.phone_number).to match(event_details.fetch(:From))
-    expect(phone_call.remote_status).to eq("in-progress")
+    delivery_attempt = event.delivery_attempt
+    expect(delivery_attempt).to be_persisted
+    expect(delivery_attempt).to be_in_progress
+    expect(delivery_attempt.remote_call_id).to eq(event.remote_call_id)
+    expect(delivery_attempt.remote_direction).to eq("inbound")
+    expect(delivery_attempt.phone_number).to match(event_details.fetch(:From))
+    expect(delivery_attempt.remote_status).to eq("in-progress")
 
-    expect(phone_call.beneficiary).to have_attributes(
+    expect(delivery_attempt.beneficiary).to have_attributes(
       persisted?: true,
       account: account,
       phone_number: "85510900123"
     )
   end
 
-  it "handles existing phone calls" do
+  it "handles existing delivery attempts" do
     account = create_account(call_flow_logic: MyCallFlowLogic)
-    phone_call = create_phone_call(
+    delivery_attempt = create_delivery_attempt(
       :remotely_queued,
       account: account,
       call_flow_logic: CallFlowLogic::HelloWorld,
@@ -51,7 +51,7 @@ RSpec.describe HandlePhoneCallEvent do
     )
     event_details = generate_event_details(
       account: account,
-      remote_call_id: phone_call.remote_call_id,
+      remote_call_id: delivery_attempt.remote_call_id,
       call_status: "completed",
       call_duration: "87"
     )
@@ -61,43 +61,43 @@ RSpec.describe HandlePhoneCallEvent do
     expect(result).to be_a(CallFlowLogic::HelloWorld)
 
     event = result.event
-    expect(event.phone_call).to eq(phone_call)
+    expect(event.delivery_attempt).to eq(delivery_attempt)
     expect(event.call_duration).to eq(87)
-    expect(event.phone_call.remote_status).to eq("completed")
-    expect(event.phone_call).to be_completed
-    expect(event.phone_call.duration).to eq(87)
+    expect(event.delivery_attempt.remote_status).to eq("completed")
+    expect(event.delivery_attempt).to be_completed
+    expect(event.delivery_attempt.duration).to eq(87)
   end
 
-  it "does not override the phone call's duration" do
+  it "does not override the delivery attempt's duration" do
     account = create_account
-    phone_call = create_phone_call(
+    delivery_attempt = create_delivery_attempt(
       :remotely_queued, account: account, duration: 87
     )
     event_details = generate_event_details(
       account: account,
-      remote_call_id: phone_call.remote_call_id,
+      remote_call_id: delivery_attempt.remote_call_id,
       call_duration: 0
     )
 
     event = HandlePhoneCallEvent.call(url, event_details).event
 
-    expect(event.phone_call).to eq(phone_call)
-    expect(event.phone_call.duration).to eq(87)
+    expect(event.delivery_attempt).to eq(delivery_attempt)
+    expect(event.delivery_attempt.duration).to eq(87)
   end
 
   it "retries ActiveRecord::StaleObjectError exceptions" do
     account = create_account
-    phone_call = create_phone_call(
+    delivery_attempt = create_delivery_attempt(
       :remotely_queued, account: account
     )
     event_details = generate_event_details(
       account: account,
-      remote_call_id: phone_call.remote_call_id
+      remote_call_id: delivery_attempt.remote_call_id
     )
-    concurrent_event = RemotePhoneCallEvent.new(details: event_details, phone_call: phone_call)
+    concurrent_event = RemotePhoneCallEvent.new(details: event_details, delivery_attempt: delivery_attempt)
     non_concurrent_event = RemotePhoneCallEvent.new(details: event_details)
     allow(RemotePhoneCallEvent).to receive(:new).and_return(concurrent_event, non_concurrent_event)
-    PhoneCall.find(phone_call.id).touch
+    DeliveryAttempt.find(delivery_attempt.id).touch
 
     event = HandlePhoneCallEvent.call(url, event_details).event
 

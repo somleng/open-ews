@@ -14,27 +14,27 @@ class BroadcastSummary
   end
 
   def alerts_still_to_be_called
-    alerts.still_trying(broadcast.account.max_phone_calls_for_alert).count
+    alerts.still_trying(broadcast.account.max_delivery_attempts_for_alert).count
   end
 
   def completed_calls
-    phone_calls.completed.count
+    delivery_attempts.completed.count
   end
 
   def not_answered_calls
-    phone_calls.not_answered.count
+    delivery_attempts.not_answered.count
   end
 
   def busy_calls
-    phone_calls.busy.count
+    delivery_attempts.busy.count
   end
 
   def failed_calls
-    phone_calls.failed.count
+    delivery_attempts.failed.count
   end
 
   def errored_calls
-    phone_calls.errored.count
+    delivery_attempts.errored.count
   end
 
   private
@@ -43,7 +43,7 @@ class BroadcastSummary
     broadcast.alerts
   end
 
-  def phone_calls
-    broadcast.phone_calls
+  def delivery_attempts
+    broadcast.delivery_attempts
   end
 end

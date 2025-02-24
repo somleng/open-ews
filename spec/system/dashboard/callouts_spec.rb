@@ -159,7 +159,7 @@ RSpec.describe "Callouts", :aggregate_failures do
       )
       expect(page).to have_link(
         "Phone Calls",
-        href: dashboard_broadcast_phone_calls_path(broadcast)
+        href: dashboard_broadcast_delivery_attempts_path(broadcast)
       )
     end
 

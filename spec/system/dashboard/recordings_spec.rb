@@ -37,8 +37,8 @@ RSpec.describe "Recordings" do
       expect(page).to have_content(recording.id.to_s)
 
       expect(page).to have_link(
-        recording.phone_call_id.to_s,
-        href: dashboard_phone_call_path(recording.phone_call_id)
+        recording.delivery_attempt_id.to_s,
+        href: dashboard_delivery_attempt_path(recording.delivery_attempt_id)
       )
 
       expect(page).to have_link(

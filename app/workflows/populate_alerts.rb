@@ -10,7 +10,7 @@ class PopulateAlerts < ApplicationWorkflow
   def call
     ApplicationRecord.transaction do
       create_alerts
-      create_phone_calls
+      create_delivery_attempts
 
       broadcast.start!
     end
@@ -25,15 +25,16 @@ class PopulateAlerts < ApplicationWorkflow
         beneficiary_id: beneficiary.id,
         phone_number: beneficiary.phone_number,
         call_flow_logic: broadcast.call_flow_logic,
-        phone_calls_count: 1
+        delivery_attempts_count: 1,
+        status: :queued
       }
     end
 
     Alert.upsert_all(alerts) if alerts.any?
   end
 
-  def create_phone_calls
-    phone_calls = broadcast.alerts.find_each.map do |alert|
+  def create_delivery_attempts
+    delivery_attempts = broadcast.alerts.find_each.map do |alert|
       {
         account_id: account.id,
         broadcast_id: broadcast.id,
@@ -45,7 +46,7 @@ class PopulateAlerts < ApplicationWorkflow
       }
     end
 
-    PhoneCall.upsert_all(phone_calls) if phone_calls.any?
+    DeliveryAttempt.upsert_all(delivery_attempts) if delivery_attempts.any?
   end
 
   def beneficiaries_scope

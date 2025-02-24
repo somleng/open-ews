@@ -130,8 +130,8 @@ RSpec.resource "Broadcasts"  do
       )
       expect(broadcast.reload.status).to eq("running")
       expect(broadcast.beneficiaries).to match_array([ female_beneficiary ])
-      expect(broadcast.phone_calls.count).to eq(1)
-      expect(broadcast.phone_calls.first.beneficiary).to eq(female_beneficiary)
+      expect(broadcast.delivery_attempts.count).to eq(1)
+      expect(broadcast.delivery_attempts.first.beneficiary).to eq(female_beneficiary)
     end
 
     example "Failed to update a broadcast", document: false do
