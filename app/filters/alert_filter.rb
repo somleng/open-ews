@@ -1,6 +1,8 @@
 class AlertFilter < ApplicationFilter
   params do
-    optional(:status).schema(FilterTypes::ListType.define(Alert.aasm.states.map { |s| s.name.to_s }))
+    FieldDefinitions::AlertFields.each do |field|
+      optional(field.name.to_sym).schema(field.schema)
+    end
   end
 
   def output
@@ -9,10 +11,10 @@ class AlertFilter < ApplicationFilter
 
     result.map do |(filter, condition)|
       operator, value = condition.first
+      beneficiary_field = FieldDefinitions::AlertFields.find(filter.to_s)
 
       FilterField.new(
-        field: filter,
-        column: filter,
+        field_definition: beneficiary_field,
         operator: operator,
         value: value
       )

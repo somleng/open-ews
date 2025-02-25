@@ -1,9 +1,13 @@
-FilterField = Struct.new(:field, :column, :operator, :relation, :value, keyword_init: true) do
-  def to_sql
-    ApplicationRecord.sanitize_sql_for_conditions([ parameter, parameter_value ])
-  end
+class FilterField
+  attr_reader :field_definition, :operator, :value
 
-  private
+  delegate :relation, :column, to: :field_definition
+
+  def initialize(field_definition:, operator:, value:)
+    @field_definition = field_definition
+    @operator = operator
+    @value = value
+  end
 
   def parameter
     case operator.to_sym
@@ -14,8 +18,8 @@ FilterField = Struct.new(:field, :column, :operator, :relation, :value, keyword_
     when :gte then "#{column} >= ?"
     when :lt then "#{column} < ?"
     when :lte then "#{column} <= ?"
-    when :between then "#{column} >= ? and #{column} <= ?"
-    when :contains then "#{column} ILIKE ?"
+    when :between then "#{column} >= ? AND #{column} <= ?"
+    when :contains, :startsWith then "#{column} ILIKE ?"
     when :notContains then "#{column} NOT ILIKE ?"
     else
       raise ArgumentError, "Unsupported operator #{operator}"
@@ -25,6 +29,7 @@ FilterField = Struct.new(:field, :column, :operator, :relation, :value, keyword_
   def parameter_value
     case operator
     when :contains, :notContains then "%#{value}%"
+    when :startsWith then "#{value}%"
     else value
     end
   end

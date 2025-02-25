@@ -7,7 +7,7 @@ RSpec.describe StatsQuery, type: :model do
 
     result = StatsQuery.new(
       group_by_fields: [
-        BeneficiaryField.find("gender")
+        FieldDefinitions::BeneficiaryFields.find("gender")
       ],
     ).apply(Beneficiary.all)
 
@@ -35,9 +35,9 @@ RSpec.describe StatsQuery, type: :model do
 
     result = StatsQuery.new(
       group_by_fields: [
-        BeneficiaryField.find("iso_country_code"),
-        BeneficiaryField.find("address.iso_region_code"),
-        BeneficiaryField.find("address.administrative_division_level_2_code")
+        FieldDefinitions::BeneficiaryFields.find("iso_country_code"),
+        FieldDefinitions::BeneficiaryFields.find("address.iso_region_code"),
+        FieldDefinitions::BeneficiaryFields.find("address.administrative_division_level_2_code")
       ],
     ).apply(Beneficiary.all)
 
@@ -73,17 +73,15 @@ RSpec.describe StatsQuery, type: :model do
     result = StatsQuery.new(
       filter_fields: [
         FilterField.new(
-          field: "address.iso_region_code",
-          column: "iso_region_code",
-          relation: :addresses,
+          field_definition: FieldDefinitions::BeneficiaryFields.find("address.iso_region_code"),
           operator: "eq",
           value: "KH-12"
         )
       ],
       group_by_fields: [
-        BeneficiaryField.find("iso_country_code"),
-        BeneficiaryField.find("address.iso_region_code"),
-        BeneficiaryField.find("address.administrative_division_level_2_code")
+        FieldDefinitions::BeneficiaryFields.find("iso_country_code"),
+        FieldDefinitions::BeneficiaryFields.find("address.iso_region_code"),
+        FieldDefinitions::BeneficiaryFields.find("address.administrative_division_level_2_code")
       ],
     ).apply(Beneficiary.all)
 
@@ -121,9 +119,9 @@ RSpec.describe StatsQuery, type: :model do
     expect {
       StatsQuery.new(
         group_by_fields: [
-          BeneficiaryField.find("iso_country_code"),
-          BeneficiaryField.find("address.iso_region_code"),
-          BeneficiaryField.find("address.administrative_division_level_2_code")
+          FieldDefinitions::BeneficiaryFields.find("iso_country_code"),
+          FieldDefinitions::BeneficiaryFields.find("address.iso_region_code"),
+          FieldDefinitions::BeneficiaryFields.find("address.administrative_division_level_2_code")
         ],
       ).apply(Beneficiary.all)
     }.to raise_error(StatsQuery::TooManyResultsError)

@@ -1,19 +1,8 @@
 class BeneficiaryFilter < ApplicationFilter
   params do
-    optional(:status).schema(FilterTypes::ListType.define(Beneficiary.status.values))
-    optional(:disability_status).schema(FilterTypes::ListType.define(Beneficiary.disability_status.values))
-    optional(:gender).schema(FilterTypes::ListType.define(Beneficiary.gender.values))
-    optional(:date_of_birth).schema(FilterTypes::ValueType.define(:date))
-    optional(:gender).schema(FilterTypes::ListType.define(Beneficiary.gender.values))
-    optional(:iso_country_code).schema(FilterTypes::ListType.define(Beneficiary.iso_country_code.values))
-    optional(:language_code).schema(FilterTypes::StringType.define)
-    optional(:"address.iso_region_code").schema(FilterTypes::StringType.define)
-    optional(:"address.administrative_division_level_2_code").schema(FilterTypes::StringType.define)
-    optional(:"address.administrative_division_level_2_name").schema(FilterTypes::StringType.define)
-    optional(:"address.administrative_division_level_3_code").schema(FilterTypes::StringType.define)
-    optional(:"address.administrative_division_level_3_name").schema(FilterTypes::StringType.define)
-    optional(:"address.administrative_division_level_4_code").schema(FilterTypes::StringType.define)
-    optional(:"address.administrative_division_level_4_name").schema(FilterTypes::StringType.define)
+    FieldDefinitions::BeneficiaryFields.each do |field|
+      optional(field.name.to_sym).schema(field.schema)
+    end
   end
 
   def output
@@ -22,12 +11,10 @@ class BeneficiaryFilter < ApplicationFilter
 
     result.map do |(filter, condition)|
       operator, value = condition.first
-      beneficiary_field = BeneficiaryField.find(filter.to_s)
+      beneficiary_field = FieldDefinitions::BeneficiaryFields.find(filter.to_s)
 
       FilterField.new(
-        field: filter,
-        column: beneficiary_field.column,
-        relation: beneficiary_field.relation,
+        field_definition: beneficiary_field,
         operator: operator,
         value: value
       )

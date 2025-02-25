@@ -21,21 +21,26 @@ module V1
         input_params: {
           filter: {
             gender: { eq: "M" },
-            "iso_country_code": { eq: "KH" }
+            iso_country_code: { eq: "KH" }
           },
           group_by: [ "iso_country_code", "gender", "address.iso_region_code" ]
         }
       ).output
 
-      # TODO: Check filter field
-      # expect(result[:filter_fields]).to include(
-      #   BeneficiaryField.find("gender") => "M",
-      #   BeneficiaryField.find("iso_country_code") => "KH"
-      # )
+      expect(result[:filter_fields][0]).to have_attributes(
+        field_definition: FieldDefinitions::BeneficiaryFields.find("gender"),
+        operator: :eq,
+        value: "M"
+      )
+      expect(result[:filter_fields][1]).to have_attributes(
+        field_definition: FieldDefinitions::BeneficiaryFields.find("iso_country_code"),
+        operator: :eq,
+        value: "KH"
+      )
       expect(result[:group_by_fields]).to contain_exactly(
-        BeneficiaryField.find("iso_country_code"),
-        BeneficiaryField.find("gender"),
-        BeneficiaryField.find("address.iso_region_code")
+        FieldDefinitions::BeneficiaryFields.find("iso_country_code"),
+        FieldDefinitions::BeneficiaryFields.find("gender"),
+        FieldDefinitions::BeneficiaryFields.find("address.iso_region_code")
       )
     end
 

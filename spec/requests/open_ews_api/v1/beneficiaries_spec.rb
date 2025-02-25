@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.resource "Beneficiaries"  do
   get "/v1/beneficiaries" do
     with_options scope: :filter do
-      BeneficiaryField.all.each do |field|
+      FieldDefinitions::BeneficiaryFields.each do |field|
         parameter(field.name, field.description, required: false, method: :_disabled)
       end
     end
@@ -283,7 +283,7 @@ RSpec.resource "Beneficiaries"  do
 
   get "/v1/beneficiaries/stats" do
     with_options scope: :filter do
-      BeneficiaryField.all.each do |field|
+      FieldDefinitions::BeneficiaryFields.each do |field|
         parameter(field.name, field.description, required: false, method: :_disabled)
       end
     end
