@@ -1,6 +1,6 @@
-class BeneficiaryFilter < ApplicationFilter
+class AlertFilter < ApplicationFilter
   params do
-    FieldDefinitions::BeneficiaryFields.each do |field|
+    FieldDefinitions::AlertFields.each do |field|
       optional(field.name.to_sym).schema(field.schema)
     end
   end
@@ -11,7 +11,7 @@ class BeneficiaryFilter < ApplicationFilter
 
     result.map do |(filter, condition)|
       operator, value = condition.first
-      beneficiary_field = FieldDefinitions::BeneficiaryFields.find(filter.to_s)
+      beneficiary_field = FieldDefinitions::AlertFields.find(filter.to_s)
 
       FilterField.new(
         field_definition: beneficiary_field,

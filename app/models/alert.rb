@@ -3,10 +3,6 @@ class Alert < ApplicationRecord
   include HasCallFlowLogic
   include AASM
 
-  DEFAULT_RETRY_STATUSES = [
-    "failed"
-  ].freeze
-
   attribute :phone_number, :phone_number
 
   belongs_to :broadcast

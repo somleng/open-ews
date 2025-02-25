@@ -43,7 +43,7 @@ module V1
       result[:filter_fields] = BeneficiaryFilter.new(input_params: result[:filter]).output if result[:filter]
 
       result[:group_by_fields] = result[:group_by].map do |group|
-        BeneficiaryField.find(group)
+        FieldDefinitions::BeneficiaryFields.find(group)
       end
 
       result
