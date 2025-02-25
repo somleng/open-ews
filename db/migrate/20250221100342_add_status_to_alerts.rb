@@ -1,6 +1,7 @@
 class AddStatusToAlerts < ActiveRecord::Migration[8.0]
   def change
     add_column :alerts, :status, :string
+    add_index :alerts, :status
 
     reversible do |dir|
       dir.up do
