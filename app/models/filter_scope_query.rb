@@ -14,12 +14,12 @@ class FilterScopeQuery
   private
 
   def joins_with
-    filter_fields.map { |f| f.relation }.compact_blank.uniq
+    filter_fields.map { |f| f.association }.compact_blank.uniq
   end
 
   def apply_filters(relation)
     filter_fields.each do |filter|
-      relation = relation.where(filter.to_sql)
+      relation = relation.where(filter.to_query)
     end
 
     relation

@@ -1,7 +1,7 @@
 class FilterField
   attr_reader :field_definition, :operator, :value
 
-  delegate :relation, :column, to: :field_definition
+  delegate :association, :column, to: :field_definition
 
   def initialize(field_definition:, operator:, value:)
     @field_definition = field_definition
@@ -9,8 +9,8 @@ class FilterField
     @value = value
   end
 
-  def to_sql
-    column.public_send(operator_method, parameter_value)
+  def to_query
+    column.public_send(operator_method, filter_value)
   end
 
   private
@@ -32,7 +32,7 @@ class FilterField
     end
   end
 
-  def parameter_value
+  def filter_value
     case operator
     when :contains, :notContains then "%#{value}%"
     when :startsWith then "#{value}%"
