@@ -11,4 +11,8 @@ module FieldDefinitions
 
     attr_reader :name, :column, :schema, :relation, :description
   end
+
+  def column_name
+    "#{column.relation.name}.#{column.name}"
+  end
 end

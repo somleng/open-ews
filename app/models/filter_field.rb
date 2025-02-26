@@ -9,18 +9,24 @@ class FilterField
     @value = value
   end
 
-  def parameter
+  def to_sql
+    column.public_send(operator_method, parameter_value)
+  end
+
+  private
+
+  # NOTE: cast from user input operator to arel attribute's operator
+  def operator_method
     case operator.to_sym
-    when :isNull then "#{column} IS #{value == "false" ? "NOT NULL" : "NULL"}"
-    when :eq then "#{column} = ?"
-    when :neq then "#{column} != ?"
-    when :gt then "#{column} > ?"
-    when :gte then "#{column} >= ?"
-    when :lt then "#{column} < ?"
-    when :lte then "#{column} <= ?"
-    when :between then "#{column} >= ? AND #{column} <= ?"
-    when :contains, :startsWith then "#{column} ILIKE ?"
-    when :notContains then "#{column} NOT ILIKE ?"
+    when :isNull, :eq then :eq
+    when :neq then :not_eq
+    when :gt then :gt
+    when :gte then :gteq
+    when :lt then :lt
+    when :lte then :lteq
+    when :between then :between
+    when :contains, :startsWith then :matches
+    when :notContains then :does_not_match
     else
       raise ArgumentError, "Unsupported operator #{operator}"
     end
@@ -30,6 +36,7 @@ class FilterField
     case operator
     when :contains, :notContains then "%#{value}%"
     when :startsWith then "#{value}%"
+    when :between then Range.new(value[0], value[1])
     else value
     end
   end

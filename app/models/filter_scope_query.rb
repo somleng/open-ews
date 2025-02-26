@@ -19,7 +19,7 @@ class FilterScopeQuery
 
   def apply_filters(relation)
     filter_fields.each do |filter|
-      relation = relation.where(filter.parameter, filter.parameter_value)
+      relation = relation.where(filter.to_sql)
     end
 
     relation
