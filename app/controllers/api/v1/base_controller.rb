@@ -48,10 +48,10 @@ module API
 
       def apply_filters(scope, with:)
         validate_request_schema(
-          with: ApplicationFilter.build_filter_schema(with),
+          with: with.filter_contract,
           input_params: request.query_parameters
         ) do |permitted_params|
-            FilterScopeQuery.new(scope, permitted_params).apply
+          FilterScopeQuery.new(scope, permitted_params).apply
         end
       end
 
