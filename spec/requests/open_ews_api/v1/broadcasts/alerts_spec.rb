@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.resource "Broadcasts"  do
+RSpec.resource "Alerts"  do
   get "/v1/broadcasts/:broadcast_id/alerts" do
     with_options scope: :filter do
       FieldDefinitions::AlertFields.each do |field|
