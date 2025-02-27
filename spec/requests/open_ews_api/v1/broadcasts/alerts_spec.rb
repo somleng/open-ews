@@ -19,9 +19,7 @@ RSpec.resource "Broadcasts"  do
 
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_collection_schema("alert")
-      expect(json_response.fetch("data").pluck("id")).to contain_exactly(
-        *alerts.map(&:id).map(&:to_s)
-      )
+      expect(json_response.fetch("data").pluck("id")).to match_array(alerts.map(&:id).map(&:to_s))
     end
 
 
@@ -37,26 +35,42 @@ RSpec.resource "Broadcasts"  do
 
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_collection_schema("alert")
-      expect(json_response.fetch("data").pluck("id")).to contain_exactly(
-        *completed_alerts.map(&:id).map(&:to_s)
-      )
+      expect(json_response.fetch("data").pluck("id")).to match_array(completed_alerts.map(&:id).map(&:to_s))
     end
 
     example "List all alerts for a broadcast with beneficiary filters", document: false do
       account = create(:account)
       broadcast = create(:broadcast, account:)
       male = create(:beneficiary, gender: "M")
-      female = create(:beneficiary, gender: "F")
+      female1 = create(:beneficiary, gender: "F")
+      female2 = create(:beneficiary, gender: "F")
+      create(
+        :beneficiary_address,
+        beneficiary: female1,
+        iso_region_code: "KH-12",
+      )
+      create(
+        :beneficiary_address,
+        beneficiary: female2,
+        iso_region_code: "KH-1",
+      )
       _male_beneficiary_alert = create(:alert, beneficiary: male, broadcast: broadcast)
-      female_beneficiary_alert = create(:alert, beneficiary: female, broadcast: broadcast)
+      female1_beneficiary_alert = create(:alert, beneficiary: female1, broadcast: broadcast)
+      _female2_beneficiary_alert = create(:alert, beneficiary: female2, broadcast: broadcast)
 
       set_authorization_header_for(account)
-      do_request(broadcast_id: broadcast.id, filter: { "beneficiary.gender": { eq: "F" } })
+      do_request(
+        broadcast_id: broadcast.id,
+        filter: {
+          "beneficiary.gender": { eq: "F" },
+          "beneficiary.address.iso_region_code": { eq: "KH-12" }
+        }
+      )
 
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_collection_schema("alert")
       expect(json_response.fetch("data").pluck("id")).to contain_exactly(
-        female_beneficiary_alert.id.to_s
+        female1_beneficiary_alert.id.to_s
       )
     end
 
@@ -150,18 +164,13 @@ RSpec.resource "Broadcasts"  do
       expect(response_body).to match_jsonapi_resource_collection_schema("stat", pagination: false)
       results = json_response.fetch("data").map { |data| data.dig("attributes", "result") }
 
-      expect(results).to match_array(
-        [
-          {
+      expect(results).to contain_exactly({
             "beneficiary.gender" => "M",
             "value" => 2
-          },
-          {
+          }, {
             "beneficiary.gender" => "F",
             "value" => 2
-          }
-        ]
-      )
+          })
     end
   end
 end

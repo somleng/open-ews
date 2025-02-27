@@ -5,7 +5,14 @@ module V1
       "beneficiary.gender",
       "beneficiary.disability_status",
       "beneficiary.language_code",
-      "beneficiary.iso_country_code"
+      "beneficiary.iso_country_code",
+      "address.iso_region_code",
+      "beneficiary.address.administrative_division_level_2_code",
+      "beneficiary.address.administrative_division_level_2_name",
+      "beneficiary.address.administrative_division_level_3_code",
+      "beneficiary.address.administrative_division_level_3_name",
+      "beneficiary.address.administrative_division_level_4_code",
+      "beneficiary.address.administrative_division_level_4_name"
     ].freeze
 
     params do
