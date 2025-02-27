@@ -6,6 +6,11 @@ module API
           apply_filters(alerts_scope, with: AlertFilter)
         end
 
+        def show
+          alert = alerts_scope.find(params[:id])
+          respond_with_resource(alert)
+        end
+
         private
 
         def broadcast
