@@ -15,14 +15,14 @@ class FilterField
 
   private
 
-  # NOTE: cast from user input operator to arel attribute's operator
+  # NOTE: cast from user input operator to arel attribute's predications
+  # https://www.rubydoc.info/gems/arel/Arel/Predications
   def operator_method
     case operator
-    when :is_null then :eq
-    when :neq then :not_eq
+    when :is_null then value == "true" ? :eq : :not_eq
     when :contains, :starts_with then :matches
     when :not_contains then :does_not_match
-    when :eq, :gt, :gteq, :lt, :lteq, :between then operator
+    when :eq, :not_eq, :gt, :gteq, :lt, :lteq, :between then operator
     else
       raise ArgumentError, "Unsupported operator #{operator}"
     end
@@ -30,6 +30,7 @@ class FilterField
 
   def filter_value
     case operator
+    when :is_null then nil
     when :contains, :not_contains then "%#{value}%"
     when :starts_with then "#{value}%"
     when :between then Range.new(value[0], value[1])
