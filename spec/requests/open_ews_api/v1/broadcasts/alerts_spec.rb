@@ -114,7 +114,7 @@ RSpec.resource "Broadcasts"  do
 
     parameter(
       :group_by,
-      "An array of fields to group by. Supported fields: #{V1::BeneficiaryStatsRequestSchema::GROUPS.map { |group| "`#{group}`" }.join(", ")}.",
+      "An array of fields to group by. Supported fields: #{V1::AlertStatsRequestSchema::GROUPS.map { |group| "`#{group}`" }.join(", ")}.",
       required: true
     )
 

@@ -6,7 +6,7 @@ module V1
       "beneficiary.disability_status",
       "beneficiary.language_code",
       "beneficiary.iso_country_code",
-      "address.iso_region_code",
+      "beneficiary.address.iso_region_code",
       "beneficiary.address.administrative_division_level_2_code",
       "beneficiary.address.administrative_division_level_2_name",
       "beneficiary.address.administrative_division_level_3_code",
