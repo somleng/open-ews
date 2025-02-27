@@ -16,8 +16,4 @@ class AggregateQuery
   def joins_with
     group_by_fields.map { |f, _| f.association }.compact_blank.uniq
   end
-
-  def group_fields
-    group_by_fields.map(&:column)
-  end
 end
