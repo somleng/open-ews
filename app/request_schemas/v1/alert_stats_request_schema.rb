@@ -2,17 +2,7 @@ module V1
   class AlertStatsRequestSchema < ApplicationRequestSchema
     GROUPS = [
       "status",
-      "beneficiary.gender",
-      "beneficiary.disability_status",
-      "beneficiary.language_code",
-      "beneficiary.iso_country_code",
-      "beneficiary.address.iso_region_code",
-      "beneficiary.address.administrative_division_level_2_code",
-      "beneficiary.address.administrative_division_level_2_name",
-      "beneficiary.address.administrative_division_level_3_code",
-      "beneficiary.address.administrative_division_level_3_name",
-      "beneficiary.address.administrative_division_level_4_code",
-      "beneficiary.address.administrative_division_level_4_name"
+      *BeneficiaryStatsRequestSchema::GROUPS.map { |f| "beneficiary.#{f}" }
     ].freeze
 
     params do

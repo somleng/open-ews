@@ -127,7 +127,7 @@ RSpec.resource "Alerts"  do
         This endpoint returns aggregated statistics about the alerts under a broadcast in your system. Common use cases include:
 
         - Counting the total number of alerts.
-        - Grouping beneficiaries by attributes such as location or gender.
+        - Grouping alerts by beneficiary's attributes such as location or gender.
         - Identifying trends or patterns in alert data.
 
         ### Parameters
