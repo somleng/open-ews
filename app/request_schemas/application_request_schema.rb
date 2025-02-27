@@ -1,4 +1,6 @@
 class ApplicationRequestSchema < Dry::Validation::Contract
+  Types = FieldDefinitions::Types
+
   attr_reader :input_params
 
   option :resource, optional: true
@@ -37,18 +39,6 @@ class ApplicationRequestSchema < Dry::Validation::Contract
       errors.each do |error|
         key(key.path.to_a + error.path).failure(error.text)
       end
-    end
-  end
-
-  module Types
-    include Dry.Types()
-
-    Number = String.constructor do |string|
-      string.gsub(/\D/, "") if string.present?
-    end
-
-    UpcaseString = String.constructor do |string|
-      string.upcase if string.present?
     end
   end
 

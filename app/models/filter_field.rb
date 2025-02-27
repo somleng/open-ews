@@ -18,15 +18,11 @@ class FilterField
   # NOTE: cast from user input operator to arel attribute's operator
   def operator_method
     case operator
-    when :is_null, :eq then :eq
+    when :is_null then :eq
     when :neq then :not_eq
-    when :gt then :gt
-    when :gteq then :gteq
-    when :lt then :lt
-    when :lteq then :lteq
-    when :between then :between
     when :contains, :starts_with then :matches
     when :not_contains then :does_not_match
+    when :eq, :gt, :gteq, :lt, :lteq, :between then operator
     else
       raise ArgumentError, "Unsupported operator #{operator}"
     end

@@ -1,11 +1,11 @@
 module FilterTypes
   class ListType
-    def self.define(values)
+    def self.define(type, values)
       filter_class = Class.new(ApplicationFilter) do
         params do
-          optional(:eq).filled(:str?, included_in?: values)
-          optional(:neq).filled(:str?, included_in?: values)
-          optional(:is_null).filled(:str?, included_in?: [ "true", "false" ])
+          optional(:eq).filled(type, included_in?: values)
+          optional(:neq).filled(type, included_in?: values)
+          optional(:is_null).filled(:string, included_in?: [ "true", "false" ])
         end
       end
 
