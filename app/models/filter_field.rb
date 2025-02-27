@@ -19,10 +19,10 @@ class FilterField
   # https://www.rubydoc.info/gems/arel/Arel/Predications
   def operator_method
     case operator
-    when :is_null then value == "true" ? :eq : :not_eq
+    when :eq, :not_eq, :gt, :gteq, :lt, :lteq, :between then operator
     when :contains, :starts_with then :matches
     when :not_contains then :does_not_match
-    when :eq, :not_eq, :gt, :gteq, :lt, :lteq, :between then operator
+    when :is_null then value ? :eq : :not_eq
     else
       raise ArgumentError, "Unsupported operator #{operator}"
     end

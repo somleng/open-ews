@@ -5,7 +5,7 @@ module FilterTypes
         params do
           optional(:eq).filled(type, included_in?: values)
           optional(:neq).filled(type, included_in?: values)
-          optional(:is_null).filled(:string, included_in?: [ "true", "false" ])
+          optional(:is_null).filled(:bool, included_in?: [ true, false ])
         end
       end
 

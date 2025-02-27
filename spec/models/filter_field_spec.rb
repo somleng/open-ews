@@ -108,7 +108,7 @@ RSpec.describe FilterField, type: :model do
       result = FilterField.new(
         field_definition: field_definition,
         operator: "is_null",
-        value: "true"
+        value: true
       ).to_query
 
       expect(result).to eq(Beneficiary.arel_table["gender"].eq(nil))
@@ -116,7 +116,7 @@ RSpec.describe FilterField, type: :model do
       result = FilterField.new(
         field_definition: field_definition,
         operator: "is_null",
-        value: "false"
+        value: false
       ).to_query
 
       expect(result).to eq(Beneficiary.arel_table["gender"].not_eq(nil))

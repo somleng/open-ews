@@ -10,7 +10,7 @@ module FilterTypes
           optional(:lt).filled(type)
           optional(:lteq).filled(type)
           optional(:between).array(type, size?: 2)
-          optional(:is_null).filled(:string, included_in?: [ "true", "false" ])
+          optional(:is_null).filled(:bool, included_in?: [ true, false ])
         end
       end
 
