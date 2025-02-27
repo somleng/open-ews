@@ -6,7 +6,7 @@ class ApplicationFilter < ApplicationRequestSchema
 
     params do
       field_collection.each do |field|
-        optional(field.name.to_sym).schema(field.schema)
+        optional(field.name.to_sym).filled(:hash).schema(field.schema)
       end
     end
   end

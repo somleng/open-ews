@@ -6,9 +6,9 @@ module FilterTypes
           optional(:eq).filled(:str?)
           optional(:neq).filled(:str?)
           optional(:contains).filled(:str?)
-          optional(:notContains).filled(:str?)
-          optional(:startsWith).filled(:str?)
-          optional(:isNull).filled(:str?, included_in?: [ "true", "false" ])
+          optional(:not_contains).filled(:str?)
+          optional(:starts_with).filled(:str?)
+          optional(:is_null).filled(:str?, included_in?: [ "true", "false" ])
         end
       end
 

@@ -7,11 +7,11 @@ module FilterTypes
           optional(:eq).filled(type_predicate)
           optional(:neq).filled(type_predicate)
           optional(:gt).filled(type_predicate)
-          optional(:gte).filled(type_predicate)
+          optional(:gteq).filled(type_predicate)
           optional(:lt).filled(type_predicate)
-          optional(:lte).filled(type_predicate)
+          optional(:lteq).filled(type_predicate)
           optional(:between).array(type_predicate, size?: 2)
-          optional(:isNull).filled(:str?, included_in?: [ "true", "false" ])
+          optional(:is_null).filled(:str?, included_in?: [ "true", "false" ])
         end
       end
 
