@@ -77,6 +77,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_21_100342) do
     t.index ["broadcast_id", "beneficiary_id"], name: "index_alerts_on_broadcast_id_and_beneficiary_id", unique: true
     t.index ["broadcast_id"], name: "index_alerts_on_broadcast_id"
     t.index ["callout_population_id"], name: "index_alerts_on_callout_population_id"
+    t.index ["status"], name: "index_alerts_on_status"
   end
 
   create_table "batch_operations", force: :cascade do |t|
