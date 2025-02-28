@@ -11,6 +11,17 @@ module API
         render json: { "errors": [ { "title":  "Too many results" } ] }, status: :bad_request
       end
 
+      rescue_from JSONAPI::Serializer::UnsupportedIncludeError do |exception|
+        render json: {
+          "errors": [
+            {
+              "title":  "`#{exception.include_item}` is not in the list of supported relationships",
+              source: { pointer: "/include" }
+            }
+          ]
+        }, status: :bad_request
+      end
+
       private
 
       def current_account
