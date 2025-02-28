@@ -50,12 +50,9 @@ class PopulateAlerts < ApplicationWorkflow
   end
 
   def beneficiaries_scope
-    @beneficiaries_scope ||= begin
-      filter_fields = beneficiary_filter.each_with_object({}) do |(filter, value), filters|
-        filters[BeneficiaryField.find(filter.to_s)] = value
-      end
-
-      FilterScopeQuery.new(account.beneficiaries.active, filter_fields).apply
-    end
+    @beneficiaries_scope ||= FilterScopeQuery.new(
+      account.beneficiaries.active,
+      BeneficiaryFilter.new(input_params: beneficiary_filter).output
+    ).apply
   end
 end

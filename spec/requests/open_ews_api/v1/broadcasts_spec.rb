@@ -44,8 +44,8 @@ RSpec.resource "Broadcasts"  do
             channel: "voice",
             audio_url: "https://www.example.com/sample.mp3",
             beneficiary_filter: {
-              gender: "M",
-              "address.iso_region_code" => "KH-1"
+              gender: { eq: "M" },
+              "address.iso_region_code" => { eq: "KH-1" }
             }
           }
         }
@@ -58,8 +58,8 @@ RSpec.resource "Broadcasts"  do
         "status" => "pending",
         "audio_url" => "https://www.example.com/sample.mp3",
         "beneficiary_filter" => {
-          "gender" => "M",
-          "address.iso_region_code" => "KH-1"
+          "gender" => { "eq" => "M" },
+          "address.iso_region_code" => { "eq" => "KH-1" }
         }
       )
     end
@@ -112,7 +112,7 @@ RSpec.resource "Broadcasts"  do
               status: "running",
               audio_url: "https://www.example.com/sample.mp3",
               beneficiary_filter: {
-                gender: "F"
+                gender: { eq: "F" }
               }
             }
           }
@@ -125,7 +125,7 @@ RSpec.resource "Broadcasts"  do
         "status" => "queued",
         "audio_url" => "https://www.example.com/sample.mp3",
         "beneficiary_filter" => {
-          "gender" => "F"
+          "gender" => { "eq" => "F" }
         }
       )
       expect(broadcast.reload.status).to eq("running")

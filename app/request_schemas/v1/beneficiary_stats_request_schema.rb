@@ -40,10 +40,12 @@ module V1
     def output
       result = super
 
-      result[:filter_fields] = BeneficiaryFilter.new(input_params: result[:filter]).output if result[:filter]
+      if result[:filter]
+        result[:filter_fields] = BeneficiaryFilter.new(input_params: result[:filter]).output
+      end
 
       result[:group_by_fields] = result[:group_by].map do |group|
-        BeneficiaryField.find(group)
+        FieldDefinitions::BeneficiaryFields.find(group)
       end
 
       result
