@@ -8,20 +8,16 @@ class FilterScopeQuery
 
   def apply
     relation = joins_with.present? ? scope.joins(*joins_with) : scope
-    apply_filters(relation)
+    relation.where(conditions)
   end
 
   private
 
   def joins_with
-    filter_fields.map { |f| f.association }.compact_blank.uniq
+    filter_fields.map(&:association).compact_blank.uniq
   end
 
-  def apply_filters(relation)
-    filter_fields.each do |filter|
-      relation = relation.where(filter.to_query)
-    end
-
-    relation
+  def conditions
+    filter_fields.map(&:to_query).reduce(:and)
   end
 end
