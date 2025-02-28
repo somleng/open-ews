@@ -7,8 +7,7 @@ class FilterScopeQuery
   end
 
   def apply
-    relation = joins_with.present? ? scope.joins(*joins_with) : scope
-    relation.where(conditions)
+    scope.joins(joins_with).where(conditions)
   end
 
   private

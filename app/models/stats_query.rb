@@ -6,7 +6,7 @@ class StatsQuery
   attr_reader :filter_fields, :group_by_fields
 
   def initialize(options)
-    @filter_fields = options.fetch(:filter_fields, {})
+    @filter_fields = options.fetch(:filter_fields, [])
     @group_by_fields = options.fetch(:group_by_fields)
   end
 

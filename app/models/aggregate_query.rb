@@ -7,13 +7,16 @@ class AggregateQuery
   end
 
   def apply
-    relation = joins_with.present? ? scope.joins(*joins_with) : scope
-    relation.group(group_by_fields.map(&:column))
+    scope.joins(joins_with).group(group_columns)
   end
 
   private
 
   def joins_with
     group_by_fields.map(&:association).compact_blank.uniq
+  end
+
+  def group_columns
+    group_by_fields.map(&:column)
   end
 end
