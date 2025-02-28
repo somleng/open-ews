@@ -10,13 +10,28 @@ class PopulateAlerts < ApplicationWorkflow
   def call
     ApplicationRecord.transaction do
       create_alerts
-      create_delivery_attempts
+      return unless broadcast.audio_file.attached?
 
-      broadcast.start!
+      if broadcast.alerts.any?
+        create_delivery_attempts
+
+        broadcast.error_message = nil
+        broadcast.start!
+      else
+        mark_as_errored!("No beneficiaries match the filters")
+      end
     end
   end
 
   private
+
+  def download_audio_file
+    audio_file = URI.open(broadcast.audio_url)
+    # FIXME: update file name
+    broadcast.audio_file.attach(avatar.attach(io: audio_file, filename: "audio.mp3"))
+  rescue OpenURI::HTTPError
+    mark_as_errored!("Unable to download audio file")
+  end
 
   def create_alerts
     alerts = beneficiaries_scope.find_each.map do |beneficiary|
@@ -54,5 +69,10 @@ class PopulateAlerts < ApplicationWorkflow
       account.beneficiaries.active,
       BeneficiaryFilter.new(input_params: beneficiary_filter).output
     ).apply
+  end
+
+  def mark_as_errored!(message)
+    broadcast.error_message = message
+    broadcast.error!
   end
 end

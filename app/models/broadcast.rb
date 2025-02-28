@@ -74,15 +74,23 @@ class Broadcast < ApplicationRecord
 
   aasm column: :status, whiny_transitions: false do
     state :pending, initial: true
+    state :errored
     state :queued
     state :running
     state :stopped
     state :completed
 
+    event :error do
+      transitions(
+        from: [ :pending, :queued ],
+        to: :errored
+      )
+    end
+
     # TODO: Remove state transition from pending after we removed the old API
     event :start do
       transitions(
-        from: [ :pending, :queued ],
+        from: [ :pending, :queued, :errored ],
         to: :running
       )
     end

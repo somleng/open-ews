@@ -13,6 +13,7 @@ RSpec.describe PopulateAlerts do
       :broadcast,
       status: :pending,
       account:,
+      error_message: "existing error message",
       beneficiary_filter: {
         gender: { eq: "F" },
         "address.iso_region_code": { eq: "KH-12" }
@@ -22,6 +23,7 @@ RSpec.describe PopulateAlerts do
     PopulateAlerts.new(broadcast).call
 
     expect(broadcast.status).to eq("running")
+    expect(broadcast.error_message).to be_blank
     expect(broadcast.beneficiaries.count).to eq(1)
     expect(broadcast.alerts.first).to have_attributes(
       beneficiary: female_beneficiary,
@@ -34,5 +36,23 @@ RSpec.describe PopulateAlerts do
       phone_number: female_beneficiary.phone_number,
       status: "created"
     )
+  end
+
+  it "marks errored when there are no beneficiaries that match the filters" do
+    account = create(:account)
+    _male_beneficiary = create(:beneficiary, account:, gender: "M")
+
+    broadcast = create(
+      :broadcast,
+      status: :queued,
+      beneficiary_filter: {
+        gender: { eq: "F" }
+      }
+    )
+
+    PopulateAlerts.new(broadcast).call
+
+    expect(broadcast.error_message).to eq("No beneficiaries match the filters")
+    expect(broadcast.status).to eq("errored")
   end
 end
