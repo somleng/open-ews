@@ -6,6 +6,7 @@ class Broadcast < ApplicationRecord
 
   module ActiveStorageDirty
     attr_reader :audio_file_blob_was, :audio_file_will_change
+    attr_accessor :cache_audio_file_from_audio_url
 
     def audio_file=(attachable)
       @audio_file_blob_was = audio_file.blob if audio_file.attached?
@@ -74,16 +75,25 @@ class Broadcast < ApplicationRecord
 
   aasm column: :status, whiny_transitions: false do
     state :pending, initial: true
+    state :errored
     state :queued
     state :running
     state :stopped
     state :completed
 
+    event :error do
+      transitions(
+        from: [ :pending, :queued ],
+        to: :errored
+      )
+    end
+
     # TODO: Remove state transition from pending after we removed the old API
     event :start do
       transitions(
-        from: [ :pending, :queued ],
-        to: :running
+        from: [ :pending, :queued, :errored ],
+        to: :running,
+        before_transaction: -> { self.error_message = nil }
       )
     end
 
@@ -132,6 +142,15 @@ class Broadcast < ApplicationRecord
     status == "pending"
   end
 
+  def mark_as_errored!(message)
+    self.error_message = message
+    self.error!
+  end
+
+  def not_yet_started?
+    pending? || queued? || errored?
+  end
+
   private
 
   def set_call_flow_logic
@@ -143,6 +162,7 @@ class Broadcast < ApplicationRecord
   def process_audio_file
     return unless audio_file.attached?
     return unless audio_file_blob_changed?
+    return if cache_audio_file_from_audio_url
 
     AudioFileProcessorJob.perform_later(self)
   end

@@ -1,6 +1,8 @@
 class PopulateAlerts < ApplicationWorkflow
   attr_reader :broadcast
 
+  class BroadcastStartedError < StandardError; end
+
   delegate :account, :beneficiary_filter, to: :broadcast, private: true
 
   def initialize(broadcast)
@@ -9,17 +11,30 @@ class PopulateAlerts < ApplicationWorkflow
 
   def call
     ApplicationRecord.transaction do
+      download_audio_file unless broadcast.audio_file.attached?
+      return if broadcast.errored?
+
       create_alerts
       create_delivery_attempts
 
+      broadcast.error_message = nil
       broadcast.start!
     end
+  rescue BroadcastStartedError => e
+    broadcast.mark_as_errored!(e.message)
   end
 
   private
 
+  def download_audio_file
+    DownloadAudioFile.call(broadcast)
+  end
+
   def create_alerts
-    alerts = beneficiaries_scope.find_each.map do |beneficiary|
+    beneficiaries = beneficiaries_scope
+    raise BroadcastStartedError, "No beneficiaries match the filters" if beneficiaries.none?
+
+    alerts = beneficiaries.find_each.map do |beneficiary|
       {
         broadcast_id: broadcast.id,
         beneficiary_id: beneficiary.id,

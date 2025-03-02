@@ -101,6 +101,9 @@ RSpec.resource "Broadcasts"  do
         }
       )
 
+      stub_request(:get, "https://www.example.com/test.mp3")
+        .to_return(status: 200, body: file_fixture("test.mp3"))
+
       set_authorization_header_for(account)
       perform_enqueued_jobs do
         do_request(
@@ -110,7 +113,7 @@ RSpec.resource "Broadcasts"  do
             type: :broadcast,
             attributes: {
               status: "running",
-              audio_url: "https://www.example.com/sample.mp3",
+              audio_url: "https://www.example.com/test.mp3",
               beneficiary_filter: {
                 gender: { eq: "F" }
               }
@@ -123,12 +126,13 @@ RSpec.resource "Broadcasts"  do
       expect(response_body).to match_jsonapi_resource_schema("broadcast")
       expect(json_response.dig("data", "attributes")).to include(
         "status" => "queued",
-        "audio_url" => "https://www.example.com/sample.mp3",
+        "audio_url" => "https://www.example.com/test.mp3",
         "beneficiary_filter" => {
           "gender" => { "eq" => "F" }
         }
       )
       expect(broadcast.reload.status).to eq("running")
+      expect(broadcast.audio_file).to be_attached
       expect(broadcast.beneficiaries).to match_array([ female_beneficiary ])
       expect(broadcast.delivery_attempts.count).to eq(1)
       expect(broadcast.delivery_attempts.first.beneficiary).to eq(female_beneficiary)
@@ -149,8 +153,7 @@ RSpec.resource "Broadcasts"  do
           id: broadcast.id,
           type: :broadcast,
           attributes: {
-            status: "pending",
-            audio_url: "https://www.example.com/sample.mp3"
+            status: "pending"
           }
         }
       )

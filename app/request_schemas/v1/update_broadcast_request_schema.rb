@@ -1,6 +1,6 @@
 module V1
   class UpdateBroadcastRequestSchema < JSONAPIRequestSchema
-    STATES = Broadcast.aasm.states.map { _1.name.to_s } - [ "queued" ]
+    STATES = Broadcast.aasm.states.map { _1.name.to_s } - [ "queued", "errored" ]
 
     params do
       required(:data).value(:hash).schema do
@@ -18,6 +18,20 @@ module V1
     attribute_rule(:beneficiary_filter).validate(contract: BeneficiaryFilter)
     attribute_rule(:audio_url).validate(:url_format)
 
+    attribute_rule(:beneficiary_filter) do
+      next unless key?
+      next if resource.not_yet_started?
+
+      key.failure("does not allow to update after broadcast started")
+    end
+
+    attribute_rule(:audio_url) do
+      next unless key?
+      next if resource.not_yet_started?
+
+      key.failure("does not allow to update after broadcast started")
+    end
+
     attribute_rule(:status) do
       next unless key?
 
@@ -32,7 +46,7 @@ module V1
     def output
       result = super
 
-      if result[:status] == "running" && resource.pending?
+      if result[:status] == "running" && (resource.pending? || resource.errored?)
         result[:status] = "queued"
       end
 
