@@ -39,6 +39,7 @@ RSpec.describe PopulateAlerts do
       phone_number: female_beneficiary.phone_number,
       status: "created"
     )
+    expect(AudioFileProcessorJob).not_to have_been_enqueued
   end
 
   it "marks errored when the audio file can't be downloaded" do

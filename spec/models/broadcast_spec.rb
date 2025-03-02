@@ -67,6 +67,16 @@ RSpec.describe Broadcast do
 
       expect(broadcast.audio_file_blob_changed?).to eq(false)
     end
+
+    it "enqueues a job to process the audio file" do
+      broadcast = create(:broadcast)
+
+      broadcast.audio_file = fixture_file_upload("test.mp3", "audio/mp3")
+      result = broadcast.save
+
+      expect(result).to eq(true)
+      expect(AudioFileProcessorJob).to have_been_enqueued.with(broadcast)
+    end
   end
 
   describe "state_machine" do

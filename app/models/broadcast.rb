@@ -6,6 +6,7 @@ class Broadcast < ApplicationRecord
 
   module ActiveStorageDirty
     attr_reader :audio_file_blob_was, :audio_file_will_change
+    attr_accessor :cache_audio_file_from_audio_url
 
     def audio_file=(attachable)
       @audio_file_blob_was = audio_file.blob if audio_file.attached?
@@ -157,7 +158,7 @@ class Broadcast < ApplicationRecord
   def process_audio_file
     return unless audio_file.attached?
     return unless audio_file_blob_changed?
-    return if audio_url.present?
+    return if cache_audio_file_from_audio_url
 
     AudioFileProcessorJob.perform_later(self)
   end
