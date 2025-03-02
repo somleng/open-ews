@@ -101,6 +101,9 @@ RSpec.resource "Broadcasts"  do
         }
       )
 
+      stub_request(:get, "https://www.example.com/sample.mp3").to_return(status: 200)
+      allow(AudioFileProcessorJob).to receive(:perform_later).with(broadcast)
+
       set_authorization_header_for(account)
       perform_enqueued_jobs do
         do_request(

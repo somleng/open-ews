@@ -91,7 +91,8 @@ class Broadcast < ApplicationRecord
     event :start do
       transitions(
         from: [ :pending, :queued, :errored ],
-        to: :running
+        to: :running,
+        before_transaction: -> { self.error_message = nil }
       )
     end
 
@@ -138,6 +139,11 @@ class Broadcast < ApplicationRecord
 
   def updatable?
     status == "pending"
+  end
+
+  def mark_as_errored!(message)
+    self.error_message = message
+    self.error!
   end
 
   private
