@@ -157,6 +157,7 @@ class Broadcast < ApplicationRecord
   def process_audio_file
     return unless audio_file.attached?
     return unless audio_file_blob_changed?
+    return if audio_url.present?
 
     AudioFileProcessorJob.perform_later(self)
   end
