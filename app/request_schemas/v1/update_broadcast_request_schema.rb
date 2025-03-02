@@ -18,6 +18,20 @@ module V1
     attribute_rule(:beneficiary_filter).validate(contract: BeneficiaryFilter)
     attribute_rule(:audio_url).validate(:url_format)
 
+    attribute_rule(:beneficiary_filter) do
+      next unless key?
+      next if resource.not_yet_started?
+
+      key.failure("does not allow to update after broadcast started")
+    end
+
+    attribute_rule(:audio_url) do
+      next unless key?
+      next if resource.not_yet_started?
+
+      key.failure("does not allow to update after broadcast started")
+    end
+
     attribute_rule(:status) do
       next unless key?
 

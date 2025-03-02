@@ -147,6 +147,10 @@ class Broadcast < ApplicationRecord
     self.error!
   end
 
+  def not_yet_started?
+    pending? || queued? || errored?
+  end
+
   private
 
   def set_call_flow_logic

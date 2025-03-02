@@ -3,7 +3,8 @@ require "rails_helper"
 module V1
   RSpec.describe UpdateBroadcastRequestSchema, type: :request_schema do
     it "validates the audio_url" do
-      broadcast = create(:broadcast)
+      broadcast = create(:broadcast, status: :pending)
+      started_broadcast = create(:broadcast, status: :running)
 
       expect(
         validate_schema(input_params: { data: { attributes: {} } }, options: { resource: broadcast })
@@ -16,6 +17,27 @@ module V1
       expect(
         validate_schema(input_params: { data: { attributes: { audio_url: "http://example.com/sample.mp3" } } }, options: { resource: broadcast })
       ).to have_valid_field(:data, :attributes, :audio_url)
+
+      expect(
+        validate_schema(input_params: { data: { attributes: { audio_url: "http://example.com/sample.mp3" } } }, options: { resource: started_broadcast })
+      ).not_to have_valid_field(:data, :attributes, :audio_url)
+    end
+
+    it "validates the beneficiary_filter" do
+      broadcast = create(:broadcast, status: :pending)
+      started_broadcast = create(:broadcast, status: :running)
+
+      expect(
+        validate_schema(input_params: { data: { attributes: {} } }, options: { resource: broadcast })
+      ).to have_valid_field(:data, :attributes, :beneficiary_filter)
+
+      expect(
+        validate_schema(input_params: { data: { attributes: { beneficiary_filter: { status: { eq: "active" } } } } }, options: { resource: broadcast })
+      ).to have_valid_field(:data, :attributes, :beneficiary_filter)
+
+      expect(
+        validate_schema(input_params: { data: { attributes: { beneficiary_filter: { status: { eq: "active" } } } } }, options: { resource: started_broadcast })
+      ).not_to have_valid_field(:data, :attributes, :beneficiary_filter)
     end
 
     it "validates the status" do

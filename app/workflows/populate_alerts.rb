@@ -12,6 +12,7 @@ class PopulateAlerts < ApplicationWorkflow
   def call
     ApplicationRecord.transaction do
       download_audio_file unless broadcast.audio_file.attached?
+      return if broadcast.errored?
 
       create_alerts
       create_delivery_attempts
@@ -26,14 +27,7 @@ class PopulateAlerts < ApplicationWorkflow
   private
 
   def download_audio_file
-    uri = URI.parse(broadcast.audio_url)
-    broadcast.cache_audio_file_from_audio_url = true
-    broadcast.audio_file.attach(
-      io: URI.open(uri),
-      filename: File.basename(uri)
-    )
-  rescue OpenURI::HTTPError, URI::InvalidURIError
-    raise BroadcastStartedError, "Unable to download audio file"
+    DownloadAudioFile.call(broadcast)
   end
 
   def create_alerts

@@ -153,8 +153,7 @@ RSpec.resource "Broadcasts"  do
           id: broadcast.id,
           type: :broadcast,
           attributes: {
-            status: "pending",
-            audio_url: "https://www.example.com/sample.mp3"
+            status: "pending"
           }
         }
       )

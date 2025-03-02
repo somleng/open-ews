@@ -122,4 +122,16 @@ RSpec.describe Broadcast do
       it { assert_transitions! }
     end
   end
+
+  describe "#not_yet_started?" do
+    it "returns true if the broadcast is pending, queued, or errored" do
+      expect(build_stubbed(:broadcast, status: :pending).not_yet_started?).to be(true)
+      expect(build_stubbed(:broadcast, status: :queued).not_yet_started?).to be(true)
+      expect(build_stubbed(:broadcast, status: :errored).not_yet_started?).to be(true)
+
+      expect(build_stubbed(:broadcast, status: :running).not_yet_started?).to be(false)
+      expect(build_stubbed(:broadcast, status: :stopped).not_yet_started?).to be(false)
+      expect(build_stubbed(:broadcast, status: :completed).not_yet_started?).to be(false)
+    end
+  end
 end
