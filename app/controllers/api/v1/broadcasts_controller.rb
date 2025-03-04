@@ -2,8 +2,7 @@ module API
   module V1
     class BroadcastsController < BaseController
       def index
-        broadcasts = broadcasts_scope
-        respond_with_resource(broadcasts)
+        apply_filters(broadcasts_scope, with: BroadcastFilter)
       end
 
       def show
