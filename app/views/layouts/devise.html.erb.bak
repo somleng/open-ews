@@ -6,7 +6,7 @@
       <% if content_for?(:page_title) %>
         <%= yield(:page_title) %>
       <% else %>
-        SCFM
+        OpenEWS
       <% end %>
     </title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0">

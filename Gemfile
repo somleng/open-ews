@@ -3,8 +3,12 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem "rails", "~> 8.0.1"
 
-# The modern asset pipeline for Rails
+# The modern frontend packages for Rails
 gem "propshaft"
+gem "cssbundling-rails"
+gem "jsbundling-rails"
+gem "stimulus-rails"
+gem "turbo-rails"
 
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
 # gem "solid_cache"
@@ -28,8 +32,6 @@ gem "aws-sdk-sqs"
 gem "aws-actionmailer-ses"
 gem "bitmask_attributes", github: "numerex/bitmask_attributes"
 gem "bootsnap", require: false
-gem "cocoon"
-gem "cssbundling-rails"
 gem "countries"
 gem "cursor_paginator"
 gem "devise"
@@ -41,7 +43,6 @@ gem "enumerize"
 gem "faraday"
 gem "file_validators"
 gem "haml-rails"
-gem "jsbundling-rails"
 gem "jsonapi-serializer"
 gem "kaminari"
 gem "lograge"
@@ -61,7 +62,6 @@ gem "simple_form"
 gem "skylight"
 gem "stimulus-rails"
 gem "strip_attributes"
-gem "turbo-rails"
 gem "twilio-ruby"
 gem "tzinfo-data"
 
