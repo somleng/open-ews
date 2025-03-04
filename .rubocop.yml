@@ -1,4 +1,4 @@
-require: rubocop-rspec
+plugins: rubocop-rspec
 
 # Omakase Ruby styling for Rails
 inherit_gem:
