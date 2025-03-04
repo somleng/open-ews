@@ -2,6 +2,12 @@ require "rails_helper"
 
 RSpec.resource "Broadcasts"  do
   get "/v1/broadcasts" do
+    with_options scope: :filter do
+      FieldDefinitions::BroadcastFields.each do |field|
+        parameter(field.name, field.description, required: false, method: :_disabled)
+      end
+    end
+
     example "List all broadcasts" do
       account = create(:account)
       account_broadcast = create(:broadcast, account:)
@@ -14,6 +20,21 @@ RSpec.resource "Broadcasts"  do
       expect(response_body).to match_jsonapi_resource_collection_schema("broadcast")
       expect(json_response.fetch("data").pluck("id")).to contain_exactly(
         account_broadcast.id.to_s
+      )
+    end
+
+    example "List all broadcasts by filters", document: false do
+      account = create(:account)
+      running_broadcast = create(:broadcast, account:, status: :running)
+      _stopped_broadcast = create(:broadcast, account:, status: :stopped)
+
+      set_authorization_header_for(account)
+      do_request(filter: { status: { eq: "running" } })
+
+      expect(response_status).to eq(200)
+      expect(response_body).to match_jsonapi_resource_collection_schema("broadcast")
+      expect(json_response.fetch("data").pluck("id")).to contain_exactly(
+        running_broadcast.id.to_s
       )
     end
   end
@@ -133,7 +154,7 @@ RSpec.resource "Broadcasts"  do
       )
       expect(broadcast.reload.status).to eq("running")
       expect(broadcast.audio_file).to be_attached
-      expect(broadcast.beneficiaries).to match_array([ female_beneficiary ])
+      expect(broadcast.beneficiaries).to contain_exactly(female_beneficiary)
       expect(broadcast.delivery_attempts.count).to eq(1)
       expect(broadcast.delivery_attempts.first.beneficiary).to eq(female_beneficiary)
     end
