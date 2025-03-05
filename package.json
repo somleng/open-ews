@@ -12,6 +12,7 @@
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo-rails": "^8.0.13",
     "@popperjs/core": "^2.11.8",
+    "@rails/activestorage": "^8.0.100",
     "@tabler/core": "^1.1.1",
     "autoprefixer": "^10.4.20",
     "autosize": "^6.0.1",

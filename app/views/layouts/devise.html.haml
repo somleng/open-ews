@@ -17,5 +17,10 @@
     = stylesheet_link_tag :app, "data-turbo-track": "reload"
     = javascript_include_tag "application", "data-turbo-track": "reload", type: "module"
 
-  = content_tag :body do
-    = yield
+  %body
+    .page.page-center
+      .container.container-tight.py-4
+        .text-center.mb-4
+          = image_tag "open-ews_landscape_logo.png", class: "w-50"
+
+        = yield

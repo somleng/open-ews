@@ -1,10 +1,10 @@
 // Entry point for the build script in your package.json
 
 import "@hotwired/turbo-rails";
-import * as bootstrap from "bootstrap";
 import * as tabler from "@tabler/core";
-require("@rails/activestorage").start();
 import moment from "moment";
+require("@rails/activestorage").start();
+
 import "./components/direct_upload";
 import "./controllers";
 
