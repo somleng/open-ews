@@ -28,14 +28,14 @@ en:
     beneficiaries:
       create: New Contact
       edit: Edit Contact
-      index: Contacts
+      index: Beneficiaries
       new: New Contact
       show: Contact %{id}
       update: Edit Contact
     broadcasts:
       create: New Callout
       edit: Edit Callout
-      index: Callouts
+      index: Broadcasts
       new: New Callout
       pause: Pause
       resume: Resume
