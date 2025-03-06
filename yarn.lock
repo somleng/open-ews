@@ -468,6 +468,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tabler/icons-webfont@npm:^3.31.0":
+  version: 3.31.0
+  resolution: "@tabler/icons-webfont@npm:3.31.0"
+  dependencies:
+    "@tabler/icons": "npm:3.31.0"
+  checksum: 0ff4f7089d0e4a4f81a56f2a356e018e4d8bd47397aa01b7746b77df1b5224988baf0a15880f7ad8c808db22465f7ff7d4ff9b405e68a460e84d1763f471fc16
+  languageName: node
+  linkType: hard
+
+"@tabler/icons@npm:3.31.0":
+  version: 3.31.0
+  resolution: "@tabler/icons@npm:3.31.0"
+  checksum: 03fcfff0b705e1474030acee2ff0523bfa1fda7a29a33d031a9fd8e3b52ecc2e0380f9cf5e81bd054b30dc0acdb819b1e08ab746805be8d660934a08b2c3545e
+  languageName: node
+  linkType: hard
+
 "abbrev@npm:^2.0.0":
   version: 2.0.0
   resolution: "abbrev@npm:2.0.0"
@@ -1552,6 +1568,7 @@ __metadata:
     "@popperjs/core": "npm:^2.11.8"
     "@rails/activestorage": "npm:^8.0.100"
     "@tabler/core": "npm:^1.1.1"
+    "@tabler/icons-webfont": "npm:^3.31.0"
     autoprefixer: "npm:^10.4.20"
     autosize: "npm:^6.0.1"
     esbuild: "npm:^0.25.0"

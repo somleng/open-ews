@@ -1,18 +1,18 @@
-#sidebar.sidebar.sidebar-fixed{"data-sidebar-target" => "sidebar"}
-  .sidebar-brand
-    = link_to dashboard_root_path do
-      = image_tag("open-ews_landscape_logo.png", class: "sidebar-brand-full", height: 64)
+%aside{class: "navbar navbar-vertical navbar-expand-lg"}
+  .container-fluid
+    .navbar-brand.navbar-brand-autodark
+      = link_to dashboard_root_path do
+        = image_tag("open-ews_landscape_logo.png", class: "navbar-brand-image")
 
-  %ul.sidebar-nav{data: {simplebar: nil }}
-    = sidebar_nav(translate(:"titles.broadcasts.index"), dashboard_broadcasts_path, icon_class: "fa-solid fa-bullhorn")
-    = sidebar_nav(translate(:"titles.beneficiaries.index"), dashboard_beneficiaries_path, icon_class: "fa-solid fa-address-book")
-    = sidebar_nav(translate(:"titles.delivery_attempts.index"), dashboard_delivery_attempts_path, icon_class: "fa-solid fa-phone-volume")
-    = sidebar_nav(translate(:"titles.recordings.index"), dashboard_recordings_path, icon_class: "fa-solid fa-microphone-lines")
-    = sidebar_nav(translate(:"titles.users.index"), dashboard_users_path, icon_class: "fa-solid fa-users")
-    %li.nav-group{data: { coreui: :navigation }}
-      %a.nav-link.nav-group-toggle{href: "#", data: {turbo: false}}
-        %i.nav-icon.fa-solid.fa-laptop-code
-        Developers
-      %ul.nav-group-items
-        = sidebar_nav(translate(:"titles.accounts.edit"), edit_dashboard_account_path, icon_class: "fa-solid fa-cog")
-        = sidebar_nav(translate(:"titles.access_tokens.index"), dashboard_access_tokens_path, icon_class: "fa-solid fa-code")
+    #sidebar-menu.collapse.navbar-collapse
+      %ul.navbar-nav.pt-lg-3
+        = sidebar_nav(translate(:"titles.broadcasts.index"), dashboard_broadcasts_path, icon_class: "ti ti-speakerphone")
+        = sidebar_nav(translate(:"titles.beneficiaries.index"), dashboard_beneficiaries_path, icon_class: "ti ti-address-book")
+        = sidebar_nav(translate(:"titles.users.index"), dashboard_users_path, icon_class: "ti ti-user")
+        %li.nav-group
+          %a.nav-link
+            %i.nav-link-icon.ti.ti-device-desktop-code
+            Developers
+          %ul.nav-group-items
+            = sidebar_nav(translate(:"titles.accounts.edit"), edit_dashboard_account_path, icon_class: "ti ti-settings")
+            = sidebar_nav(translate(:"titles.access_tokens.index"), dashboard_access_tokens_path, icon_class: "ti ti-code")

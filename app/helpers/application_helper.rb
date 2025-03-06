@@ -52,8 +52,8 @@ module ApplicationHelper
       sidebar_nav_class += " active" if request.path == path
       link_to(path, class: sidebar_nav_class, **link_options) do
         content = "".html_safe
-        content += content_tag(:i, nil, class: "nav-icon #{icon_class}")
-        content + " " + text
+        content += content_tag(:i, nil, class: "nav-link-icon d-md-none d-lg-inline-block #{icon_class}")
+        content + " " + content_tag(:span, text, class: "nav-link-title")
       end
     end
   end

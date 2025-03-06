@@ -17,12 +17,14 @@
     = stylesheet_link_tag :app, "data-turbo-track": "reload"
     = javascript_include_tag "application", "data-turbo-track": "reload", type: "module"
 
-  = content_tag :body, data: { action: action_name, controller: "sidebar" } do
-    = render("layouts/dashboard/side_navigation")
-    .wrapper
-      = render("layouts/dashboard/header")
-      .body
-        .container-lg
-          = render("shared/alerts")
-          .card
-            = yield
+  %body
+    .page
+      = render("layouts/dashboard/side_navigation")
+
+      .page-wrapper
+        = render("layouts/dashboard/header")
+        .body
+          .container-lg
+            = render("shared/alerts")
+            .card
+              = yield
