@@ -114,9 +114,9 @@ GEM
     after_commit_everywhere (1.6.0)
       activerecord (>= 4.2)
       activesupport
-    appsignal (4.5.2)
+    appsignal (4.5.3)
       logger
-      rack
+      rack (>= 2.0.0)
     ast (2.4.2)
     aws-actionmailer-ses (1.0.0)
       actionmailer (>= 7.1.0)
