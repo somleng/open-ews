@@ -1,4 +1,4 @@
-%aside{class: "navbar navbar-vertical navbar-expand-lg"}
+%aside{class: "navbar navbar-vertical navbar-expand-lg", "data-bs-theme": "dark"}
   .container-fluid
     .navbar-brand.navbar-brand-autodark
       = link_to dashboard_root_path do
@@ -9,10 +9,3 @@
         = sidebar_nav(translate(:"titles.broadcasts.index"), dashboard_broadcasts_path, icon_class: "ti ti-speakerphone")
         = sidebar_nav(translate(:"titles.beneficiaries.index"), dashboard_beneficiaries_path, icon_class: "ti ti-address-book")
         = sidebar_nav(translate(:"titles.users.index"), dashboard_users_path, icon_class: "ti ti-user")
-        %li.nav-group
-          %a.nav-link
-            %i.nav-link-icon.ti.ti-device-desktop-code
-            Developers
-          %ul.nav-group-items
-            = sidebar_nav(translate(:"titles.accounts.edit"), edit_dashboard_account_path, icon_class: "ti ti-settings")
-            = sidebar_nav(translate(:"titles.access_tokens.index"), dashboard_access_tokens_path, icon_class: "ti ti-code")

@@ -1,14 +1,15 @@
-%table#resources.table.table-hover.table-bordered.table-striped
-  %thead
-    %tr{role: "row"}
-      %th #
-      - columns.each do |column|
-        %th
-          .text
-            = resource_class.human_attribute_name(column.to_sym)
+.table-responsive
+  %table#resources.table.table-vcenter.card-table
+    %thead
+      %tr{role: "row"}
+        %th #
+        - columns.each do |column|
+          %th
+            .text
+              = resource_class.human_attribute_name(column.to_sym)
 
-  %tbody
-    - if local_assigns[:partial]
-      = render(partial: partial, collection: resources)
-    - else
-      = render(resources)
+    %tbody
+      - if local_assigns[:partial]
+        = render(partial: partial, collection: resources)
+      - else
+        = render(resources)

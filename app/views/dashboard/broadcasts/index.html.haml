@@ -1,6 +1,4 @@
-= page_title(title: title) do
-  = render("shared/new_resource_page_action", path: new_dashboard_broadcast_path)
+= render("shared/resources_table", resource_class: Broadcast, columns: [:status, :call_flow_logic, :created_at])
 
-.card-body
-  = render("shared/resources_table", resource_class: Broadcast, columns: [:status, :call_flow_logic, :created_at])
+.card-footer
   = render("shared/pagination", resources: resources)
