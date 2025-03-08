@@ -4,6 +4,20 @@
   %td
     = broadcast.channel.humanize
   %td
-    = broadcast.status.humanize
+    - if broadcast.running?
+      .span.badge.bg-blue.text-blue-fg
+        %i.icon.ti.ti-player-play
+        = broadcast.status.humanize
+    - elsif broadcast.stopped?
+      .span.badge.bg-yellow.text-yellow-fg
+        %i.icon.ti.ti-player-pause
+        = broadcast.status.humanize
+    - elsif broadcast.completed?
+      .span.badge.bg-green.text-green-fg
+        %i.icon.ti.ti-check
+        = broadcast.status.humanize
+    - else
+      = broadcast.status.humanize
+
   %td
     = local_time(broadcast.created_at)
