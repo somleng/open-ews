@@ -2,9 +2,8 @@
   %td
     = link_to(broadcast.id, show_location(broadcast))
   %td
-    = broadcast.status.humanize
+    = broadcast.channel.humanize
   %td
-    %code
-      = translate("simple_form.options.defaults.call_flow_logic.#{broadcast.call_flow_logic}")
+    = broadcast.status.humanize
   %td
     = local_time(broadcast.created_at)

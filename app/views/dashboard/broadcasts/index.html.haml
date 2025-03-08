@@ -1,4 +1,13 @@
-= render("shared/resources_table", resource_class: Broadcast, columns: [:status, :call_flow_logic, :created_at])
+.card-header
+  .card-actions
+    %a.btn
+      %i.icon.ti.ti-filter
+      Filter
+    %a.btn
+      %i.icon.ti.ti-file-export
+      Export
+
+= render("shared/resources_table", resource_class: Broadcast, columns: [:channel, :status, :created_at])
 
 .card-footer
   = render("shared/pagination", resources: resources)
