@@ -1,12 +1,8 @@
-.card-footer
-  %nav
-    %ul.pagination.mb-0
-      -# NOTE: the result has only one page
-      - if rel_next_prev_link_tags(resources).blank?
+- if rel_next_prev_link_tags(resources).present?
+  .card-footer
+    %nav
+      %ul.pagination.mb-0
         %li.page-item
-          &nbsp;
-
-      %li.page-item
-        = link_to_prev_page(resources, raw(t 'views.pagination.previous'), rel: 'prev', class: 'page-link')
-      %li.page-item
-        = link_to_next_page(resources, raw(t 'views.pagination.next'), rel: 'next', class: 'page-link')
+          = link_to_prev_page(resources, raw(t 'views.pagination.previous'), rel: 'prev', class: 'page-link')
+        %li.page-item
+          = link_to_next_page(resources, raw(t 'views.pagination.next'), rel: 'next', class: 'page-link')

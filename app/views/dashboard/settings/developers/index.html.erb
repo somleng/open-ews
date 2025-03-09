@@ -1,3 +1,51 @@
-<%= render "dashboard/settings/frame" do %>
-  Developers section
-<% end %>
+<div class="card">
+  <div class="row g-0">
+    <div class="col-12 col-md-2 border-end">
+      <div class="card-body">
+        <div class="list-group list-group-transparent">
+          <%= link_to dashboard_settings_root_path, class: "list-group-item list-group-item-action d-flex align-items-center #{"active" if controller_name == "account"}" do %>
+            <span class="nav-link-icon">
+              <i class="icon ti ti-settings"></i>
+            </span>
+            <span class="nav-link-title">
+              Account
+            </span>
+          <% end %>
+          <%= link_to dashboard_settings_users_path, class: "list-group-item list-group-item-action d-flex align-items-center #{"active" if controller_name == "users"}" do %>
+            <span class="nav-link-icon">
+              <i class="icon ti ti-users"></i>
+            </span>
+            <span class="nav-link-title">
+              Users
+            </span>
+          <% end %>
+          <%= link_to dashboard_settings_developers_path, class: "list-group-item list-group-item-action d-flex align-items-center #{"active" if controller_name == "developers"}" do %>
+            <span class="nav-link-icon">
+              <i class="icon ti ti-device-desktop-code"></i>
+            </span>
+            <span class="nav-link-title">
+              Developers
+            </span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-10 d-flex flex-column">
+      <div class="card-header">
+        <div class="card-actions">
+          <a class="btn"><i class="icon ti ti-filter"></i>Filter</a>
+        </div>
+      </div>
+
+      <%= render(
+        "shared/resources_table",
+        resource_class: AccessToken,
+        partial: "dashboard/access_tokens/access_token",
+        columns: %i[token created_at],
+        unsortable_columns: %i[token],
+      ) %>
+
+      <%= render("shared/pagination", resources: resources) %>
+    </div>
+  </div>
+</div>
