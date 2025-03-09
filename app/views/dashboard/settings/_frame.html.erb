@@ -1,0 +1,36 @@
+<div class="navbar navbar-expand-lg justify-content-center nav-fill">
+  <ul class="navbar-nav">
+    <li class="nav-item <%= "active" if controller_name == "account" %>">
+      <%= link_to dashboard_settings_root_path, class: "nav-link" do %>
+        <span class="nav-link-icon">
+          <i class="icon ti ti-settings"></i>
+        </span>
+        <span class="nav-link-title">
+          Account
+        </span>
+      <% end %>
+    </li>
+    <li class="nav-item <%= "active" if controller_name == "users" %>">
+      <%= link_to dashboard_settings_users_path, class: "nav-link" do %>
+        <span class="nav-link-icon">
+          <i class="icon ti ti-users"></i>
+        </span>
+        <span class="nav-link-title">
+          Users
+        </span>
+      <% end %>
+    </li>
+    <li class="nav-item <%= "active" if controller_name == "developers" %>">
+      <%= link_to dashboard_settings_developers_path, class: "nav-link" do %>
+        <span class="nav-link-icon">
+          <i class="icon ti ti-device-desktop-code"></i>
+        </span>
+        <span class="nav-link-title">
+          Developers
+        </span>
+      <% end %>
+    </li>
+  </ul>
+</div>
+
+<%= yield %>

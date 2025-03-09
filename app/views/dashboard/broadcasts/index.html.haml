@@ -8,6 +8,4 @@
       Export
 
 = render("shared/resources_table", resource_class: Broadcast, columns: [:channel, :status, :created_at])
-
-.card-footer
-  = render("shared/pagination", resources: resources)
+= render("shared/pagination", resources: resources)

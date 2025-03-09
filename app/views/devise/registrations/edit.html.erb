@@ -1,17 +1,51 @@
-<%= page_title(title: translate(:"titles.user_registrations.edit")) %>
+<div class="row">
+  <div class="col">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Profile</h3>
+      </div>
 
-<div class="card-body">
-  <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :patch, data: { turbo: false } }) do |f| %>
-    <%= f.input :current_password, required: true, input_html: { autocomplete: "current-password" } %>
-    <%= f.input :password, required: true, input_html: { autocomplete: "new-password" } %>
-    <%= f.input :password_confirmation, required: true, input_html: { autocomplete: "new-password" } %>
+      <div class="card-body">
+        <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :patch, data: { turbo: false } }) do |f| %>
+          <%= f.input :email, required: true %>
 
-    <div class="row">
-      <div class="col">
-        <%= f.button :submit, translate(:"titles.user_registrations.update") %>
-        <%= link_to "Cancel", :back, class: "btn btn-secondary" %>
+          <div class="row">
+            <div class="col">
+              <%= f.button :submit, translate(:"titles.user_registrations.update") %>
+            </div>
+          </div>
+        <% end %>
       </div>
     </div>
-  <% end %>
-</div>
+  </div>
 
+  <div class="col">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Change Password</h3>
+      </div>
+
+      <div class="card-body">
+        <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :patch, data: { turbo: false } }) do |f| %>
+          <%= f.input :current_password,
+                  required: true,
+                  input_html: {
+                    autocomplete: "current-password",
+                  } %>
+          <%= f.input :password, required: true, input_html: { autocomplete: "new-password" } %>
+          <%= f.input :password_confirmation,
+                  required: true,
+                  input_html: {
+                    autocomplete: "new-password",
+                  } %>
+
+          <div class="row">
+            <div class="col">
+              <%= f.button :submit, translate(:"titles.user_registrations.update") %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

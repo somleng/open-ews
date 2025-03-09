@@ -82,6 +82,12 @@ en:
       new: Sign In
     users:
       edit: Edit User
-      index: Users
+      index: Settings
       show: User %{id}
       update: Edit User
+    account:
+      show: Settings
+    developers:
+      index: Settings
+    registrations:
+      edit: Edit Profile

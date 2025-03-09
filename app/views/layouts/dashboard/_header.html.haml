@@ -22,9 +22,15 @@
             %div John Doe
             .mt-1.small.text-secondary PIN Laos
         .dropdown-menu.dropdown-menu-end.dropdown-menu-arrow
-          %a.dropdown-item{:href => "./profile.html"} Profile
+          %a.dropdown-item{:href => "/users/edit"}
+            %i.icon.ti.ti-user
+            Profile
           .dropdown-divider
-          %a.dropdown-item{:href => "./settings.html"} Settings
-          %a.dropdown-item{:href => "./sign-in.html"} Logout
+          %a.dropdown-item{:href => "/dashboard/settings"}
+            %i.icon.ti.ti-settings
+            Settings
+          %a.dropdown-item{:href => "./sign-in.html"}
+            %i.icon.ti.ti-logout
+            Logout
 
     #navbar-menu

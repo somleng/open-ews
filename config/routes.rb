@@ -25,6 +25,14 @@ Rails.application.routes.draw do
     resources :access_tokens
     resource :account, only: %i[edit update]
 
+    namespace :settings do
+      root to: "account#show"
+
+      resource :account, only: :show
+      resources :users, only: :index
+      resources :developers, only: :index
+    end
+
     namespace :batch_operation do
       resources :callout_populations, only: %i[edit update]
     end
