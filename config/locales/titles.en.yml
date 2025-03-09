@@ -1,6 +1,8 @@
 ---
 en:
   titles:
+    home:
+      index: Home
     access_tokens:
       edit: Edit API Key
       index: API Keys

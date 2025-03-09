@@ -13,71 +13,8 @@
               %path{:d => "M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"}
               %path{:d => "M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7"}
         .nav-item
-          %a.nav-link.px-0.hide-theme-dark{"aria-label" => "API Docs", "data-bs-original-title" => "API Docs", "data-bs-placement" => "bottom", "data-bs-toggle" => "tooltip", :href => "?theme=dark"}
-            %i.ti.ti-device-desktop-code{style: "font-size: 1.2rem"}
-        .nav-item
           %a.nav-link.px-0.hide-theme-dark{"aria-label" => "Select language", "data-bs-original-title" => "Select language", "data-bs-placement" => "bottom", "data-bs-toggle" => "tooltip", :href => "?theme=dark"}
             %i.ti.ti-language{style: "font-size: 1.2rem"}
-        .nav-item.dropdown.d-none.d-md-flex.me-3
-          %a.nav-link.px-0{"aria-label" => "Show notifications", "data-bs-toggle" => "dropdown", :href => "#", :tabindex => "-1"}
-            / Download SVG icon from http://tabler.io/icons/icon/bell
-            %svg.icon.icon-1{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
-              %path{:d => "M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6"}
-              %path{:d => "M9 17v1a3 3 0 0 0 6 0v-1"}
-            %span.badge.bg-red
-          .dropdown-menu.dropdown-menu-arrow.dropdown-menu-end.dropdown-menu-card
-            .card
-              .card-header
-                %h3.card-title Last updates
-              .list-group.list-group-flush.list-group-hoverable
-                .list-group-item
-                  .row.align-items-center
-                    .col-auto
-                      %span.status-dot.status-dot-animated.bg-red.d-block
-                    .col.text-truncate
-                      %a.text-body.d-block{:href => "#"} Example 1
-                      .d-block.text-secondary.text-truncate.mt-n1 Change deprecated html tags to text decoration classes (#29604)
-                    .col-auto
-                      %a.list-group-item-actions{:href => "#"}
-                        / Download SVG icon from http://tabler.io/icons/icon/star
-                        %svg.icon.text-muted.icon-2{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
-                          %path{:d => "M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"}
-                .list-group-item
-                  .row.align-items-center
-                    .col-auto
-                      %span.status-dot.d-block
-                    .col.text-truncate
-                      %a.text-body.d-block{:href => "#"} Example 2
-                      .d-block.text-secondary.text-truncate.mt-n1 justify-content:between ⇒ justify-content:space-between (#29734)
-                    .col-auto
-                      %a.list-group-item-actions.show{:href => "#"}
-                        / Download SVG icon from http://tabler.io/icons/icon/star
-                        %svg.icon.text-yellow.icon-2{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
-                          %path{:d => "M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"}
-                .list-group-item
-                  .row.align-items-center
-                    .col-auto
-                      %span.status-dot.d-block
-                    .col.text-truncate
-                      %a.text-body.d-block{:href => "#"} Example 3
-                      .d-block.text-secondary.text-truncate.mt-n1 Update change-version.js (#29736)
-                    .col-auto
-                      %a.list-group-item-actions{:href => "#"}
-                        / Download SVG icon from http://tabler.io/icons/icon/star
-                        %svg.icon.text-muted.icon-2{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
-                          %path{:d => "M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"}
-                .list-group-item
-                  .row.align-items-center
-                    .col-auto
-                      %span.status-dot.status-dot-animated.bg-green.d-block
-                    .col.text-truncate
-                      %a.text-body.d-block{:href => "#"} Example 4
-                      .d-block.text-secondary.text-truncate.mt-n1 Regenerate package-lock.json (#29730)
-                    .col-auto
-                      %a.list-group-item-actions{:href => "#"}
-                        / Download SVG icon from http://tabler.io/icons/icon/star
-                        %svg.icon.text-muted.icon-2{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
-                          %path{:d => "M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"}
       .nav-item.dropdown
         %a.nav-link.d-flex.lh-1.p-0.px-2{"aria-label" => "Open user menu", "data-bs-toggle" => "dropdown", :href => "#"}
           %span.avatar.avatar-sm{:style => "background-image: url('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')"}
@@ -85,9 +22,7 @@
             %div John Doe
             .mt-1.small.text-secondary PIN Laos
         .dropdown-menu.dropdown-menu-end.dropdown-menu-arrow
-          %a.dropdown-item{:href => "#"} Status
           %a.dropdown-item{:href => "./profile.html"} Profile
-          %a.dropdown-item{:href => "#"} Feedback
           .dropdown-divider
           %a.dropdown-item{:href => "./settings.html"} Settings
           %a.dropdown-item{:href => "./sign-in.html"} Logout

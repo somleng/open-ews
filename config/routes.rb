@@ -13,15 +13,15 @@ Rails.application.routes.draw do
              controllers: { invitations: "users/invitations" },
              skip: :registrations
 
-  get "dashboard", to: "dashboard/broadcasts#index", as: :user_root
-  root to: "dashboard/broadcasts#index"
+  get "dashboard", to: "dashboard/home#index", as: :user_root
+  root to: "dashboard/home#index"
 
   namespace :admin do
     mount(PgHero::Engine, at: "pghero")
   end
 
   namespace "dashboard" do
-    root to: "broadcasts#index"
+    root to: "home#index"
     resources :access_tokens
     resource :account, only: %i[edit update]
 
