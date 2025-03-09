@@ -1,15 +1,15 @@
--# = page_title(title: title) do
-  -# TODO: Re-enable this once after data migration to native columns
-  -# = render("shared/new_resource_page_action", path: new_dashboard_beneficiary_path)
+= content_for(:page_actions) do
+  = render("shared/new_resource_page_action", path: new_dashboard_beneficiary_path)
 
-.card-header
-  .card-actions
-    %a.btn
-      %i.icon.ti.ti-filter
-      Filter
-    %a.btn
-      %i.icon.ti.ti-file-export
-      Export
+.card
+  .card-header
+    .card-actions
+      %a.btn
+        %i.icon.ti.ti-filter
+        Filter
+      %a.btn
+        %i.icon.ti.ti-file-export
+        Export
 
-= render("shared/resources_table", resource_class: Beneficiary, columns: [:phone_number, :created_at])
-= render("shared/pagination", resources: resources)
+  = render("shared/resources_table", resource_class: Beneficiary, columns: [:phone_number, :created_at])
+  = render("shared/pagination", resources: resources)

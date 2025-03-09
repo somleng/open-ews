@@ -41,7 +41,7 @@ Rails.application.routes.draw do
       resources :batch_operation_events, only: :create
     end
 
-    resources :beneficiaries, only: %i[index show destroy] do
+    resources :beneficiaries do
       resources :alerts, only: :index
       resources :delivery_attempts, only: :index
     end

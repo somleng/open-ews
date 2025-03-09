@@ -12,9 +12,18 @@
             %svg.icon.icon-1{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
               %path{:d => "M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"}
               %path{:d => "M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7"}
-        .nav-item
-          %a.nav-link.px-0.hide-theme-dark{"aria-label" => "Select language", "data-bs-original-title" => "Select language", "data-bs-placement" => "bottom", "data-bs-toggle" => "tooltip", :href => "?theme=dark"}
+        .nav-item.dropdown
+          %a.nav-link.px-0.hide-theme-dark{"aria-label" => "Select language", "data-bs-original-title" => "Select language", "data-bs-toggle" => "dropdown"}
             %i.ti.ti-language{style: "font-size: 1.2rem"}
+          .dropdown-menu.dropdown-menu-end.dropdown-menu-arrow
+            %a.dropdown-item{:href => "#"}
+              .i.icon.ti
+                🇬🇧
+              English
+            %a.dropdown-item{:href => "#"}
+              .i.icon.ti
+                🇰🇭
+              ខែ្មរ
       .nav-item.dropdown
         %a.nav-link.d-flex.lh-1.p-0.px-2{"aria-label" => "Open user menu", "data-bs-toggle" => "dropdown", :href => "#"}
           %span.avatar.avatar-sm{:style => "background-image: url('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')"}

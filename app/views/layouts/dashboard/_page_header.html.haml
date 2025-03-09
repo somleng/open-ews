@@ -4,12 +4,7 @@
       .col
         %h2.page-title= title(resource)
 
-      .col-auto.ms-auto.d-print-none
-        .btn-list
-          %a.btn.btn-primary.btn-5.d-none.d-sm-inline-block{"data-bs-target" => "#modal-report", "data-bs-toggle" => "modal", :href => "#"}
-            / Download SVG icon from http://tabler.io/icons/icon/plus
-            %svg.icon.icon-2{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
-              %path{:d => "M12 5l0 14"}
-              %path{:d => "M5 12l14 0"}
-            New
-
+      - if content_for?(:page_actions)
+        .col-auto.ms-auto.d-print-none
+          .btn-list
+            = yield(:page_actions)

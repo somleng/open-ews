@@ -1,7 +1,7 @@
 !!!
 %html{lang: current_user.locale}
   %head
-    %title= title(resource)
+    %title= "OpenEWS - #{title(resource)}"
     %meta{:content => "width=device-width, initial-scale=1, shrink-to-fit=no", :name => "viewport"}/
 
     = csrf_meta_tags
@@ -30,6 +30,5 @@
 
         .page-body
           .container-xl
-            .card
-              = render("shared/alerts")
-              = yield
+            = render("shared/alerts")
+            = yield
