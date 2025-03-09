@@ -1,6 +1,8 @@
 ---
 en:
   titles:
+    home:
+      index: Home
     access_tokens:
       edit: Edit API Key
       index: API Keys
@@ -28,14 +30,14 @@ en:
     beneficiaries:
       create: New Contact
       edit: Edit Contact
-      index: Contacts
+      index: Beneficiaries
       new: New Contact
       show: Contact %{id}
       update: Edit Contact
     broadcasts:
       create: New Callout
       edit: Edit Callout
-      index: Callouts
+      index: Broadcasts
       new: New Callout
       pause: Pause
       resume: Resume
@@ -80,6 +82,12 @@ en:
       new: Sign In
     users:
       edit: Edit User
-      index: Users
+      index: Settings
       show: User %{id}
       update: Edit User
+    account:
+      show: Settings
+    developers:
+      index: Settings
+    registrations:
+      edit: Edit Profile

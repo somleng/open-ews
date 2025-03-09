@@ -1,0 +1,17 @@
+<%= render "dashboard/settings/frame" do %>
+  <div class="card-header">
+    <div class="card-actions">
+      <a class="btn"><i class="icon ti ti-filter"></i>Filter</a>
+      <a class="btn"><i class="icon ti ti-file-export"></i>Export</a>
+    </div>
+  </div>
+
+  <%= render(
+    "shared/resources_table",
+    resource_class: User,
+    partial: "dashboard/users/user",
+    columns: %i[email invitation_accepted_at last_sign_in_at created_at],
+  ) %>
+
+  <%= render("shared/pagination", resources: resources) %>
+<% end %>

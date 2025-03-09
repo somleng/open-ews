@@ -5,8 +5,4 @@
     %code
       = access_token.token
   %td
-    %code
-      = access_token.permissions_text
-  %td
-    %code
-      = local_time(access_token.created_at)
+    = local_time(access_token.created_at)

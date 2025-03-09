@@ -1,7 +1,4 @@
-@import "coreui/custom";
-@import "@coreui/coreui/scss/coreui";
+@import "@tabler/core/scss/tabler";
+@import "@tabler/icons-webfont/dist/tabler-icons";
 @import "direct_uploads";
-
-.card .callout {
-  border-left: 1px solid rgb(216, 219, 224);
-}
+@import "custom";

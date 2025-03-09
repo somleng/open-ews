@@ -1,0 +1,10 @@
+.page-header.d-print-none
+  .container-xl
+    .row.g-2.align-items-center
+      .col
+        %h2.page-title= title(resource)
+
+      - if content_for?(:page_actions)
+        .col-auto.ms-auto.d-print-none
+          .btn-list
+            = yield(:page_actions)

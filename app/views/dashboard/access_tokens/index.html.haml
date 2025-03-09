@@ -2,5 +2,5 @@
   = render("shared/new_resource_page_action", path: new_dashboard_access_token_path)
 
 .card-body
-  = render("shared/resources_table", resource_class: AccessToken, columns: [:token, :permissions, :created_at], unsortable_columns: [:token, :permissions])
+  = render("shared/resources_table", resource_class: AccessToken, columns: [:token, :created_at], unsortable_columns: [:token, :permissions])
   = render("shared/pagination", resources: resources)

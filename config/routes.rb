@@ -13,17 +13,25 @@ Rails.application.routes.draw do
              controllers: { invitations: "users/invitations" },
              skip: :registrations
 
-  get "dashboard", to: "dashboard/broadcasts#index", as: :user_root
-  root to: "dashboard/broadcasts#index"
+  get "dashboard", to: "dashboard/home#index", as: :user_root
+  root to: "dashboard/home#index"
 
   namespace :admin do
     mount(PgHero::Engine, at: "pghero")
   end
 
   namespace "dashboard" do
-    root to: "broadcasts#index"
+    root to: "home#index"
     resources :access_tokens
     resource :account, only: %i[edit update]
+
+    namespace :settings do
+      root to: "account#show"
+
+      resource :account, only: :show
+      resources :users, only: :index
+      resources :developers, only: :index
+    end
 
     namespace :batch_operation do
       resources :callout_populations, only: %i[edit update]
@@ -33,7 +41,7 @@ Rails.application.routes.draw do
       resources :batch_operation_events, only: :create
     end
 
-    resources :beneficiaries, only: %i[index show destroy] do
+    resources :beneficiaries do
       resources :alerts, only: :index
       resources :delivery_attempts, only: :index
     end

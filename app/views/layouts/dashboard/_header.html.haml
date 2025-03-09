@@ -1,26 +1,45 @@
-%body
-  %header.header.header-sticky.mb-4
-    .container-fluid
-      %button.header-toggler.px-md-0.me-md-3{data: { action: "sidebar#toggle" }, type: "button"}
-        %i.fa-solid.fa-bars
-      = link_to(dashboard_root_path, class: "header-brand d-lg-none header-brand-sm-up-center") do
-        = t(:"titles.app_name")
-      %ul.header-nav.mr-auto
-      %ul.header-nav
-        %li.nav-item.dropdown#language_menu
-          %a.nav-link{"aria-expanded" => "false", "aria-haspopup" => "true", "data-bs-toggle" => "dropdown", href: "#", role: "button"}
-            %i.fa-solid.fa-language.mfe-2
-          .dropdown-menu.dropdown-menu-right.pt-0
-            = button_to("🇬🇧 English", dashboard_locale_path(user: { locale: "en" }), class: "dropdown-item", method: :patch)
-            = button_to("🇰🇭 ខែ្មរ", dashboard_locale_path(user: { locale: "km" }), class: "dropdown-item", method: :patch)
-        %li.nav-item.dropdown
-          %a.nav-link{"aria-expanded" => "false", "aria-haspopup" => "true", "data-bs-toggle" => "dropdown", href: "#", role: "button"}
-            %i.fa-solid.fa-user.mfe-2
-          .dropdown-menu.dropdown-menu-right.pt-0
-            = link_to(edit_user_registration_path, class: "dropdown-item") do
-              %i.fa-solid.fa-user-cog.mfe-2
-              = translate(:"titles.user_registrations.edit")
-            .dropdown-divider
-            = button_to(destroy_user_session_path, class: "dropdown-item", method: :delete, form: { data: { turbo: false } }) do
-              %i.fa-solid.fa-sign-out-alt.mfe-2
-              = translate(:"titles.user_sessions.destroy")
+%header{class: "navbar navbar-expand-md d-none d-lg-flex d-print-none"}
+  .container-xl
+    .navbar-nav.flex-row.order-md-last
+      .d-none.d-md-flex
+        .nav-item
+          %a.nav-link.px-0.hide-theme-dark{"aria-label" => "Enable dark mode", "data-bs-original-title" => "Enable dark mode", "data-bs-placement" => "bottom", "data-bs-toggle" => "tooltip", :href => "?theme=dark"}
+            / Download SVG icon from http://tabler.io/icons/icon/moon
+            %svg.icon.icon-1{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
+              %path{:d => "M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"}
+          %a.nav-link.px-0.hide-theme-light{"aria-label" => "Enable light mode", "data-bs-original-title" => "Enable light mode", "data-bs-placement" => "bottom", "data-bs-toggle" => "tooltip", :href => "?theme=light"}
+            / Download SVG icon from http://tabler.io/icons/icon/sun
+            %svg.icon.icon-1{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
+              %path{:d => "M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"}
+              %path{:d => "M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7"}
+        .nav-item.dropdown
+          %a.nav-link.px-0.hide-theme-dark{"aria-label" => "Select language", "data-bs-original-title" => "Select language", "data-bs-toggle" => "dropdown"}
+            %i.ti.ti-language{style: "font-size: 1.2rem"}
+          .dropdown-menu.dropdown-menu-end.dropdown-menu-arrow
+            %a.dropdown-item{:href => "#"}
+              .i.icon.ti
+                🇬🇧
+              English
+            %a.dropdown-item{:href => "#"}
+              .i.icon.ti
+                🇰🇭
+              ខែ្មរ
+      .nav-item.dropdown
+        %a.nav-link.d-flex.lh-1.p-0.px-2{"aria-label" => "Open user menu", "data-bs-toggle" => "dropdown", :href => "#"}
+          %span.avatar.avatar-sm{:style => "background-image: url('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')"}
+          .d-none.d-xl-block.ps-2
+            %div John Doe
+            .mt-1.small.text-secondary PIN Laos
+        .dropdown-menu.dropdown-menu-end.dropdown-menu-arrow
+          %a.dropdown-item{:href => "/users/edit"}
+            %i.icon.ti.ti-user
+            Profile
+          .dropdown-divider
+          %a.dropdown-item{:href => "/dashboard/settings"}
+            %i.icon.ti.ti-settings
+            Settings
+          %a.dropdown-item{:href => "./sign-in.html"}
+            %i.icon.ti.ti-logout
+            Logout
+
+    #navbar-menu

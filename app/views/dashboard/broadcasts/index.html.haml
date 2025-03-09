@@ -1,6 +1,15 @@
-= page_title(title: title) do
+= content_for(:page_actions) do
   = render("shared/new_resource_page_action", path: new_dashboard_broadcast_path)
 
-.card-body
-  = render("shared/resources_table", resource_class: Broadcast, columns: [:status, :call_flow_logic, :created_at])
+.card
+  .card-header
+    .card-actions
+      %a.btn
+        %i.icon.ti.ti-filter
+        Filter
+      %a.btn
+        %i.icon.ti.ti-file-export
+        Export
+
+  = render("shared/resources_table", resource_class: Broadcast, columns: [:channel, :status, :created_at])
   = render("shared/pagination", resources: resources)

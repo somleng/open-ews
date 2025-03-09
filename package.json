@@ -1,31 +1,31 @@
 {
-  "name": "somleng-simple-cfm",
+  "name": "open-ews",
   "private": true,
-  "dependencies": {
-    "@coreui/coreui": "^4.3.0",
-    "@fortawesome/fontawesome-free": "^6.6.0",
-    "@hotwired/stimulus": "^3.2.2",
-    "@hotwired/turbo-rails": "^8.0.12",
-    "@nathanvda/cocoon": "^1.2.14",
-    "@popperjs/core": "^2.11.8",
-    "@rails/activestorage": "^8.0.0",
-    "autoprefixer": "^10.4.20",
-    "bootstrap": "^5.3.3",
-    "bootstrap-icons": "^1.11.3",
-    "esbuild": "^0.25.0",
-    "moment": "^2.30.1",
-    "nodemon": "^3.1.7",
-    "postcss": "^8.4.49",
-    "postcss-cli": "^11.0.0",
-    "sass": "^1.81.0",
-    "yarn": "^1.22.22"
-  },
   "scripts": {
-    "build": "esbuild app/javascript/*.* --bundle --sourcemap --outdir=app/assets/builds --public-path=/assets",
+    "build": "esbuild app/javascript/*.* --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets",
     "build:css:compile": "sass ./app/assets/stylesheets/application.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules",
     "build:css:prefix": "postcss ./app/assets/builds/application.css --use=autoprefixer --output=./app/assets/builds/application.css",
     "build:css": "yarn build:css:compile && yarn build:css:prefix",
     "watch:css": "nodemon --watch ./app/assets/stylesheets/ --ext scss --exec \"yarn build:css\""
+  },
+  "dependencies": {
+    "@hotwired/stimulus": "^3.2.2",
+    "@hotwired/turbo-rails": "^8.0.13",
+    "@popperjs/core": "^2.11.8",
+    "@rails/activestorage": "^8.0.100",
+    "@tabler/core": "^1.1.1",
+    "@tabler/icons-webfont": "^3.31.0",
+    "autoprefixer": "^10.4.20",
+    "autosize": "^6.0.1",
+    "imask": "^7.6.1",
+    "moment": "^2.30.1",
+    "nodemon": "^3.1.9",
+    "postcss": "^8.5.3",
+    "postcss-cli": "^11.0.0",
+    "sass": "^1.85.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
   },
   "browserslist": [
     "defaults"
