@@ -22,14 +22,14 @@ module V1
       next unless key?
       next if resource.not_yet_started?
 
-      key.failure("does not allow to update after broadcast started")
+      key.failure("cannot be updated after broadcast started")
     end
 
     attribute_rule(:audio_url) do
       next unless key?
       next if resource.not_yet_started?
 
-      key.failure("does not allow to update after broadcast started")
+      key.failure("cannot be updated after broadcast started")
     end
 
     attribute_rule(:status) do
@@ -40,7 +40,7 @@ module V1
       next if value == "stopped" && resource.may_stop?
       next if value == "completed" && resource.may_complete?
 
-      key.failure("does not allow to transition from #{resource.status} to #{value}")
+      key.failure("cannot transition from #{resource.status} to #{value}")
     end
 
     def output
