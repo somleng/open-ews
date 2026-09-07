@@ -25,7 +25,14 @@ RSpec.resource "Broadcasts"  do
 
     example "Filter broadcasts" do
       account = create(:account)
-      broadcast = create(:broadcast, :running, :text_message, account:, name: "Test Broadcast")
+      matching_broadcast = create(
+        :broadcast,
+        :running,
+        :text_message,
+        account:,
+        name: "Test Broadcast"
+      )
+
       create(:broadcast, :running, account:, started_at: 6.hours.ago, created_at: 6.hours.ago)
       create(:broadcast, :stopped, account:)
 
@@ -42,7 +49,66 @@ RSpec.resource "Broadcasts"  do
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_collection_schema("broadcast")
       expect(json_response.fetch("data").pluck("id")).to contain_exactly(
-        broadcast.id.to_s
+        matching_broadcast.id.to_s
+      )
+    end
+
+    example "Filter broadcasts by coverage area" do
+      explanation <<~HEREDOC
+        Use the `any` operator to return broadcasts where any target area includes the specified administrative division.
+        The filter matches broadcasts whose target area coverage contains the provided geocode.
+      HEREDOC
+
+      account = create(:account)
+      matching_broadcast = create(:broadcast, account:)
+      create(:broadcast, account:)
+      create(
+        :broadcast_target_area_coverage,
+        broadcast: matching_broadcast,
+        administrative_level: 3,
+        geocode: "010201"
+      )
+
+      set_authorization_header_for(account)
+      do_request(
+        filter: {
+          target_areas: { geocode: { administrative_division_level_3_code: { any: "010201" } } }
+        }
+      )
+
+      expect(response_status).to eq(200)
+      expect(response_body).to match_jsonapi_resource_collection_schema("broadcast")
+      expect(json_response.fetch("data").pluck("id")).to contain_exactly(
+        matching_broadcast.id.to_s
+      )
+    end
+
+    example "Filter broadcasts by coverage area" do
+      explanation <<~HEREDOC
+        Use the `all` operator to return broadcasts where all target areas are contained within the specified administrative division.
+        The filter matches broadcasts whose target areas are entirely within the provided geocode.
+      HEREDOC
+
+      account = create(:account)
+      matching_broadcast = create(:broadcast, account:)
+      create(:broadcast, account:)
+      create(
+        :broadcast_target_area,
+        broadcast: matching_broadcast,
+        iso_region_code: "KH-1"
+      )
+
+      set_authorization_header_for(account)
+      do_request(
+        filter: {
+          target_areas: { geocode: { iso_region_code: { all: "KH-1" } } }
+        }
+      )
+
+      expect(response_status).to eq(200)
+      expect(response_body).to match_jsonapi_resource_collection_schema("broadcast")
+      expect(json_response.fetch("data").pluck("id")).to contain_exactly(
+        matching_broadcast.id.to_s
       )
     end
   end
