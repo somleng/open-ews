@@ -433,7 +433,7 @@ module V1
       )
 
       expect(schema.output).to include(
-        target_areas: {
+        target_area_data: {
           geocode: [
             { iso_region_code: "KH-1" },
             {

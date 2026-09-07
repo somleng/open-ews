@@ -26,7 +26,7 @@ RSpec.describe StartBroadcast do
       beneficiary_filter: {
         gender: { eq: "F" }
       },
-      target_areas: {
+      target_area_data: {
         geocode: [
           { iso_region_code: "KH-12" }
         ]
@@ -107,7 +107,7 @@ RSpec.describe StartBroadcast do
       :with_attached_audio,
       status: :queued,
       account:,
-      target_areas: {
+      target_area_data: {
         geocode: {
           iso_region_code: [ "KH-12" ]
         }

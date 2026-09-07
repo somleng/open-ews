@@ -34,6 +34,6 @@ class BroadcastPreview
   end
 
   def target_area_filter
-    @target_area_filter || TargetAreaFilter.new(input_params: broadcast.target_areas)
+    @target_area_filter || TargetAreaFilter.new(input_params: broadcast.target_area_data)
   end
 end

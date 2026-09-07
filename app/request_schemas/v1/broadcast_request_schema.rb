@@ -92,9 +92,10 @@ module V1
 
     def output
       output_data = super
-      result = output_data.slice(:message, :audio_url, :beneficiary_filter, :metadata, :target_areas)
+      result = output_data.slice(:message, :audio_url, :beneficiary_filter, :metadata)
 
       result[:channel] = context[:channels].first
+      result[:target_area_data] = output_data[:target_areas] if output_data.key?(:target_areas)
       result[:beneficiary_group_ids] = Array(output_data[:beneficiary_groups])
       result[:desired_status] = broadcast_state_machine.transition_to!(output_data.fetch(:status)).name if output_data.key?(:status)
       result[:created_via] = :api

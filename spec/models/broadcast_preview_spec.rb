@@ -20,7 +20,7 @@ RSpec.describe BroadcastPreview do
         gender: { eq: "F" }
       },
       beneficiary_groups: [ beneficiary_group ],
-      target_areas: {
+      target_area_data: {
         geocode: [
           { iso_region_code: "KH-12" },
           {
@@ -45,7 +45,7 @@ RSpec.describe BroadcastPreview do
       status: :queued,
       account: beneficiary.account,
       beneficiary_filter: {},
-      target_areas: {}
+      target_area_data: {}
     )
 
     preview = BroadcastPreview.new(broadcast)
@@ -61,7 +61,7 @@ RSpec.describe BroadcastPreview do
       status: :queued,
       account: beneficiary.account,
       beneficiary_filter: {},
-      target_areas: {
+      target_area_data: {
         geocode: [
           { iso_region_code: "KH-1" }
         ]
