@@ -53,9 +53,9 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    example "Filter broadcasts by coverage area" do
+    example "Filter broadcasts by included coverage area" do
       explanation <<~HEREDOC
-        Use the `any` operator to return broadcasts where any target area includes the specified administrative division.
+        Use the `includes` operator to return broadcasts where any target area includes the specified administrative division.
         The filter matches broadcasts whose target area coverage contains the provided geocode.
       HEREDOC
 
@@ -72,7 +72,7 @@ RSpec.resource "Broadcasts"  do
       set_authorization_header_for(account)
       do_request(
         filter: {
-          target_areas: { geocode: { administrative_division_level_3_code: { any: "010201" } } }
+          target_areas: { geocode: { administrative_division_level_3_code: { includes: "010201" } } }
         }
       )
 
@@ -83,7 +83,7 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    example "Filter broadcasts by coverage area" do
+    example "Filter broadcasts by exclusive coverage area" do
       explanation <<~HEREDOC
         Use the `all` operator to return broadcasts where all target areas are contained within the specified administrative division.
         The filter matches broadcasts whose target areas are entirely within the provided geocode.
