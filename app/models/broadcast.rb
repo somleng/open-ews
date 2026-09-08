@@ -22,7 +22,6 @@ class Broadcast < ApplicationRecord
   belongs_to :updated_by, class_name: "User", optional: true
 
   has_many :target_areas, class_name: "BroadcastTargetArea"
-  has_many :target_area_coverages, class_name: "BroadcastTargetAreaCoverage"
   has_many :notifications
   has_many :beneficiaries, through: :notifications
   has_many :delivery_attempts
@@ -48,14 +47,14 @@ class Broadcast < ApplicationRecord
 
   before_create :set_default_status
 
-  def self.all_target_areas_within(...)
+  def self.target_areas_equal(...)
     joins(:target_areas)
-    .where
-    .not(id: BroadcastTargetArea.outside(...).select(:broadcast_id)).distinct
+    .merge(BroadcastTargetArea.where(...))
+    .where.not(id: BroadcastTargetArea.outside(...).select(:broadcast_id)).distinct
   end
 
-  def self.any_target_areas_include(...)
-    joins(:target_area_coverages).merge(BroadcastTargetAreaCoverage.where(...))
+  def self.target_areas_contains(...)
+    joins(:target_areas).merge(BroadcastTargetArea.where(...))
   end
 
   def mark_as_errored!(error_code)

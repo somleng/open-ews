@@ -1,12 +1,11 @@
 class FilterField
-  attr_reader :field_definition, :operator, :value
+  attr_reader :association, :column, :operator, :value
 
-  delegate :association, :column, to: :field_definition
-
-  def initialize(field_definition:, operator:, value:)
-    @field_definition = field_definition
-    @operator = operator.to_sym
-    @value = value
+  def initialize(**options)
+    @operator = options.fetch(:operator).to_sym
+    @value = options.fetch(:value)
+    @column = options.fetch(:column)
+    @association = options[:association]
   end
 
   def to_query

@@ -1,7 +1,7 @@
 class BroadcastTargetArea < ApplicationRecord
   belongs_to :broadcast
 
-  def self.outside(administrative_division)
-    where.not(administrative_division)
+  def self.outside(administrative_level:, geocode:)
+    where(administrative_level:).where.not(geocode:)
   end
 end

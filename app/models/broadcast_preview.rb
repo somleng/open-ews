@@ -7,14 +7,14 @@ class BroadcastPreview
 
   def filtered_beneficiaries
     beneficiary_filter_group = beneficiary_filter.output
-    target_area_filter_group = target_area_filter.output
+    beneficiary_address_filter_group = build_beneficiary_address_filter_group
 
-    return Beneficiary.none if beneficiary_filter_group.blank? && target_area_filter_group.blank?
+    return Beneficiary.none if beneficiary_filter_group.blank? && beneficiary_address_filter_group.blank?
 
     FilterScopeQuery.new(
       scope: broadcast.account.beneficiaries.active.where.not(id: group_beneficiaries.select(:id)),
       filter_group: FilterGroup.new(
-        conditions: [ beneficiary_filter_group, target_area_filter_group ]
+        conditions: [ beneficiary_filter_group, beneficiary_address_filter_group ]
       )
     ).apply
   end
@@ -33,7 +33,19 @@ class BroadcastPreview
     @beneficiary_filter ||= BeneficiaryFilter.new(input_params: broadcast.beneficiary_filter)
   end
 
-  def target_area_filter
-    @target_area_filter || TargetAreaFilter.new(input_params: broadcast.target_area_data)
+  def build_beneficiary_address_filter_group
+    area_groups = Array(broadcast.target_area_data["geocode"]).map do |area|
+      fields = area.map do |field_name, value|
+        FilterField.new(
+          operator: :eq,
+          value:,
+          column: BeneficiaryAddress.arel_table[field_name],
+          association: :addresses
+        )
+      end
+      FilterGroup.new(conditions: fields, conjunction: :and)
+    end
+
+    FilterGroup.new(conditions: area_groups, conjunction: :or)
   end
 end

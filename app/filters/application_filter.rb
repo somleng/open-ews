@@ -40,7 +40,7 @@ class ApplicationFilter < ApplicationRequestSchema
       operator, value = condition.first
       field_definition = field_collection.find_by!(path: filter)
 
-      FilterField.new(field_definition:, operator:, value:)
+      FilterField.new(operator:, value:, column: field_definition.column, association: field_definition.association)
     end
 
     FilterGroup.new(conditions: group)

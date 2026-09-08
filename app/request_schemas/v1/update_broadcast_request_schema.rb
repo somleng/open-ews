@@ -12,7 +12,7 @@ module V1
           optional(:audio_url).filled(:string)
           optional(:message).filled(:string)
           optional(:beneficiary_filter).filled(:hash).schema(BeneficiaryFilter.schema)
-          optional(:target_areas).value(:hash).schema(TargetAreaFilter.schema)
+          optional(:target_areas).value(:hash).schema(TargetAreaSchema.schema)
           optional(:status).filled(included_in?: VALID_STATES)
           optional(:metadata).value(:hash)
         end
@@ -31,7 +31,7 @@ module V1
     end
 
     attribute_rule(:beneficiary_filter).validate(contract: BeneficiaryFilter)
-    attribute_rule(:target_areas).validate(contract: TargetAreaFilter)
+    attribute_rule(:target_areas).validate(contract: TargetAreaSchema)
     attribute_rule(:audio_url).validate(:url_format)
 
     attribute_rule(:beneficiary_filter) do

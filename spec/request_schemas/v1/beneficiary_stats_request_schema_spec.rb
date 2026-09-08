@@ -31,12 +31,12 @@ module V1
         filter_group: have_attributes(
           conditions: contain_exactly(
             have_attributes(
-              field_definition: FieldDefinitions::BeneficiaryFields.find_by!(name: :gender),
+              column: Beneficiary.arel_table[:gender],
               operator: :eq,
               value: "M"
             ),
             have_attributes(
-              field_definition: FieldDefinitions::BeneficiaryFields.find_by!(name: :iso_country_code),
+              column: Beneficiary.arel_table[:iso_country_code],
               operator: :eq,
               value: "KH"
             )

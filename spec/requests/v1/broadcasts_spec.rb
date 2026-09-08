@@ -42,7 +42,7 @@ RSpec.resource "Broadcasts"  do
           status: { eq: "running" },
           started_at: { gt: 5.hours.ago.utc.iso8601 },
           name: { starts_with: "Test" },
-          channels: { in: [ "text_message" ] }
+          channels: { contains: "text_message" }
         }
       )
 
@@ -55,15 +55,27 @@ RSpec.resource "Broadcasts"  do
 
     example "Filter broadcasts by included coverage area" do
       explanation <<~HEREDOC
-        Use the `includes` operator to return broadcasts where any target area includes the specified administrative division.
-        The filter matches broadcasts whose target area coverage contains the provided geocode.
+        Use the `contains` operator to return broadcasts where any target area contains any of specified administrative divisions.
+        The filter matches broadcasts whose target area coverage contains the provided geocodes.
       HEREDOC
 
       account = create(:account)
       matching_broadcast = create(:broadcast, account:)
       create(:broadcast, account:)
       create(
-        :broadcast_target_area_coverage,
+        :broadcast_target_area,
+        broadcast: matching_broadcast,
+        administrative_level: 1,
+        geocode: "KH-1"
+      )
+      create(
+        :broadcast_target_area,
+        broadcast: matching_broadcast,
+        administrative_level: 2,
+        geocode: "0102"
+      )
+      create(
+        :broadcast_target_area,
         broadcast: matching_broadcast,
         administrative_level: 3,
         geocode: "010201"
@@ -72,7 +84,7 @@ RSpec.resource "Broadcasts"  do
       set_authorization_header_for(account)
       do_request(
         filter: {
-          target_areas: { geocode: { administrative_division_level_3_code: { includes: "010201" } } }
+          target_areas: { geocode: { administrative_division_level_3_code: { contains: [ "010201",  "010202" ] } } }
         }
       )
 
@@ -85,8 +97,8 @@ RSpec.resource "Broadcasts"  do
 
     example "Filter broadcasts by exclusive coverage area" do
       explanation <<~HEREDOC
-        Use the `all` operator to return broadcasts where all target areas are contained within the specified administrative division.
-        The filter matches broadcasts whose target areas are entirely within the provided geocode.
+        Use the `eq` operator to return broadcasts where all target areas match exactly the specified administrative divisions.
+        The filter matches broadcasts whose target areas are entirely within the provided geocodes.
       HEREDOC
 
       account = create(:account)
@@ -101,7 +113,7 @@ RSpec.resource "Broadcasts"  do
       set_authorization_header_for(account)
       do_request(
         filter: {
-          target_areas: { geocode: { iso_region_code: { all: "KH-1" } } }
+          target_areas: { geocode: { iso_region_code: { eq: [ "KH-1" ] } } }
         }
       )
 
@@ -187,7 +199,7 @@ RSpec.resource "Broadcasts"  do
 
     FieldDefinitions::TargetAreaFields.where(category: :geocode).each do |field|
       with_options scope: [ :data, :attributes, :target_areas ] do
-        parameter(:"geocode.*.#{field.path}", field.description, required: false, method: :_disabled)
+        parameter(:"geocode.*.#{field.name}", field.description, required: false, method: :_disabled)
       end
     end
 

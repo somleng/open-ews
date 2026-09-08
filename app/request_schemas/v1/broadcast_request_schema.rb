@@ -13,7 +13,7 @@ module V1
           optional(:audio_url).maybe(:str?)
           optional(:message).maybe(:str?)
           optional(:beneficiary_filter).filled(:hash).schema(BeneficiaryFilter.schema)
-          optional(:target_areas).filled(:hash).schema(TargetAreaFilter.schema)
+          optional(:target_areas).filled(:hash).schema(TargetAreaSchema.schema)
           optional(:status).filled(:str?, eql?: "running")
           optional(:metadata).value(:hash)
         end
@@ -54,7 +54,7 @@ module V1
     end
 
     attribute_rule(:beneficiary_filter).validate(contract: BeneficiaryFilter)
-    attribute_rule(:target_areas).validate(contract: TargetAreaFilter)
+    attribute_rule(:target_areas).validate(contract: TargetAreaSchema)
 
     attribute_rule(:beneficiary_filter) do |attributes:, relationships:, context:, **|
       next if context[:channel_capabilities].blank?

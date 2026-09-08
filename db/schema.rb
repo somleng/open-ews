@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_07_130504) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_07_124027) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -127,26 +127,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_07_130504) do
     t.index ["broadcast_id", "beneficiary_group_id"], name: "idx_on_broadcast_id_beneficiary_group_id_2859ae2689", unique: true
   end
 
-  create_table "broadcast_target_area_coverages", force: :cascade do |t|
+  create_table "broadcast_target_areas", force: :cascade do |t|
     t.integer "administrative_level", null: false
     t.bigint "broadcast_id", null: false
     t.datetime "created_at", null: false
     t.string "geocode", null: false
     t.datetime "updated_at", null: false
-    t.index ["administrative_level", "geocode"], name: "idx_on_administrative_level_geocode_0a4d83b18c"
-    t.index ["broadcast_id", "administrative_level", "geocode"], name: "idx_on_broadcast_id_administrative_level_geocode_2da6c4c36a", unique: true
-  end
-
-  create_table "broadcast_target_areas", force: :cascade do |t|
-    t.string "administrative_division_level_2_code"
-    t.string "administrative_division_level_3_code"
-    t.string "administrative_division_level_4_code"
-    t.string "administrative_division_level_5_code"
-    t.bigint "broadcast_id", null: false
-    t.datetime "created_at", null: false
-    t.string "iso_region_code", null: false
-    t.datetime "updated_at", null: false
-    t.index ["broadcast_id", "iso_region_code", "administrative_division_level_2_code", "administrative_division_level_3_code", "administrative_division_level_4_code", "administrative_division_level_5_code"], name: "idx_on_broadcast_id_iso_region_code_administrative__d140a2572c", unique: true
+    t.index ["administrative_level", "geocode"], name: "idx_on_administrative_level_geocode_adfbae4a73"
+    t.index ["broadcast_id", "administrative_level", "geocode"], name: "idx_on_broadcast_id_administrative_level_geocode_eeb7fef893", unique: true
   end
 
   create_table "broadcasts", force: :cascade do |t|
@@ -392,7 +380,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_07_130504) do
   add_foreign_key "beneficiary_groups", "accounts", on_delete: :cascade
   add_foreign_key "broadcast_beneficiary_groups", "beneficiary_groups", on_delete: :cascade
   add_foreign_key "broadcast_beneficiary_groups", "broadcasts", on_delete: :cascade
-  add_foreign_key "broadcast_target_area_coverages", "broadcasts", on_delete: :cascade
   add_foreign_key "broadcast_target_areas", "broadcasts", on_delete: :cascade
   add_foreign_key "broadcasts", "accounts"
   add_foreign_key "broadcasts", "users", column: "created_by_id", on_delete: :nullify

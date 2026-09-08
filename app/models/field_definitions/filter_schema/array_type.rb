@@ -1,12 +1,12 @@
 module FieldDefinitions
   module FilterSchema
     class ArrayType < Base
-      def self.define(type: :string, **options)
+      def self.define(type: Dry.Types()::String, **options)
         schema = Dry::Schema.Params do
           schema_options = {}
           schema_options[:included_in?] = Array(options[:included_in]) if options.key?(:included_in)
-          optional(:in).array(type, **schema_options)
-          optional(:not_in).array(type, **schema_options)
+          optional(:eq).filled(type | Types::Array.of(type), **schema_options)
+          optional(:contains).filled(type | Types::Array.of(type), **schema_options)
         end
 
         new(

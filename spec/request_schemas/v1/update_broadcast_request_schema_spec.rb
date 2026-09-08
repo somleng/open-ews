@@ -281,8 +281,26 @@ module V1
             data: {
               attributes: {
                 target_areas: {
+                  geocode: [ {} ]
+                }
+              }
+            }
+          },
+          options: {
+            account:,
+            resource: broadcast
+          }
+        )
+      ).not_to have_valid_field(:data, :attributes, :target_areas, :geocode, 0, :iso_region_code)
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              attributes: {
+                target_areas: {
                   geocode: [
-                    { administrative_division_level_2_code: "0102" }
+                    { iso_region_code: "KH-1", administrative_division_level_3_code: "010201" }
                   ]
                 }
               }
@@ -293,7 +311,10 @@ module V1
             resource: broadcast
           }
         )
-      ).not_to have_valid_field(:data, :attributes, :target_areas, :geocode, 0)
+      ).not_to have_valid_field(
+        :data, :attributes, :target_areas, :geocode, 0,
+        error_message: "must include contiguous administrative levels starting at level 1"
+      )
 
       expect(
         validate_schema(
