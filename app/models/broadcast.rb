@@ -53,7 +53,7 @@ class Broadcast < ApplicationRecord
     .where.not(id: BroadcastTargetArea.outside(...).select(:broadcast_id)).distinct
   end
 
-  def self.target_areas_contains(...)
+  def self.target_areas_contain(...)
     joins(:target_areas).merge(BroadcastTargetArea.where(...))
   end
 

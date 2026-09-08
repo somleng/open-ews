@@ -45,7 +45,7 @@ RSpec.describe Broadcast do
     end
   end
 
-  describe ".target_areas_contains" do
+  describe ".target_areas_contain" do
     it "returns broadcasts whose target areas contain the specified administrative divisions" do
       matching_broadcast = create(:broadcast)
       non_matching_broadcast = create(:broadcast)
@@ -75,7 +75,7 @@ RSpec.describe Broadcast do
         geocode: "KH-2"
       )
 
-      result = Broadcast.target_areas_contains(administrative_level: 3, geocode: [ "010201", "010202" ])
+      result = Broadcast.target_areas_contain(administrative_level: 3, geocode: [ "010201", "010202" ])
 
       expect(result).to contain_exactly(matching_broadcast)
     end

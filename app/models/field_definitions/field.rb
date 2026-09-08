@@ -18,13 +18,14 @@ module FieldDefinitions
 
     MULTIPLE_SELECTION_OPERATORS = %w[in not_in]
 
-    attr_reader :name, :prefix, :path, :column, :schema, :association, :description, :example, :attributes
+    attr_reader :name, :prefix, :path, :column, :query, :schema, :association, :description, :example, :attributes
 
     def initialize(attributes)
       @name = attributes.fetch(:name)
       @prefix = ActiveSupport::StringInquirer.new(attributes[:prefix].to_s) if attributes.key?(:prefix)
       @path = attributes[:path] = [ prefix, name ].compact.join(".")
       @schema = attributes.fetch(:schema)
+      @query = attributes[:query]
       @column = attributes[:column]
       @association = attributes[:association]
       @description = attributes[:description]

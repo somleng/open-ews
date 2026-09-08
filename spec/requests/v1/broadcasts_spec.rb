@@ -53,15 +53,15 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    example "Filter broadcasts by included coverage area" do
+    example "Filter running broadcasts by included coverage area" do
       explanation <<~HEREDOC
         Use the `contains` operator to return broadcasts where any target area contains any of specified administrative divisions.
         The filter matches broadcasts whose target area coverage contains the provided geocodes.
       HEREDOC
 
       account = create(:account)
-      matching_broadcast = create(:broadcast, account:)
-      create(:broadcast, account:)
+      matching_broadcast = create(:broadcast, :running, account:)
+      create(:broadcast, :running, account:)
       create(
         :broadcast_target_area,
         broadcast: matching_broadcast,
@@ -84,7 +84,12 @@ RSpec.resource "Broadcasts"  do
       set_authorization_header_for(account)
       do_request(
         filter: {
-          target_areas: { geocode: { administrative_division_level_3_code: { contains: [ "010201",  "010202" ] } } }
+          status: {
+            eq: :running
+          },
+          "target_areas.geocode.administrative_division_level_3_code": {
+            contains: [ "010201",  "010202" ]
+          }
         }
       )
 
@@ -95,25 +100,49 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    example "Filter broadcasts by exclusive coverage area" do
+    example "Filter running broadcasts by exclusive coverage area" do
       explanation <<~HEREDOC
         Use the `eq` operator to return broadcasts where all target areas match exactly the specified administrative divisions.
         The filter matches broadcasts whose target areas are entirely within the provided geocodes.
       HEREDOC
 
       account = create(:account)
-      matching_broadcast = create(:broadcast, account:)
-      create(:broadcast, account:)
+      matching_broadcast = create(:broadcast, :running, account:)
+      non_matching_broadcast = create(:broadcast, :running, account:)
       create(
         :broadcast_target_area,
         broadcast: matching_broadcast,
-        iso_region_code: "KH-1"
+        administrative_level: 1,
+        geocode: "KH-1"
+      )
+      create(
+        :broadcast_target_area,
+        broadcast: matching_broadcast,
+        administrative_level: 2,
+        geocode: "0102"
+      )
+      create(
+        :broadcast_target_area,
+        broadcast: matching_broadcast,
+        administrative_level: 3,
+        geocode: "010201"
+      )
+      create(
+        :broadcast_target_area,
+        broadcast: non_matching_broadcast,
+        administrative_level: 1,
+        geocode: "KH-2"
       )
 
       set_authorization_header_for(account)
       do_request(
         filter: {
-          target_areas: { geocode: { iso_region_code: { eq: [ "KH-1" ] } } }
+          status: {
+            eq: :running
+          },
+          "target_areas.geocode.iso_region_code": {
+            eq: [ "KH-1" ]
+          }
         }
       )
 
