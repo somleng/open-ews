@@ -10,7 +10,6 @@ module FieldDefinitions
       *TargetAreaFields.where(category: :geocode).map do |field|
         field.clone(
           prefix: [ :target_areas, :geocode, field.prefix ].compact.join("."),
-          association: :target_areas,
           query: ->(operator:, value:) do
             query_params = {
               administrative_level: field.attributes.fetch(:administrative_level),
