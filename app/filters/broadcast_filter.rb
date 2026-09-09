@@ -1,3 +1,3 @@
 class BroadcastFilter < ApplicationFilter
-  has_fields FieldDefinitions::BroadcastFields.concat(FieldDefinitions::TargetAreaFields)
+  has_fields FieldDefinitions::BroadcastFields
 end

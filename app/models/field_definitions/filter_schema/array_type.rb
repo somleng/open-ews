@@ -5,8 +5,9 @@ module FieldDefinitions
         schema = Dry::Schema.Params do
           schema_options = {}
           schema_options[:included_in?] = Array(options[:included_in]) if options.key?(:included_in)
-          optional(:eq).filled(type | Types::Array.of(type), **schema_options)
-          optional(:contains).filled(type | Types::Array.of(type), **schema_options)
+          options.fetch(:operators, [ :eq, :contains ]).each do |operator|
+            optional(operator).filled(type | Types::Array.of(type), **schema_options)
+          end
         end
 
         new(
