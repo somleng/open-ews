@@ -40,6 +40,11 @@ module V1
       next key.failure("is not allowed") if resource.channel_capabilities.none?(&:deliverable?)
     end
 
+    attribute_rule(:target_areas) do
+      next unless key?
+      next key.failure("cannot be updated after broadcast started") unless broadcast_state_machine.updatable?
+    end
+
     attribute_rule(:audio_url) do
       next unless key?
       next key.failure("cannot be updated after broadcast started") unless broadcast_state_machine.updatable?

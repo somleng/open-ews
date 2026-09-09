@@ -274,6 +274,7 @@ module V1
     it "validates the target areas" do
       account = create(:account)
       broadcast = create(:broadcast, :pending, account:)
+      running_broadcast = create(:broadcast, :running, account:)
 
       expect(
         validate_schema(
@@ -315,6 +316,28 @@ module V1
         :data, :attributes, :target_areas, :geocode, 0,
         error_message: "must include contiguous administrative levels starting at level 1"
       )
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              attributes: {
+                target_areas: {
+                  geocode: [
+                    {
+                      iso_region_code: "KH-1"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          options: {
+            account:,
+            resource: running_broadcast
+          }
+        )
+      ).not_to have_valid_field(:data, :attributes, :target_areas)
 
       expect(
         validate_schema(
