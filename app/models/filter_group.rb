@@ -2,6 +2,11 @@ class FilterGroup
   attr_reader :conditions, :conjunction
 
   delegate :blank?, :empty?, to: :conditions
+  delegate :type, to: :class
+
+  def self.type
+    "group".inquiry
+  end
 
   def initialize(conditions: [], conjunction: :and)
     @conditions = conditions

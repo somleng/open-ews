@@ -1,15 +1,45 @@
 require "rails_helper"
 
 RSpec.describe UpdateBroadcast do
-  it "updates the broadcast" do
+  it "updates a broadcast" do
+    broadcast = create(:broadcast, :pending)
+    create(:broadcast_target_area, broadcast:, administrative_level: 1, geocode: "KH-2")
+
+    UpdateBroadcast.call(
+      broadcast,
+      target_area_records: [
+        { administrative_level: 1, geocode: "KH-1" },
+        { administrative_level: 2, geocode: "0201" }
+      ]
+    )
+
+    expect(broadcast.reload).to have_attributes(
+      target_areas: contain_exactly(
+        have_attributes(
+          administrative_level: 1,
+          geocode: "KH-1"
+        ),
+        have_attributes(
+          administrative_level: 2,
+          geocode: "0201"
+        )
+      )
+    )
+  end
+
+  it "updates the broadcast state" do
     broadcast = create(:broadcast, :running)
 
     UpdateBroadcast.call(broadcast, desired_status: :completed)
 
-    expect(broadcast).to have_attributes(status: "completed")
-    expect(broadcast.account.events).to include(
-      have_attributes(
-        type: "broadcast.updated",
+    expect(broadcast).to have_attributes(
+      status: "completed",
+      account: have_attributes(
+        events: contain_exactly(
+          have_attributes(
+            type: "broadcast.updated",
+          )
+        )
       )
     )
   end

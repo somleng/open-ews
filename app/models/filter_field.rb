@@ -1,9 +1,17 @@
 class FilterField
-  attr_reader :association, :column, :operator, :value, :query
+  attr_reader :operator, :value
+  attr_accessor :name, :column, :query, :association
+
+  delegate :type, to: :class
+
+  def self.type
+    "field".inquiry
+  end
 
   def initialize(**options)
     @operator = options.fetch(:operator).to_sym
     @value = options.fetch(:value)
+    @name = options[:name]
     @column = options[:column]
     @query = options[:query]
     @association = options[:association]

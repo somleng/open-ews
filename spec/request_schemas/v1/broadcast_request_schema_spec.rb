@@ -380,6 +380,7 @@ module V1
     end
 
     it "handles postprocessing" do
+      account = create(:account, iso_country_code: "KH")
       schema = validate_schema(
         input_params: {
           data: {
@@ -395,6 +396,7 @@ module V1
         channel: "text_message",
         message: "Test message",
         beneficiary_group_ids: [],
+        target_area_records: [],
         created_via: :api
       )
 
@@ -443,10 +445,20 @@ module V1
               }
             }
           }
+        },
+        options: {
+          account:
         }
       )
 
       expect(schema.output).to include(
+        target_area_records: include(
+          { administrative_level: 1, geocode: "KH-1" },
+          { administrative_level: 2, geocode: "0102" },
+          { administrative_level: 3, geocode: "010201" },
+          { administrative_level: 2, geocode: "0201" },
+          { administrative_level: 3, geocode: "020101" }
+        ),
         target_area_data: {
           geocode: [
             { iso_region_code: "KH-1" },

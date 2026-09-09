@@ -1,5 +1,9 @@
 module CountryAddressData
   Configuration = Data.define(:local_language, :address_field, :data) do
+    def self.blank
+      new(local_language: nil, address_field: nil, data: -> { [] })
+    end
+
     def localities
       data.call
     end
@@ -19,7 +23,7 @@ module CountryAddressData
   end
 
   def self.address_data(iso_country_code)
-    return [] unless supported?(iso_country_code)
+    return Configuration.blank unless supported?(iso_country_code)
 
     SETTINGS.fetch(iso_country_code.to_sym)
   end

@@ -367,9 +367,10 @@ module V1
     end
 
     it "handles post processing" do
-      pending_broadcast = create(:broadcast, :pending, :voice_call)
-      errored_broadcast = create(:broadcast, :errored, :voice_call)
-      text_message_broadcast = create(:broadcast, :pending, :text_message)
+      account = create(:account, iso_country_code: "KH")
+      pending_broadcast = create(:broadcast, :pending, :voice_call, account:)
+      errored_broadcast = create(:broadcast, :errored, :voice_call, account:)
+      text_message_broadcast = create(:broadcast, :pending, :text_message, account:)
 
       result = validate_schema(
         input_params: {
@@ -386,7 +387,8 @@ module V1
 
       expect(result).to include(
         desired_status: :queued,
-        audio_url: "http://example.com/sample.mp3"
+        audio_url: "http://example.com/sample.mp3",
+        target_area_records: []
       )
 
       result = validate_schema(
@@ -423,6 +425,47 @@ module V1
       expect(result).to include(
         desired_status: :queued,
         message: "Updated test message"
+      )
+
+      result = validate_schema(
+        input_params: {
+          data: {
+            attributes: {
+              target_areas: {
+                geocode: [
+                  { iso_region_code: "KH-1" },
+                  {
+                    iso_region_code: "KH-2",
+                    administrative_division_level_2_code: "0201"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        options: {
+          resource: pending_broadcast,
+          account:
+        }
+      )
+
+      expect(result.output).to include(
+        target_area_records: include(
+          { administrative_level: 1, geocode: "KH-1" },
+          { administrative_level: 2, geocode: "0102" },
+          { administrative_level: 3, geocode: "010201" },
+          { administrative_level: 2, geocode: "0201" },
+          { administrative_level: 3, geocode: "020101" }
+        ),
+        target_area_data: {
+          geocode: [
+            { iso_region_code: "KH-1" },
+            {
+              iso_region_code: "KH-2",
+              administrative_division_level_2_code: "0201"
+            }
+          ]
+        }
       )
     end
 

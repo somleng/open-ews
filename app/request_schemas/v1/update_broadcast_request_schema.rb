@@ -3,6 +3,15 @@ module V1
     VALID_STATES = [ "running", "stopped" ].freeze
 
     option :broadcast_state_machine, default: -> { BroadcastStateMachine.new(resource.status) }
+    option :target_area_data_type, default: -> {
+      TargetAreaDataType.new(
+        include: {
+          target_area_records: {
+            locality_data: CountryAddressData.address_data(account.iso_country_code).localities
+          }
+        }
+      )
+    }
 
     params do
       required(:data).value(:hash).schema do
@@ -83,6 +92,7 @@ module V1
       beneficiary_groups = output_data[:beneficiary_groups]
       result[:desired_status] = context.fetch(:desired_status) if context.key?(:desired_status)
       result[:target_area_data] = output_data[:target_areas] if output_data.key?(:target_areas)
+      result[:target_area_records] = target_area_data_type.cast(output_data[:target_areas]).target_area_records
       result[:beneficiary_group_ids] = beneficiary_groups if beneficiary_groups.present?
       result
     end
