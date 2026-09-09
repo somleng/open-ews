@@ -11,6 +11,8 @@ class Broadcast < ApplicationRecord
     state :completed
   end
 
+  attribute :target_area_data, TargetAreaDataType.new
+
   enumerize :channel, in: [ :voice_call, :text_message, :audio ]
   enumerize :status, in: StateMachine.state_definitions.map(&:name)
   enumerize :created_via, in: [ :api, :dashboard ]

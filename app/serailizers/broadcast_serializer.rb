@@ -7,6 +7,6 @@ class BroadcastSerializer < ResourceSerializer
   end
 
   attribute :target_areas do |object|
-    object.target_area_data
+    object.target_area_data.value
   end
 end

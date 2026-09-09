@@ -1,5 +1,5 @@
 module V1
-  class TargetAreaSchema < JSONAPIRequestSchema
+  class TargetAreaSchema < ApplicationRequestSchema
     params do
       optional(:geocode).array(:hash) do
         optional(:iso_region_code).filled(:string, max_size?: 255)

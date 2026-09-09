@@ -1,15 +1,6 @@
 module V1
   class BroadcastRequestSchema < JSONAPIRequestSchema
     option :broadcast_state_machine, default: -> { BroadcastStateMachine.new }
-    option :target_area_data_type, default: -> {
-      TargetAreaDataType.new(
-        include: {
-          target_area_records: {
-            locality_data: CountryAddressData.address_data(account.iso_country_code).localities
-          }
-        }
-      )
-    }
 
     params do
       required(:data).value(:hash).schema do
@@ -103,7 +94,6 @@ module V1
       output_data = super
       result = output_data.slice(:message, :audio_url, :beneficiary_filter, :metadata)
       result[:target_area_data] = output_data[:target_areas] if output_data.key?(:target_areas)
-      result[:target_area_records] = target_area_data_type.cast(output_data[:target_areas]).target_area_records
       result[:channel] = context[:channels].first
       result[:beneficiary_group_ids] = Array(output_data[:beneficiary_groups])
       result[:desired_status] = broadcast_state_machine.transition_to!(output_data.fetch(:status)).name if output_data.key?(:status)
