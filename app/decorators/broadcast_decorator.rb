@@ -45,7 +45,7 @@ class BroadcastDecorator < ApplicationDecorator
   end
 
   def preview?
-    notifications.none?
+    channel_capabilities.any?(&:deliverable?) && notifications.none?
   end
 
   def broadcast_preview
