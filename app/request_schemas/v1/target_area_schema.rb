@@ -1,8 +1,8 @@
 module V1
   class TargetAreaSchema < ApplicationRequestSchema
     params do
-      optional(:geocode).array(:hash) do
-        optional(:iso_region_code).filled(:string, max_size?: 255)
+      required(:geocode).array(:hash) do
+        required(:iso_region_code).filled(:string, max_size?: 255)
         optional(:administrative_division_level_2_code).maybe(:string, max_size?: 255)
         optional(:administrative_division_level_3_code).maybe(:string, max_size?: 255)
         optional(:administrative_division_level_4_code).maybe(:string, max_size?: 255)

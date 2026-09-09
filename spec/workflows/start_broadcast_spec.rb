@@ -108,9 +108,9 @@ RSpec.describe StartBroadcast do
       status: :queued,
       account:,
       target_area_data: {
-        geocode: {
-          iso_region_code: [ "KH-12" ]
-        }
+        geocode: [
+          { iso_region_code: [ "KH-12" ] }
+        ]
       }
     )
 

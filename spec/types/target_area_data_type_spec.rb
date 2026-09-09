@@ -18,7 +18,7 @@ RSpec.describe TargetAreaDataType do
         target_areas: {
           "geocode" => [
             { "iso_region_code" => "KH-1" },
-            { "iso_region_code" => "KH-2", "administrative_division_level_2_code" => "0201" }
+            { "administrative_division_level_2_code" => "0201", "iso_region_code" => "KH-2" }
           ]
         }
       ).target_areas
@@ -26,26 +26,30 @@ RSpec.describe TargetAreaDataType do
       value: be_present,
       geocode_areas: contain_exactly(
         have_attributes(
-          levels: contain_exactly(
-            have_attributes(
-              field_name: "iso_region_code",
-              geocode: "KH-1",
-              level: 1
-            )
+          levels: match(
+            [
+              have_attributes(
+                field_name: "iso_region_code",
+                geocode: "KH-1",
+                level: 1
+              )
+            ]
           )
         ),
         have_attributes(
-          levels: contain_exactly(
-            have_attributes(
-              field_name: "iso_region_code",
-              geocode: "KH-2",
-              level: 1
-            ),
-            have_attributes(
-              field_name: "administrative_division_level_2_code",
-              geocode: "0201",
-              level: 2
-            )
+          levels: match(
+            [
+              have_attributes(
+                field_name: "iso_region_code",
+                geocode: "KH-2",
+                level: 1
+              ),
+              have_attributes(
+                field_name: "administrative_division_level_2_code",
+                geocode: "0201",
+                level: 2
+              )
+            ]
           )
         )
       )

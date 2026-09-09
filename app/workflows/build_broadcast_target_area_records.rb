@@ -1,21 +1,25 @@
 class BuildBroadcastTargetAreaRecords < ApplicationWorkflow
   AdministrativeLevel = Data.define(:level, :geocode)
 
-  attr_reader :broadcast, :bucket, :client
+  attr_reader :broadcast, :locality_data
 
-  def initialize(broadcast)
+  def initialize(broadcast, **options)
     super()
     @broadcast = broadcast
+    @locality_data = options.fetch(:locality_data) do
+      CountryAddressData.address_data(broadcast.account.iso_country_code).localities
+    end
   end
 
   def call
-    broadcast.target_area_data.geocode_areas.each_with_object({}) do |area, result|
+    target_areas = broadcast.target_area_data.geocode_areas.each_with_object({}) do |area, result|
       add_target_area(result, area.levels.last)
 
       subdivisions_of(area.levels.map(&:geocode)).each do |administrative_level|
         add_target_area(result, administrative_level)
       end
-    end.values
+    end
+    target_areas.values
   end
 
   private
@@ -26,10 +30,6 @@ class BuildBroadcastTargetAreaRecords < ApplicationWorkflow
       geocode: administrative_level.geocode,
       broadcast_id: broadcast.id
     }
-  end
-
-  def locality_data
-    CountryAddressData.address_data(broadcast.account.iso_country_code).localities
   end
 
   def subdivisions_of(path)
