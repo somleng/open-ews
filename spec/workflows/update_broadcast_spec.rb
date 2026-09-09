@@ -2,22 +2,24 @@ require "rails_helper"
 
 RSpec.describe UpdateBroadcast do
   it "updates a broadcast" do
-    broadcast = create(:broadcast, :pending)
-    create(:broadcast_target_area, broadcast:, administrative_level: 1, geocode: "KH-2")
+    broadcast = create(:broadcast, :pending, account: create(:account, iso_country_code: "US"))
+    create(:broadcast_target_area, broadcast:, administrative_level: 1, geocode: "US-AL")
 
     UpdateBroadcast.call(
       broadcast,
-      target_area_records: [
-        { administrative_level: 1, geocode: "KH-1" },
-        { administrative_level: 2, geocode: "0201" }
-      ]
+      target_area_data: {
+        geocode: [
+          { iso_region_code: "US-NY" },
+          { iso_region_code: "US-CA", administrative_division_level_2_code: "0201" }
+        ]
+      }
     )
 
     expect(broadcast.reload).to have_attributes(
       target_areas: contain_exactly(
         have_attributes(
           administrative_level: 1,
-          geocode: "KH-1"
+          geocode: "US-NY"
         ),
         have_attributes(
           administrative_level: 2,
