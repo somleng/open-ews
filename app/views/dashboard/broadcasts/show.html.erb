@@ -149,10 +149,10 @@
       <% next if filter.address_data_field.present? && filter.address_data_field == field %>
       <div class="row mb-3" id="beneficiary_filter_<%= field.name %>">
         <div class="col">
-          <input class="field-name form-control" type="text" value="<%= field.field_definition.human_name(namespace: current_account.iso_country_code) %>" readonly />
+          <input class="field-name form-control" type="text" value="<%= human_attribute_name(field.name, namespace: current_account.iso_country_code) %>" readonly />
         </div>
         <div class="col">
-          <input class="field-operator form-control" type="text" value="<%= field.field_definition.human_operator(field.operator) %>" readonly />
+          <input class="field-operator form-control" type="text" value="<%= human_operator(field.operator) %>" readonly />
         </div>
         <div class="col">
           <% if field.operator == "between" %>
@@ -167,11 +167,11 @@
           <% elsif field.value.is_a?(Array) %>
             <select class="input-tags-readonly form-control" readonly multiple>
               <% field.value.each do |value| %>
-                <option selected><%= field.field_definition.human_value(value) %></option>
+                <option selected><%= human_value(value, schema: field.field_definition.filter.schema) %></option>
               <% end %>
             </select>
           <% else %>
-            <input class="field-value form-control" type="text" value="<%= field.field_definition.human_value(field.value) %>" readonly />
+            <input class="field-value form-control" type="text" value="<%= human_value(field.value, schema: field.field_definition.filter.schema) %>" readonly />
           <% end %>
         </div>
       </div>

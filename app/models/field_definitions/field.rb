@@ -39,14 +39,5 @@ module FieldDefinitions
     def required?
       !!@required
     end
-
-    def human_name(**options)
-      translation_key = [ options[:namespace]&.downcase, name ].compact.join(".")
-      ApplicationRecord.human_attribute_name(translation_key)
-    end
-
-    def human_operator(operator)
-      I18n.t("filter_operators.#{operator}")
-    end
   end
 end

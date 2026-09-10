@@ -214,6 +214,21 @@ module ApplicationHelper
     Phony.format(value)
   end
 
+  def human_operator(operator)
+    I18n.t("filter_operators.#{operator}")
+  end
+
+  def human_value(value, schema: nil)
+    return value unless schema.respond_to?(:options_for_select)
+
+    schema.options_for_select.find { it[1] == value }.first
+  end
+
+  def human_attribute_name(name, **options)
+    translation_key = [ options[:namespace]&.downcase, name ].compact.join(".")
+    ApplicationRecord.human_attribute_name(translation_key)
+  end
+
   def mfa_qr_code(user)
     label = "OpenEWS:#{user.email}"
     content = "".html_safe

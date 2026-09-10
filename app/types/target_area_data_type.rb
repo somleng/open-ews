@@ -43,6 +43,7 @@ class TargetAreaDataType < ActiveRecord::Type::Json
   private
 
   def administrative_level_for(field_name)
-    field_definitions.call.find_by!(name: field_name).attributes.fetch(:administrative_level)
+    result = field_definitions.respond_to?(:call) ? field_definitions.call : field_definitions
+    result.find_by!(name: field_name).attributes.fetch(:administrative_level)
   end
 end

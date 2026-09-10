@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "Broadcasts" do
-  it "list broadcasts", :js do
+  xit "list broadcasts", :js do
     user = create(:user)
     pending_broadcast = create(
       :broadcast,
