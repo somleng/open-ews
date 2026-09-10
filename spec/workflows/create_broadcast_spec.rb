@@ -13,7 +13,7 @@ RSpec.describe CreateBroadcast do
           eq: "M"
         }
       },
-      target_area_data: {
+      target_areas: {
         geocode: [
           { iso_region_code: "US-NY" },
           { iso_region_code: "US-CA", administrative_division_level_2_code: "0201" }
@@ -46,7 +46,7 @@ RSpec.describe CreateBroadcast do
           "eq" => "M"
         }
       },
-      target_areas: contain_exactly(
+      geocode_target_areas: contain_exactly(
         have_attributes(
           administrative_level: 1,
           geocode: "US-NY"

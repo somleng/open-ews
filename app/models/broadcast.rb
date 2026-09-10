@@ -11,7 +11,7 @@ class Broadcast < ApplicationRecord
     state :completed
   end
 
-  attribute :target_area_data, TargetAreaDataType.new
+  attribute :target_areas, TargetAreaDataType.new
 
   enumerize :channel, in: [ :voice_call, :text_message, :audio ]
   enumerize :status, in: StateMachine.state_definitions.map(&:name)
@@ -23,7 +23,7 @@ class Broadcast < ApplicationRecord
   belongs_to :stopped_by, class_name: "User", optional: true
   belongs_to :updated_by, class_name: "User", optional: true
 
-  has_many :target_areas, class_name: "BroadcastTargetArea"
+  has_many :geocode_target_areas, class_name: "BroadcastGeocodeTargetArea"
   has_many :notifications
   has_many :beneficiaries, through: :notifications
   has_many :delivery_attempts
@@ -49,14 +49,14 @@ class Broadcast < ApplicationRecord
 
   before_create :set_default_status
 
-  def self.target_areas_equal(...)
-    joins(:target_areas)
-    .merge(BroadcastTargetArea.where(...))
-    .where.not(id: BroadcastTargetArea.outside(...).select(:broadcast_id)).distinct
+  def self.geocode_target_areas_equal(...)
+    joins(:geocode_target_areas)
+    .merge(BroadcastGeocodeTargetArea.where(...))
+    .where.not(id: BroadcastGeocodeTargetArea.outside(...).select(:broadcast_id)).distinct
   end
 
-  def self.target_areas_contain(...)
-    joins(:target_areas).merge(BroadcastTargetArea.where(...))
+  def self.geocode_target_areas_contain(...)
+    joins(:geocode_target_areas).merge(BroadcastGeocodeTargetArea.where(...))
   end
 
   def mark_as_errored!(error_code)

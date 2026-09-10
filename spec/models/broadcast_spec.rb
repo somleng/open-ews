@@ -9,73 +9,73 @@ RSpec.describe Broadcast do
     expect(broadcast.errors[:beneficiary_groups]).to be_present
   end
 
-  describe ".target_areas_equal" do
+  describe ".geocode_target_areas_equal" do
     it "returns broadcasts whose target areas are all within the specified administrative division" do
       matching_broadcast = create(:broadcast)
       non_matching_broadcast = create(:broadcast)
       _broadcast_with_no_target_areas = create(:broadcast)
       create(
-        :broadcast_target_area,
+        :broadcast_geocode_target_area,
         broadcast: matching_broadcast,
         administrative_level: 1,
         geocode: "KH-1"
       )
       create(
-        :broadcast_target_area,
+        :broadcast_geocode_target_area,
         broadcast: matching_broadcast,
         administrative_level: 2,
         geocode: "0102"
       )
       create(
-        :broadcast_target_area,
+        :broadcast_geocode_target_area,
         broadcast: matching_broadcast,
         administrative_level: 3,
         geocode: "010201"
       )
       create(
-        :broadcast_target_area,
+        :broadcast_geocode_target_area,
         broadcast: non_matching_broadcast,
         administrative_level: 1,
         geocode: "KH-2"
       )
 
-      result = Broadcast.target_areas_equal(administrative_level: 1, geocode: [ "KH-1" ])
+      result = Broadcast.geocode_target_areas_equal(administrative_level: 1, geocode: [ "KH-1" ])
 
       expect(result).to contain_exactly(matching_broadcast)
     end
   end
 
-  describe ".target_areas_contain" do
+  describe ".geocode_target_areas_contain" do
     it "returns broadcasts whose target areas contain the specified administrative divisions" do
       matching_broadcast = create(:broadcast)
       non_matching_broadcast = create(:broadcast)
 
       create(
-        :broadcast_target_area,
+        :broadcast_geocode_target_area,
         broadcast: matching_broadcast,
         administrative_level: 1,
         geocode: "KH-1"
       )
       create(
-        :broadcast_target_area,
+        :broadcast_geocode_target_area,
         broadcast: matching_broadcast,
         administrative_level: 2,
         geocode: "0102"
       )
       create(
-        :broadcast_target_area,
+        :broadcast_geocode_target_area,
         broadcast: matching_broadcast,
         administrative_level: 3,
         geocode: "010201"
       )
       create(
-        :broadcast_target_area,
+        :broadcast_geocode_target_area,
         broadcast: non_matching_broadcast,
         administrative_level: 1,
         geocode: "KH-2"
       )
 
-      result = Broadcast.target_areas_contain(administrative_level: 3, geocode: [ "010201", "010202" ])
+      result = Broadcast.geocode_target_areas_contain(administrative_level: 3, geocode: [ "010201", "010202" ])
 
       expect(result).to contain_exactly(matching_broadcast)
     end

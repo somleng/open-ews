@@ -1,7 +1,7 @@
 class TargetAreaDataType < ActiveRecord::Type::Json
-  TargetAreas = Data.define(:geocode_areas, :value) do
+  TargetAreas = Data.define(:geocode, :value) do
     def self.blank
-      new(geocode_areas: [], value: {})
+      new(geocode: [], value: {})
     end
   end
   AdministrativeArea = Data.define(:levels)
@@ -18,7 +18,7 @@ class TargetAreaDataType < ActiveRecord::Type::Json
     return TargetAreas.blank if value.blank?
     return value if value.is_a?(TargetAreas)
 
-    geocode_areas = geocoded_areas(value).map do |area|
+    geocode_areas = Array(value.with_indifferent_access[:geocode]).map do |area|
       levels = area.map do |field_name, value|
         field_definition = field_definitions.find_by!(name: field_name)
         AdministrativeLevel.new(
@@ -30,7 +30,7 @@ class TargetAreaDataType < ActiveRecord::Type::Json
       AdministrativeArea.new(levels: levels.sort_by(&:level))
     end
 
-    TargetAreas.new(geocode_areas:, value:)
+    TargetAreas.new(geocode: geocode_areas, value:)
   end
 
   def serialize(value)
@@ -39,11 +39,5 @@ class TargetAreaDataType < ActiveRecord::Type::Json
 
   def deserialize(value)
     cast(super)
-  end
-
-  private
-
-  def geocoded_areas(value)
-    Array(value.with_indifferent_access[:geocode])
   end
 end

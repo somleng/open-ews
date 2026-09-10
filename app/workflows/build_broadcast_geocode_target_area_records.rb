@@ -1,4 +1,4 @@
-class BuildBroadcastTargetAreaRecords < ApplicationWorkflow
+class BuildBroadcastGeocodeTargetAreaRecords < ApplicationWorkflow
   AdministrativeLevel = Data.define(:level, :geocode)
 
   attr_reader :broadcast, :locality_data
@@ -12,14 +12,14 @@ class BuildBroadcastTargetAreaRecords < ApplicationWorkflow
   end
 
   def call
-    target_areas = broadcast.target_area_data.geocode_areas.each_with_object({}) do |area, result|
+    geocode_areas = broadcast.target_areas.geocode.each_with_object({}) do |area, result|
       add_target_area(result, area.levels.last)
 
       subdivisions_of(area.levels.map(&:geocode)).each do |administrative_level|
         add_target_area(result, administrative_level)
       end
     end
-    target_areas.values
+    geocode_areas.values
   end
 
   private

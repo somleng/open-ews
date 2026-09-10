@@ -34,7 +34,7 @@ class BroadcastPreview
   end
 
   def build_beneficiary_address_filter_group
-    area_groups = broadcast.target_area_data.geocode_areas.map do |area|
+    area_groups = broadcast.target_areas.geocode.map do |area|
       fields = area.levels.map do |level|
         FilterField.new(
           name: level.field_name,

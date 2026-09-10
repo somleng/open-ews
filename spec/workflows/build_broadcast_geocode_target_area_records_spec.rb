@@ -1,11 +1,11 @@
 require "rails_helper"
 
-RSpec.describe BuildBroadcastTargetAreaRecords do
+RSpec.describe BuildBroadcastGeocodeTargetAreaRecords do
   it "builds target area records" do
     broadcast = create(
       :broadcast,
       account: create(:account, iso_country_code: "US"),
-      target_area_data: {
+      target_areas: {
         geocode: [
           { iso_region_code: "US-AL" },
           { iso_region_code: "US-NY", administrative_division_level_2_code: "0201" }
@@ -13,7 +13,7 @@ RSpec.describe BuildBroadcastTargetAreaRecords do
       }
     )
 
-    result = BuildBroadcastTargetAreaRecords.call(broadcast)
+    result = BuildBroadcastGeocodeTargetAreaRecords.call(broadcast)
 
     expect(result).to contain_exactly(
       { administrative_level: 1, geocode: "US-AL", broadcast_id: broadcast.id },
@@ -25,7 +25,7 @@ RSpec.describe BuildBroadcastTargetAreaRecords do
     broadcast = create(
       :broadcast,
       account: create(:account, iso_country_code: "KH"),
-      target_area_data: {
+      target_areas: {
         geocode: [
           { iso_region_code: "KH-1" },
           { iso_region_code: "KH-2", administrative_division_level_2_code: "0201" }
@@ -33,7 +33,7 @@ RSpec.describe BuildBroadcastTargetAreaRecords do
       }
     )
 
-    result = BuildBroadcastTargetAreaRecords.call(broadcast)
+    result = BuildBroadcastGeocodeTargetAreaRecords.call(broadcast)
 
     expect(result).to include(
       { administrative_level: 1, geocode: "KH-1", broadcast_id: broadcast.id },

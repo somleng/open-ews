@@ -11,7 +11,7 @@ RSpec.describe TargetAreaDataType do
 
     expect(
       klass.new(target_areas: {}).target_areas
-    ).to have_attributes(value: {}, geocode_areas: [])
+    ).to have_attributes(value: {}, geocode: [])
 
     expect(
       klass.new(
@@ -24,7 +24,7 @@ RSpec.describe TargetAreaDataType do
       ).target_areas
     ).to have_attributes(
       value: be_present,
-      geocode_areas: contain_exactly(
+      geocode: contain_exactly(
         have_attributes(
           levels: match(
             [

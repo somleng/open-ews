@@ -1,4 +1,4 @@
-class BroadcastTargetArea < ApplicationRecord
+class BroadcastGeocodeTargetArea < ApplicationRecord
   belongs_to :broadcast
 
   def self.outside(administrative_level:, geocode:)

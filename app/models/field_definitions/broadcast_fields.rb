@@ -19,9 +19,9 @@ module FieldDefinitions
 
             scope = case operator.to_sym
             when :eq
-              Broadcast.target_areas_equal(**query_params)
+              Broadcast.geocode_target_areas_equal(**query_params)
             when :contains
-              Broadcast.target_areas_contain(**query_params)
+              Broadcast.geocode_target_areas_contain(**query_params)
             end
 
             Broadcast.arel_table[:id].in(scope.select(:id).arel)

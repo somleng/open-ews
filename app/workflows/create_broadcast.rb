@@ -11,8 +11,8 @@ class CreateBroadcast < ApplicationWorkflow
     Broadcast.transaction do
       broadcast = Broadcast.create!(params)
       broadcast.transition_to!(desired_status) if desired_status.present?
-      BroadcastTargetArea.insert_all(
-        BuildBroadcastTargetAreaRecords.call(broadcast),
+      BroadcastGeocodeTargetArea.insert_all(
+        BuildBroadcastGeocodeTargetAreaRecords.call(broadcast),
         unique_by: [ :broadcast_id, :administrative_level, :geocode ]
       )
       ExecuteWorkflowJob.perform_later(StartBroadcast.to_s, broadcast) if broadcast.queued?
