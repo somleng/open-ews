@@ -1,11 +1,10 @@
-class FilterField
-  attr_reader :operator, :value, :query, :metadata
-
-  def initialize(**options)
-    @operator = options.fetch(:operator).to_sym
-    @value = options.fetch(:value)
-    @query = options.fetch(:query)
-    @metadata = options.fetch(:metadata, {})
+FilterField = Data.define(:operator, :value, :query, :metadata) do
+  def initialize(**attributes)
+    super(
+      metadata: {},
+      **attributes,
+      operator: attributes.fetch(:operator).to_sym
+    )
   end
 
   def to_query

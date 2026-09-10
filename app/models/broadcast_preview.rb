@@ -37,7 +37,6 @@ class BroadcastPreview
     area_groups = broadcast.target_areas.geocode.map do |area|
       fields = area.levels.map do |level|
         FilterField.new(
-          name: level.field_name,
           operator: :eq,
           value: level.geocode,
           query: FieldQuery.new(
