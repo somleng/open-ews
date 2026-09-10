@@ -166,6 +166,53 @@ RSpec.describe "Broadcasts" do
     expect(page).to have_no_field(with: "Phone number")
   end
 
+  it "show a broadcast" do
+    account = create(:account, iso_country_code: "US")
+    user = create(:user, account:)
+    broadcast = create(
+      :broadcast,
+      account:,
+      beneficiary_filter: {
+        gender: { eq: "M" }
+      },
+      target_areas: {
+        geocode: [
+          { iso_region_code: "US-AL" },
+          { iso_region_code: "US-NY", administrative_division_level_2_code: "0201" }
+        ]
+      }
+    )
+
+    account_sign_in(user)
+    visit dashboard_broadcast_path(broadcast)
+
+    expect(page).to have_content("US-AL")
+    expect(page).to have_field(with: "Male")
+  end
+
+  it "show a broadcast with a tree", :js do
+    account = create(:account, iso_country_code: "KH")
+    user = create(:user, account:)
+    broadcast = create(
+      :broadcast,
+      account:,
+      target_areas: {
+        geocode: [
+          { iso_region_code: "KH-1" },
+          { iso_region_code: "KH-2", administrative_division_level_2_code: "0201" }
+        ]
+      }
+    )
+
+    account_sign_in(user)
+    visit dashboard_broadcast_path(broadcast)
+
+    within("#target_areas") do
+      expect(page).to have_content("Banteay Meanchey")
+      expect(page).to have_content("Banan")
+    end
+  end
+
   it "update a broadcast", :js do
     account = create(:account, iso_country_code: "KH")
     user = create(:user, account:)

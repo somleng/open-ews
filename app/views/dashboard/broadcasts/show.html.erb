@@ -134,60 +134,67 @@
       <%= f.attribute :updated_at, value: local_time(@broadcast.updated_at) %>
     <% end %>
 
-    <div class="hr-text">
-      <%= t("beneficiary_filters")%>
-    </div>
-
-    <%= render("shared/filter_form/field_headers") %>
-
-    <% filter = BeneficiaryFilterData.new(
-      data: @broadcast.beneficiary_filter,
-      address_data_field_definition: CountryAddressData.address_field(current_account.iso_country_code)
-    ) %>
-
-    <% filter.data.fields.values.each do |field| %>
-      <% next if filter.address_data_field.present? && filter.address_data_field == field %>
-      <div class="row mb-3" id="beneficiary_filter_<%= field.name %>">
-        <div class="col">
-          <input class="field-name form-control" type="text" value="<%= human_attribute_name(field.name, namespace: current_account.iso_country_code) %>" readonly />
-        </div>
-        <div class="col">
-          <input class="field-operator form-control" type="text" value="<%= human_operator(field.operator) %>" readonly />
-        </div>
-        <div class="col">
-          <% if field.operator == "between" %>
-            <div class="row">
-              <div class="col">
-                <input class="field-value form-control" type="text" value="<%= field.value[0] %>" readonly />
-              </div>
-              <div class="col">
-                <input class="field-value form-control" type="text" value="<%= field.value[1] %>" readonly />
-              </div>
-            </div>
-          <% elsif field.value.is_a?(Array) %>
-            <select class="input-tags-readonly form-control" readonly multiple>
-              <% field.value.each do |value| %>
-                <option selected><%= human_value(value, schema: field.field_definition.filter.schema) %></option>
-              <% end %>
-            </select>
-          <% else %>
-            <input class="field-value form-control" type="text" value="<%= human_value(field.value, schema: field.field_definition.filter.schema) %>" readonly />
-          <% end %>
-        </div>
+    <% if @broadcast.beneficiary_filter.present? %>
+      <div class="hr-text">
+        <%= t("beneficiary_filters")%>
       </div>
-    <% end %>
 
-    <% if filter.address_data_field.present? %>
-      <div class="row" id="beneficiary_filter_<%= filter.address_data_field.name %>">
-        <div class="col">
-          <input class="mb-1 field-name form-control" type="text" value="<%= ApplicationRecord.human_attribute_name(:target_areas) %>" readonly />
+      <%= render("shared/filter_form/field_headers") %>
 
-          <div data-controller="treeview"
-               data-treeview-data-value="<%= treeview_address_data.to_json %>"
-               data-treeview-selected-value="<%= Array(filter.address_data_field.value).to_json %>">
+      <% filter = BeneficiaryFilterData.new(data: @broadcast.beneficiary_filter) %>
+      <% filter.data.fields.values.each do |field| %>
+        <div class="row mb-3" id="beneficiary_filter_<%= field.name %>">
+          <div class="col">
+            <input class="field-name form-control" type="text" value="<%= human_attribute_name(field.name, namespace: current_account.iso_country_code) %>" readonly />
+          </div>
+          <div class="col">
+            <input class="field-operator form-control" type="text" value="<%= human_operator(field.operator) %>" readonly />
+          </div>
+          <div class="col">
+            <% if field.operator == "between" %>
+              <div class="row">
+                <div class="col">
+                  <input class="field-value form-control" type="text" value="<%= field.value[0] %>" readonly />
+                </div>
+                <div class="col">
+                  <input class="field-value form-control" type="text" value="<%= field.value[1] %>" readonly />
+                </div>
+              </div>
+            <% elsif field.value.is_a?(Array) %>
+              <select class="input-tags-readonly form-control" readonly multiple>
+                <% field.value.each do |value| %>
+                  <option selected><%= human_value(value, schema: field.field_definition.filter.schema) %></option>
+                <% end %>
+              </select>
+            <% else %>
+              <input class="field-value form-control" type="text" value="<%= human_value(field.value, schema: field.field_definition.filter.schema) %>" readonly />
+            <% end %>
           </div>
         </div>
+      <% end %>
+    <% end %>
+
+    <% if @broadcast.target_areas.present? %>
+      <div class="hr-text">
+        <%= Broadcast.human_attribute_name(:target_areas) %>
       </div>
+
+      <% if CountryAddressData.supported?(current_account.iso_country_code) %>
+        <div class="row" id="target_areas">
+          <div class="col">
+            <div data-controller="treeview"
+                  data-treeview-data-value="<%= treeview_address_data.to_json %>"
+                  data-treeview-selected-value="<%= Array(@broadcast.target_areas.value["geocode"]).to_json %>">
+            </div>
+          </div>
+        </div>
+      <% else %>
+        <%= show_for(@broadcast) do |f| %>
+          <%= f.attribute :target_areas, label: false do %>
+            <%= text_area_tag(:target_areas, JSON.pretty_generate(@broadcast.target_areas.value), rows: 10, class: "form-control w-100", readonly: true) %>
+          <% end %>
+        <% end %>
+      <% end %>
     <% end %>
   </div>
 </div>

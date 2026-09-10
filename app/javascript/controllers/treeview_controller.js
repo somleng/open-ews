@@ -26,23 +26,24 @@ export default class extends Controller {
   }
 
   #markChecked() {
-    this.tree
-      .deepest()
-      .available()
-      .each((n) => {
-        const node = n.itree.ref
-        const originalLabel = node.querySelector("a.title")
-        const parent = originalLabel.parentNode
+    const selectedLeafValues = this.selectedValue.map((n) => {
+      return Object.values(n).at(-1)
+    })
 
-        const label = document.createElement("a")
-        label.className = originalLabel.className
-        label.innerHTML = originalLabel.innerHTML
-        parent.replaceChild(label, originalLabel)
+    this.tree.available().each((n) => {
+      const node = n.itree.ref
+      const originalLabel = node.querySelector("a.title")
+      const parent = originalLabel.parentNode
 
-        if (this.selectedValue.includes(n.id)) {
-          n.check()
-        }
-      })
+      const label = document.createElement("a")
+      label.className = originalLabel.className
+      label.innerHTML = originalLabel.innerHTML
+      parent.replaceChild(label, originalLabel)
+
+      if (selectedLeafValues.includes(n.id)) {
+        n.check()
+      }
+    })
   }
 
   #hideUnchecked() {
