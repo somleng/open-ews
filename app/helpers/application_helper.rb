@@ -119,6 +119,8 @@ module ApplicationHelper
 
     {
       id: locality.value,
+      administrative_level: locality.administrative_level,
+      field_name: FieldDefinitions::BroadcastGeocodeFieldMap.to_name(locality.administrative_level),
       text: I18n.locale == local_language ? locality.name_local : locality.name_en,
       children:
     }

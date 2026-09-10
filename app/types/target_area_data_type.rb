@@ -7,13 +7,6 @@ class TargetAreaDataType < ActiveRecord::Type::Json
   AdministrativeArea = Data.define(:levels)
   AdministrativeLevel = Data.define(:field_name, :geocode, :level)
 
-  attr_reader :field_definitions
-
-  def initialize(**options)
-    super()
-    @field_definitions = options.fetch(:field_definitions)
-  end
-
   def cast(value)
     return TargetAreas.blank if value.blank?
     return value if value.is_a?(TargetAreas)
@@ -43,7 +36,6 @@ class TargetAreaDataType < ActiveRecord::Type::Json
   private
 
   def administrative_level_for(field_name)
-    result = field_definitions.respond_to?(:call) ? field_definitions.call : field_definitions
-    result.find_by!(name: field_name).metadata.fetch(:administrative_level)
+    FieldDefinitions::BroadcastGeocodeFieldMap.to_administrative_level(field_name)
   end
 end

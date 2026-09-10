@@ -12,7 +12,7 @@ module V1
 
     rule(:geocode).each do
       levels = value.keys
-              .map { FieldDefinitions::BroadcastFields.find_by!(name: it).metadata.fetch(:administrative_level) }
+              .map { FieldDefinitions::BroadcastGeocodeFieldMap.to_administrative_level(it) }
               .sort
 
       next if levels == (1..levels.size).to_a
