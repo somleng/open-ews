@@ -6,7 +6,7 @@ RSpec.describe TargetAreaDataType do
       include ActiveModel::Model
       include ActiveModel::Attributes
 
-      attribute :target_areas, TargetAreaDataType.new(field_definitions: FieldDefinitions::BroadcastFields)
+      attribute :target_areas, TargetAreaDataType.new
     end
 
     expect(
