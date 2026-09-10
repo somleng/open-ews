@@ -1,22 +1,25 @@
 class FilterField
-  attr_reader :operator, :value, :column, :query, :association
+  attr_reader :operator, :value, :query, :attributes
 
   def initialize(**options)
     @operator = options.fetch(:operator).to_sym
     @value = options.fetch(:value)
-    @column = options[:column]
-    @query = options[:query]
-    @association = options[:association]
+    @query = options.fetch(:query)
+    @attributes = options.fetch(:attributes, {})
   end
 
   def to_query
-    query.present? ? query.call(operator:, value:) : column.public_send(operator_method, filter_value)
+    if query.respond_to?(:to_arel)
+      query.to_arel(operator:, value:, **attributes)
+    else
+      query.arel_column.public_send(operator_method, filter_value)
+    end
   end
 
   def associations
-    return [] if association.blank?
+    return [] if query.association.blank?
 
-    [ association ]
+    [ query.association ]
   end
 
   private

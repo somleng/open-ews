@@ -226,12 +226,6 @@ RSpec.resource "Broadcasts"  do
       end
     end
 
-    FieldDefinitions::TargetAreaFields.where(category: :geocode).each do |field|
-      with_options scope: [ :data, :attributes, :target_areas ] do
-        parameter(:"geocode.*.#{field.name}", field.description, required: false, method: :_disabled)
-      end
-    end
-
     with_options scope: [ :data, :relationships, :beneficiary_groups ] do
       parameter(
         :"data.*.type", "Must be `beneficiary_group`",

@@ -31,21 +31,31 @@ module V1
         filter_group: have_attributes(
           conditions: contain_exactly(
             have_attributes(
-              column: Beneficiary.arel_table[:gender],
+              query: have_attributes(
+                arel_column: Beneficiary.arel_table[:gender]
+              ),
               operator: :eq,
               value: "M"
             ),
             have_attributes(
-              column: Beneficiary.arel_table[:iso_country_code],
+              query: have_attributes(
+                arel_column: Beneficiary.arel_table[:iso_country_code]
+              ),
               operator: :eq,
               value: "KH"
             )
           )
         ),
-        group_by_fields: contain_exactly(
-          FieldDefinitions::BeneficiaryFields.find_by!(name: :iso_country_code),
-          FieldDefinitions::BeneficiaryFields.find_by!(name: :gender),
-          FieldDefinitions::BeneficiaryFields.find_by!(name: :iso_region_code)
+        group_by: contain_exactly(
+          have_attributes(
+            name: "iso_country_code",
+          ),
+          have_attributes(
+            name: "gender"
+          ),
+          have_attributes(
+            name: "address.iso_region_code"
+          )
         )
       )
     end

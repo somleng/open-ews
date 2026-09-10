@@ -60,7 +60,7 @@ class APIController < ActionController::API
       with: with.filter_contract,
       input_params: request.query_parameters
     ) do |filter_group|
-      FilterScopeQuery.new(scope:, filter_group:).apply
+      FilterScope.new(scope:, filter_group:).apply
     end
   end
 

@@ -16,8 +16,13 @@ module V1
         FilterGroup.new
       end
 
-      result[:group_by_fields] = result[:group_by].map do |group|
-        field_definitions.find_by!(path: group)
+      result[:group_by] = result[:group_by].map do |group|
+        field_definition = field_definitions.find_by!(path: group)
+
+        GroupByField.new(
+          name: field_definition.path,
+          query: field_definition.filter.query
+        )
       end
 
       result

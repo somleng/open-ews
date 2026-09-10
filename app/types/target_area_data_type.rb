@@ -11,7 +11,7 @@ class TargetAreaDataType < ActiveRecord::Type::Json
 
   def initialize(**options)
     super()
-    @field_definitions = options.fetch(:field_definitions) { FieldDefinitions::TargetAreaFields }
+    @field_definitions = options.fetch(:field_definitions)
   end
 
   def cast(value)
@@ -20,11 +20,10 @@ class TargetAreaDataType < ActiveRecord::Type::Json
 
     geocode_areas = Array(value.with_indifferent_access[:geocode]).map do |area|
       levels = area.map do |field_name, value|
-        field_definition = field_definitions.find_by!(name: field_name)
         AdministrativeLevel.new(
           field_name:,
           geocode: value,
-          level: field_definition.attributes.fetch(:administrative_level)
+          level: administrative_level_for(field_name)
         )
       end
       AdministrativeArea.new(levels: levels.sort_by(&:level))
@@ -39,5 +38,11 @@ class TargetAreaDataType < ActiveRecord::Type::Json
 
   def deserialize(value)
     cast(super)
+  end
+
+  private
+
+  def administrative_level_for(field_name)
+    field_definitions.call.find_by!(name: field_name).attributes.fetch(:administrative_level)
   end
 end

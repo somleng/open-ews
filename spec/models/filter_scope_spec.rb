@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe FilterScopeQuery, type: :model do
+RSpec.describe FilterScope, type: :model do
   it "handles relationships without an association" do
     beneficiary_with_address = create(:beneficiary)
     create(:beneficiary_address, beneficiary: beneficiary_with_address)
@@ -12,7 +12,7 @@ RSpec.describe FilterScopeQuery, type: :model do
       value: true
     )
     filter_group = FilterGroup.new(conditions: Array(filter_field))
-    query = FilterScopeQuery.new(scope: Beneficiary, filter_group:)
+    query = FilterScope.new(scope: Beneficiary, filter_group:)
 
     result = query.apply
 
@@ -29,7 +29,7 @@ RSpec.describe FilterScopeQuery, type: :model do
       value: [ "KH-1", "KH-2" ]
     )
     filter_group = FilterGroup.new(conditions: Array(filter_field))
-    query = FilterScopeQuery.new(scope: Beneficiary, filter_group:)
+    query = FilterScope.new(scope: Beneficiary, filter_group:)
 
     result = query.apply
 

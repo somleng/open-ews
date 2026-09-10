@@ -11,7 +11,7 @@ class BroadcastPreview
 
     return Beneficiary.none if beneficiary_filter_group.blank? && beneficiary_address_filter_group.blank?
 
-    FilterScopeQuery.new(
+    FilterScope.new(
       scope: broadcast.account.beneficiaries.active.where.not(id: group_beneficiaries.select(:id)),
       filter_group: FilterGroup.new(
         conditions: [ beneficiary_filter_group, beneficiary_address_filter_group ]
@@ -40,8 +40,10 @@ class BroadcastPreview
           name: level.field_name,
           operator: :eq,
           value: level.geocode,
-          column: BeneficiaryAddress.arel_table[level.field_name],
-          association: :addresses
+          query: FieldQuery.new(
+            association: :addresses,
+            arel_column: BeneficiaryAddress.arel_table[level.field_name]
+          )
         )
       end
       FilterGroup.new(conditions: fields, conjunction: :and)

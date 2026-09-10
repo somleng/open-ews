@@ -31,7 +31,7 @@ class UpdateBroadcast < ApplicationWorkflow
     end
 
     broadcast
-  rescue StateMachine::Machine::InvalidStateTransitionError => e
+  rescue ::StateMachine::Machine::InvalidStateTransitionError => e
     raise InvalidStateTransitionError, e.message
   end
 

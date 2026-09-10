@@ -44,7 +44,7 @@ class ExportCSV < ApplicationWorkflow
   end
 
   def records
-    FilterScopeQuery.new(
+    FilterScope.new(
       scope: resources_scope,
       filter_group: filter_class.new(input_params: export.filter_params).output
     ).apply

@@ -2,7 +2,7 @@ class Broadcast < ApplicationRecord
   AUDIO_CONTENT_TYPES = %w[audio/mpeg audio/mp3 audio/wav audio/x-wav].freeze
   MAX_BENEFICIARY_GROUPS = 10
 
-  class StateMachine < StateMachine::ActiveRecord
+  class StateMachine < ::StateMachine::ActiveRecord
     state :pending, initial: true, transitions_to: :queued
     state :queued, transitions_to: [ :running, :errored ]
     state :errored, transitions_to: :queued
@@ -11,7 +11,7 @@ class Broadcast < ApplicationRecord
     state :completed
   end
 
-  attribute :target_areas, TargetAreaDataType.new
+  attribute :target_areas, TargetAreaDataType.new(field_definitions: -> { FieldDefinitions::BroadcastFields })
 
   enumerize :channel, in: [ :voice_call, :text_message, :audio ]
   enumerize :status, in: StateMachine.state_definitions.map(&:name)

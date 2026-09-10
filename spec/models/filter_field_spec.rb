@@ -4,7 +4,9 @@ RSpec.describe FilterField, type: :model do
   describe "#to_query" do
     it "handles `eq` operator" do
       result = FilterField.new(
-        column: Beneficiary.arel_table["gender"],
+        query: FieldQuery.new(
+          arel_column: Beneficiary.arel_table["gender"]
+        ),
         operator: "eq",
         value: "M"
       ).to_query
@@ -14,7 +16,9 @@ RSpec.describe FilterField, type: :model do
 
     it "handles `not_eq` operator" do
       result = FilterField.new(
-        column: Beneficiary.arel_table["gender"],
+        query: FieldQuery.new(
+          arel_column: Beneficiary.arel_table["gender"]
+        ),
         operator: "not_eq",
         value: "M"
       ).to_query
@@ -24,7 +28,9 @@ RSpec.describe FilterField, type: :model do
 
     it "handles `gt` operator" do
       result = FilterField.new(
-        column: Beneficiary.arel_table["date_of_birth"],
+        query: FieldQuery.new(
+          arel_column: Beneficiary.arel_table["date_of_birth"]
+        ),
         operator: "gt",
         value: Date.today
       ).to_query
@@ -34,7 +40,9 @@ RSpec.describe FilterField, type: :model do
 
     it "handles `gteq` operator" do
       result = FilterField.new(
-        column: Beneficiary.arel_table["date_of_birth"],
+        query: FieldQuery.new(
+          arel_column: Beneficiary.arel_table["date_of_birth"]
+        ),
         operator: "gteq",
         value: Date.today
       ).to_query
@@ -44,7 +52,9 @@ RSpec.describe FilterField, type: :model do
 
     it "handles `lt` operator" do
       result = FilterField.new(
-        column: Beneficiary.arel_table["date_of_birth"],
+        query: FieldQuery.new(
+          arel_column: Beneficiary.arel_table["date_of_birth"]
+        ),
         operator: "lt",
         value: Date.today
       ).to_query
@@ -54,7 +64,9 @@ RSpec.describe FilterField, type: :model do
 
     it "handles `lteq` operator" do
       result = FilterField.new(
-        column: Beneficiary.arel_table["date_of_birth"],
+        query: FieldQuery.new(
+          arel_column: Beneficiary.arel_table["date_of_birth"]
+        ),
         operator: "lteq",
         value: Date.today
       ).to_query
@@ -64,7 +76,9 @@ RSpec.describe FilterField, type: :model do
 
     it "handles `between` operator" do
       result = FilterField.new(
-        column: Beneficiary.arel_table["date_of_birth"],
+        query: FieldQuery.new(
+          arel_column: Beneficiary.arel_table["date_of_birth"]
+        ),
         operator: "between",
         value: [ Date.yesterday, Date.today ]
       ).to_query
@@ -74,7 +88,9 @@ RSpec.describe FilterField, type: :model do
 
     it "handles `contains` operator" do
       result = FilterField.new(
-        column: Beneficiary.arel_table["iso_language_code"],
+        query: FieldQuery.new(
+          arel_column: Beneficiary.arel_table["iso_language_code"]
+        ),
         operator: "contains",
         value: "foo"
       ).to_query
@@ -84,7 +100,9 @@ RSpec.describe FilterField, type: :model do
 
     it "handles `not_contains` operator" do
       result = FilterField.new(
-        column: Beneficiary.arel_table["iso_language_code"],
+        query: FieldQuery.new(
+          arel_column: Beneficiary.arel_table["iso_language_code"]
+        ),
         operator: "not_contains",
         value: "foo"
       ).to_query
@@ -94,7 +112,9 @@ RSpec.describe FilterField, type: :model do
 
     it "handles `starts_with` operator" do
       result = FilterField.new(
-        column: Beneficiary.arel_table["iso_language_code"],
+        query: FieldQuery.new(
+          arel_column: Beneficiary.arel_table["iso_language_code"]
+        ),
         operator: "starts_with",
         value: "foo"
       ).to_query
@@ -104,7 +124,9 @@ RSpec.describe FilterField, type: :model do
 
     it "handles `is_null` operator" do
       result = FilterField.new(
-        column: Beneficiary.arel_table["gender"],
+        query: FieldQuery.new(
+          arel_column: Beneficiary.arel_table["gender"]
+        ),
         operator: "is_null",
         value: true
       ).to_query
@@ -112,7 +134,9 @@ RSpec.describe FilterField, type: :model do
       expect(result.to_sql).to eq(Beneficiary.arel_table["gender"].eq(nil).to_sql)
 
       result = FilterField.new(
-        column: Beneficiary.arel_table["gender"],
+        query: FieldQuery.new(
+          arel_column: Beneficiary.arel_table["gender"]
+        ),
         operator: "is_null",
         value: false
       ).to_query
@@ -122,7 +146,9 @@ RSpec.describe FilterField, type: :model do
 
     it "handles `in` operator" do
       result = FilterField.new(
-        column: Beneficiary.arel_table["gender"],
+        query: FieldQuery.new(
+          arel_column: Beneficiary.arel_table["gender"]
+        ),
         operator: "in",
         value: [ "M", "F" ]
       ).to_query
@@ -132,7 +158,9 @@ RSpec.describe FilterField, type: :model do
 
     it "handles `not_in` operator" do
       result = FilterField.new(
-        column: Beneficiary.arel_table["gender"],
+        query: FieldQuery.new(
+          arel_column: Beneficiary.arel_table["gender"]
+        ),
         operator: "not_in",
         value: [ "M", "F" ]
       ).to_query
@@ -143,7 +171,9 @@ RSpec.describe FilterField, type: :model do
     it "handles unsupported operator" do
       expect {
         FilterField.new(
-          column: Beneficiary.arel_table["gender"],
+          query: FieldQuery.new(
+            arel_column: Beneficiary.arel_table["gender"]
+          ),
           operator: "invalid-operator",
           value: "true"
         ).to_query
@@ -152,7 +182,9 @@ RSpec.describe FilterField, type: :model do
 
     it "handles custom types" do
       result = FilterField.new(
-        column: Beneficiary.arel_table["phone_number"],
+        query: FieldQuery.new(
+          arel_column: Beneficiary.arel_table["phone_number"]
+        ),
         operator: "starts_with",
         value: "855"
       ).to_query
@@ -162,7 +194,9 @@ RSpec.describe FilterField, type: :model do
 
     it "handles SQL injection" do
       result = FilterField.new(
-        column: Beneficiary.arel_table["iso_language_code"],
+        query: FieldQuery.new(
+          arel_column: Beneficiary.arel_table["iso_language_code"]
+        ),
         operator: "starts_with",
         value: "'"
       ).to_query

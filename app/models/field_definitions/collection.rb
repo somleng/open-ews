@@ -19,11 +19,5 @@ module FieldDefinitions
         attributes.all? { |key, value| field.attributes[key]&.to_sym == value&.to_sym }
       end
     end
-
-    def where(attributes)
-      collection.select do |field|
-        attributes.all? { |key, value| field.attributes[key]&.to_sym == value&.to_sym }
-      end
-    end
   end
 end

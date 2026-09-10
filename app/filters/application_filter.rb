@@ -6,7 +6,7 @@ class ApplicationFilter < ApplicationRequestSchema
 
     params do
       field_collection.each do |field|
-        optional(field.path.to_sym).filled(:hash).schema(field.schema.schema_definition)
+        optional(field.path.to_sym).filled(:hash).schema(field.filter.schema.schema_definition)
       end
     end
   end
@@ -43,9 +43,8 @@ class ApplicationFilter < ApplicationRequestSchema
       FilterField.new(
         operator:,
         value:,
-        column: field_definition.column,
-        association: field_definition.association,
-        query: field_definition.query
+        query: field_definition.filter.query,
+        attributes: field_definition.attributes
       )
     end
 

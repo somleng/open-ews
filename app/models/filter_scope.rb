@@ -1,4 +1,4 @@
-class FilterScopeQuery
+class FilterScope
   attr_reader :scope, :filter_group
 
   def initialize(scope:, filter_group:)
