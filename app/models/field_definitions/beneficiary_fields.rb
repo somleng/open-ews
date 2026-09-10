@@ -88,7 +88,6 @@ module FieldDefinitions
       name: :iso_region_code,
       prefix: :address,
       filter: BeneficiaryFilter.address(:iso_region_code),
-      association: :addresses,
       description: "The [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) region code of the address"
     ),
     Field.new(
@@ -101,14 +100,12 @@ module FieldDefinitions
       name: :administrative_division_level_2_name,
       prefix: :address,
       filter: BeneficiaryFilter.address(:administrative_division_level_2_name),
-      association: :addresses,
       description: "The second-level administrative subdivision name of the address (e.g. district name)"
     ),
     Field.new(
       name: :administrative_division_level_3_code,
       prefix: :address,
       filter: BeneficiaryFilter.address(:administrative_division_level_3_code),
-      association: :addresses,
       description: "The third-level administrative subdivision code of the address (e.g. township code)"
     ),
     Field.new(
@@ -121,28 +118,24 @@ module FieldDefinitions
       name: :administrative_division_level_4_code,
       prefix: :address,
       filter: BeneficiaryFilter.address(:administrative_division_level_4_code),
-      association: :addresses,
       description: "The fourth-level administrative subdivision code of the address (e.g. town code)"
     ),
     Field.new(
       name: :administrative_division_level_4_name,
       prefix: :address,
       filter: BeneficiaryFilter.address(:administrative_division_level_4_name),
-      association: :addresses,
       description: "The fourth-level administrative subdivision name of the address (e.g. town name)"
     ),
     Field.new(
       name: :administrative_division_level_5_code,
       prefix: :address,
       filter: BeneficiaryFilter.address(:administrative_division_level_5_code),
-      association: :addresses,
       description: "The fifth-level administrative subdivision code of the address (e.g. village code)"
     ),
     Field.new(
       name: :administrative_division_level_5_name,
       prefix: :address,
       filter: BeneficiaryFilter.address(:administrative_division_level_5_name),
-      association: :addresses,
       description: "The fifth-level administrative subdivision name of the address (e.g. village name)"
     )
   ])

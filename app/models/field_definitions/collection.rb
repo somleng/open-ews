@@ -16,7 +16,7 @@ module FieldDefinitions
 
     def find_by!(attributes)
       collection.find(-> { raise ArgumentError, "Unable to find field with #{attributes}" }) do |field|
-        attributes.all? { |key, value| field.attributes[key]&.to_sym == value&.to_sym }
+        attributes.all? { |key, value| field.to_h[key]&.to_sym == value&.to_sym }
       end
     end
   end

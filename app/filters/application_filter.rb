@@ -44,7 +44,7 @@ class ApplicationFilter < ApplicationRequestSchema
         operator:,
         value:,
         query: field_definition.filter.query,
-        attributes: field_definition.attributes
+        metadata: field_definition.metadata
       )
     end
 

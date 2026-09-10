@@ -114,7 +114,7 @@
       <% end %>
 
       <div class="multi-value-input hidden">
-        <% selected_values = FieldDefinitions::Field::MULTIPLE_SELECTION_OPERATORS.include?(field_form.object&.operator) ? field_form.object.value : [] %>
+        <% selected_values = [ "in", "not_in" ].include?(field_form.object&.operator) ? field_form.object.value : [] %>
         <% base_options = { label: false, required: true, include_hidden: false, multiple: true, selected: selected_values } %>
         <% if field_definition.filter.schema.respond_to?(:options_for_select) %>
           <%= field_form.input(

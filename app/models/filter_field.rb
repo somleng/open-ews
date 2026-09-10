@@ -1,16 +1,16 @@
 class FilterField
-  attr_reader :operator, :value, :query, :attributes
+  attr_reader :operator, :value, :query, :metadata
 
   def initialize(**options)
     @operator = options.fetch(:operator).to_sym
     @value = options.fetch(:value)
     @query = options.fetch(:query)
-    @attributes = options.fetch(:attributes, {})
+    @metadata = options.fetch(:metadata, {})
   end
 
   def to_query
     if query.respond_to?(:to_arel)
-      query.to_arel(operator:, value:, **attributes)
+      query.to_arel(operator:, value:, **metadata)
     else
       query.arel_column.public_send(operator_method, filter_value)
     end

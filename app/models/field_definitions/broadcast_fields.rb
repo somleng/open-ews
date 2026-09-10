@@ -61,37 +61,47 @@ module FieldDefinitions
       Field.new(
         name: :iso_region_code,
         prefix: "target_areas.geocode",
-        administrative_level: 1,
         filter: BroadcastFilter.geocode_target_areas,
-        description: "The [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) region code of the target area"
+        description: "The [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) region code of the target area",
+        metadata: {
+          administrative_level: 1
+        }
       ),
       Field.new(
         name: :administrative_division_level_2_code,
         prefix: "target_areas.geocode",
-        administrative_level: 2,
         filter: BroadcastFilter.geocode_target_areas,
-        description: "The second-level administrative subdivision code of the target area (e.g. district code)"
+        description: "The second-level administrative subdivision code of the target area (e.g. district code)",
+        metadata: {
+          administrative_level: 2
+        }
       ),
       Field.new(
         name: :administrative_division_level_3_code,
         prefix: "target_areas.geocode",
-        administrative_level: 3,
         filter: BroadcastFilter.geocode_target_areas,
-        description: "The third-level administrative subdivision code of the target area (e.g. township code)"
+        description: "The third-level administrative subdivision code of the target area (e.g. township code)",
+        metadata: {
+          administrative_level: 3
+        }
       ),
       Field.new(
         name: :administrative_division_level_4_code,
         prefix: "target_areas.geocode",
-        administrative_level: 4,
         filter: BroadcastFilter.geocode_target_areas,
-        description: "The fourth-level administrative subdivision code of the target area (e.g. town code)"
+        description: "The fourth-level administrative subdivision code of the target area (e.g. town code)",
+        metadata: {
+          administrative_level: 4
+        }
       ),
       Field.new(
         name: :administrative_division_level_5_code,
         prefix: "target_areas.geocode",
-        administrative_level: 5,
         filter: BroadcastFilter.geocode_target_areas,
-        description: "The fifth-level administrative subdivision code of the target area (e.g. village code)"
+        description: "The fifth-level administrative subdivision code of the target area (e.g. village code)",
+        metadata: {
+          administrative_level: 5
+        }
       )
     ]
   )

@@ -1,43 +1,30 @@
 module FieldDefinitions
-  class Field
-    OPERATORS = %i[
-      eq
-      not_eq
-      contains
-      not_contains
-      starts_with
-      gt
-      gteq
-      lt
-      lteq
-      between
-      is_null
-      in
-      not_in
-    ].freeze
+  Field = Data.define(:name, :prefix, :path, :filter, :description, :read_only, :required, :example, :metadata) do
+    def initialize(**attributes)
+      prefix = attributes.fetch(:prefix).to_s.inquiry if attributes.key?(:prefix)
 
-    MULTIPLE_SELECTION_OPERATORS = %w[in not_in]
+      super(
+        read_only: false,
+        required: false,
+        description: nil,
+        example: nil,
+        metadata: {},
+        **attributes,
+        prefix:,
+        path: [ prefix, attributes[:name] ].compact.join(".")
+      )
+    end
 
-    attr_reader :name, :prefix, :path, :filter, :description, :example, :attributes
-
-    def initialize(attributes)
-      @name = attributes.fetch(:name)
-      @prefix = ActiveSupport::StringInquirer.new(attributes[:prefix].to_s) if attributes.key?(:prefix)
-      @path = attributes[:path] = [ prefix, name ].compact.join(".")
-      @filter = attributes.fetch(:filter)
-      @description = attributes[:description]
-      @read_only = attributes[:read_only] = attributes.fetch(:read_only, false)
-      @required = attributes[:required] = attributes.fetch(:required, false)
-      @example = attributes[:example]
-      @attributes = attributes
+    def path
+      [ prefix, name ].compact.join(".")
     end
 
     def read_only?
-      !!@read_only
+      read_only
     end
 
     def required?
-      !!@required
+      required
     end
   end
 end

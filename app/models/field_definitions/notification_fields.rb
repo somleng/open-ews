@@ -40,7 +40,7 @@ module FieldDefinitions
     ),
     *BeneficiaryFields.map do |field|
       Field.new(
-        **field.attributes,
+        **field.to_h,
         prefix: [ "beneficiary", field.prefix ].compact.join("."),
         filter: Filter.new(
           schema: field.filter.schema,
