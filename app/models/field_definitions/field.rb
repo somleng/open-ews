@@ -15,10 +15,6 @@ module FieldDefinitions
       )
     end
 
-    def path
-      [ prefix, name ].compact.join(".")
-    end
-
     def read_only?
       read_only
     end

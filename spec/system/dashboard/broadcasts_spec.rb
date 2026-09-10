@@ -29,7 +29,7 @@ RSpec.describe "Broadcasts" do
 
     click_on "Filters"
     select_filter("Status", operator: "Equals", select: "Pending")
-    select_filter("Channels", operator: "In", select: "Voice call")
+    select_filter("Channels", operator: "Contains", select: "Voice call")
     click_on "Apply Filters"
 
     expect(page).to have_content_tag_for(pending_broadcast)
