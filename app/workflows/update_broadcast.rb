@@ -38,11 +38,11 @@ class UpdateBroadcast < ApplicationWorkflow
   private
 
   def update_target_areas
-    BroadcastGeocodeTargetArea.where(broadcast_id: broadcast.id).delete_all
-    BroadcastGeocodeTargetArea.insert_all(build_target_area_records)
+    GeocodeTargetArea.where(broadcast_id: broadcast.id).delete_all
+    GeocodeTargetArea.insert_all(build_geocode_target_area_records)
   end
 
-  def build_target_area_records
+  def build_geocode_target_area_records
     BuildGeocodeTargetAreaRecords.call(broadcast.target_areas.geocode, locality_data:).map { it.merge(broadcast_id: broadcast.id) }
   end
 

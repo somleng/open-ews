@@ -110,7 +110,7 @@ module ApplicationHelper
 
     Rails.cache.fetch("#{iso_country_code}-#{I18n.locale}") do
       address_data = CountryAddressData.address_data(iso_country_code)
-      address_data.localities.map { treeview_node(it, local_language: address_data.local_language) }
+      address_data.tree.map { treeview_node(it, local_language: address_data.local_language) }
     end
   end
 

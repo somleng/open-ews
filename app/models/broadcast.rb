@@ -23,7 +23,7 @@ class Broadcast < ApplicationRecord
   belongs_to :stopped_by, class_name: "User", optional: true
   belongs_to :updated_by, class_name: "User", optional: true
 
-  has_many :geocode_target_areas, class_name: "BroadcastGeocodeTargetArea"
+  has_many :geocode_target_areas
   has_many :notifications
   has_many :beneficiaries, through: :notifications
   has_many :delivery_attempts
@@ -51,12 +51,12 @@ class Broadcast < ApplicationRecord
 
   def self.geocode_target_areas_equal(...)
     joins(:geocode_target_areas)
-    .merge(BroadcastGeocodeTargetArea.where(...))
-    .where.not(id: BroadcastGeocodeTargetArea.outside(...).select(:broadcast_id)).distinct
+    .merge(GeocodeTargetArea.where(...))
+    .where.not(id: GeocodeTargetArea.outside(...).select(:broadcast_id)).distinct
   end
 
   def self.geocode_target_areas_contain(...)
-    joins(:geocode_target_areas).merge(BroadcastGeocodeTargetArea.where(...))
+    joins(:geocode_target_areas).merge(GeocodeTargetArea.where(...))
   end
 
   def mark_as_errored!(error_code)

@@ -11,7 +11,7 @@ class CreateBroadcast < ApplicationWorkflow
     Broadcast.transaction do
       broadcast = Broadcast.create!(params)
       broadcast.transition_to!(desired_status) if desired_status.present?
-      BroadcastGeocodeTargetArea.insert_all(
+      GeocodeTargetArea.insert_all(
         build_geocode_target_area_records(broadcast),
         unique_by: [ :broadcast_id, :administrative_level, :geocode ]
       )

@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe UpdateBroadcast do
   it "updates a broadcast" do
     broadcast = create(:broadcast, :pending, account: create(:account, iso_country_code: "US"))
-    create(:broadcast_geocode_target_area, broadcast:, administrative_level: 1, geocode: "US-AL")
+    create(:geocode_target_area, broadcast:, administrative_level: 1, geocode: "US-AL")
 
     UpdateBroadcast.call(
       broadcast,

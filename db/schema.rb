@@ -127,16 +127,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_10_012554) do
     t.index ["broadcast_id", "beneficiary_group_id"], name: "idx_on_broadcast_id_beneficiary_group_id_2859ae2689", unique: true
   end
 
-  create_table "broadcast_geocode_target_areas", force: :cascade do |t|
-    t.integer "administrative_level", null: false
-    t.bigint "broadcast_id", null: false
-    t.datetime "created_at", null: false
-    t.string "geocode", null: false
-    t.datetime "updated_at", null: false
-    t.index ["administrative_level", "geocode"], name: "idx_on_administrative_level_geocode_5cc511604b"
-    t.index ["broadcast_id", "administrative_level", "geocode"], name: "idx_on_broadcast_id_administrative_level_geocode_3d38d4857c", unique: true
-  end
-
   create_table "broadcasts", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.string "audio_url"
@@ -219,6 +209,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_10_012554) do
     t.bigint "user_id", null: false
     t.index ["account_id"], name: "index_exports_on_account_id"
     t.index ["user_id"], name: "index_exports_on_user_id"
+  end
+
+  create_table "geocode_target_areas", force: :cascade do |t|
+    t.integer "administrative_level", null: false
+    t.bigint "broadcast_id", null: false
+    t.datetime "created_at", null: false
+    t.string "geocode", null: false
+    t.datetime "updated_at", null: false
+    t.index ["administrative_level", "geocode"], name: "index_geocode_target_areas_on_administrative_level_and_geocode"
+    t.index ["broadcast_id", "administrative_level", "geocode"], name: "idx_on_broadcast_id_administrative_level_geocode_c460e89501", unique: true
   end
 
   create_table "imports", force: :cascade do |t|
@@ -380,7 +380,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_10_012554) do
   add_foreign_key "beneficiary_groups", "accounts", on_delete: :cascade
   add_foreign_key "broadcast_beneficiary_groups", "beneficiary_groups", on_delete: :cascade
   add_foreign_key "broadcast_beneficiary_groups", "broadcasts", on_delete: :cascade
-  add_foreign_key "broadcast_geocode_target_areas", "broadcasts", on_delete: :cascade
   add_foreign_key "broadcasts", "accounts"
   add_foreign_key "broadcasts", "users", column: "created_by_id", on_delete: :nullify
   add_foreign_key "broadcasts", "users", column: "started_by_id", on_delete: :nullify
@@ -392,6 +391,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_10_012554) do
   add_foreign_key "events", "accounts", on_delete: :cascade
   add_foreign_key "exports", "accounts", on_delete: :cascade
   add_foreign_key "exports", "users", on_delete: :cascade
+  add_foreign_key "geocode_target_areas", "broadcasts", on_delete: :cascade
   add_foreign_key "imports", "accounts", on_delete: :cascade
   add_foreign_key "imports", "users", on_delete: :cascade
   add_foreign_key "notifications", "beneficiaries", on_delete: :nullify

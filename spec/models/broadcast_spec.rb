@@ -15,25 +15,25 @@ RSpec.describe Broadcast do
       non_matching_broadcast = create(:broadcast)
       _broadcast_with_no_target_areas = create(:broadcast)
       create(
-        :broadcast_geocode_target_area,
+        :geocode_target_area,
         broadcast: matching_broadcast,
         administrative_level: 1,
         geocode: "KH-1"
       )
       create(
-        :broadcast_geocode_target_area,
+        :geocode_target_area,
         broadcast: matching_broadcast,
         administrative_level: 2,
         geocode: "0102"
       )
       create(
-        :broadcast_geocode_target_area,
+        :geocode_target_area,
         broadcast: matching_broadcast,
         administrative_level: 3,
         geocode: "010201"
       )
       create(
-        :broadcast_geocode_target_area,
+        :geocode_target_area,
         broadcast: non_matching_broadcast,
         administrative_level: 1,
         geocode: "KH-2"
@@ -51,25 +51,25 @@ RSpec.describe Broadcast do
       non_matching_broadcast = create(:broadcast)
 
       create(
-        :broadcast_geocode_target_area,
+        :geocode_target_area,
         broadcast: matching_broadcast,
         administrative_level: 1,
         geocode: "KH-1"
       )
       create(
-        :broadcast_geocode_target_area,
+        :geocode_target_area,
         broadcast: matching_broadcast,
         administrative_level: 2,
         geocode: "0102"
       )
       create(
-        :broadcast_geocode_target_area,
+        :geocode_target_area,
         broadcast: matching_broadcast,
         administrative_level: 3,
         geocode: "010201"
       )
       create(
-        :broadcast_geocode_target_area,
+        :geocode_target_area,
         broadcast: non_matching_broadcast,
         administrative_level: 1,
         geocode: "KH-2"

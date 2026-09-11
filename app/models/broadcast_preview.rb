@@ -35,13 +35,13 @@ class BroadcastPreview
 
   def build_beneficiary_address_filter_group
     area_groups = broadcast.target_areas.geocode.map do |area|
-      fields = area.levels.map do |level|
+      fields = area.divisions.map do |division|
         FilterField.new(
           operator: :eq,
-          value: level.geocode,
+          value: division.geocode,
           query: FieldQuery.new(
             association: :addresses,
-            arel_column: BeneficiaryAddress.arel_table[level.field_name]
+            arel_column: BeneficiaryAddress.arel_table[division.field_name]
           )
         )
       end
