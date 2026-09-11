@@ -18,7 +18,7 @@ module CountryLocalityData
       items.select { it.path.size > path.size && it.path.join(".").start_with?(path.join(".")) }
     end
 
-    def to_tree(&block)
+    def to_tree(&)
       nodes_by_path = {}
 
       items.sort_by { it.path.size }.each_with_object([]) do |locality, tree|
