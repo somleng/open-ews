@@ -24,7 +24,7 @@ class CreateBroadcast < ApplicationWorkflow
   private
 
   def build_geocode_target_area_records(broadcast)
-    locality_data = CountryAddressData.address_data(broadcast.account.iso_country_code).collection
+    locality_data = CountryLocalityData.locality_data(broadcast.account.iso_country_code).collection
     BuildGeocodeTargetAreaRecords.call(broadcast.target_areas.geocode, locality_data:).map { it.merge(broadcast_id: broadcast.id) }
   end
 end

@@ -105,12 +105,12 @@ module ApplicationHelper
     tag.time(time.utc.iso8601, data: { behavior: "local-time" })
   end
 
-  def treeview_address_data
+  def treeview_locality_data
     iso_country_code = current_account.iso_country_code
 
     Rails.cache.fetch("#{iso_country_code}-#{I18n.locale}") do
-      address_data = CountryAddressData.address_data(iso_country_code)
-      address_data.tree.map { treeview_node(it, local_language: address_data.local_language) }
+      locality_data = CountryLocalityData.locality_data(iso_country_code)
+      LocalityTreeBuilder.new(locality_data.collection).to_tree.map { treeview_node(it, local_language: locality_data.local_language) }
     end
   end
 

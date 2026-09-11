@@ -1,7 +1,7 @@
-module CountryAddressData
+module CountryLocalityData
   class Cambodia
     class << self
-      def address_data
+      def locality_data
         add_provinces
         add_districts
         add_communes
@@ -35,7 +35,7 @@ module CountryAddressData
 
       def build_locality(data, &)
         value, path = yield(data)
-        CountryAddressData::Locality.new(
+        CountryLocalityData::Locality.new(
           value:,
           name_en: data.name_latin,
           name_local: data.name_km,

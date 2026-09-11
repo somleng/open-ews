@@ -1,7 +1,7 @@
-module CountryAddressData
+module CountryLocalityData
   class Myanmar
     class << self
-      def address_data
+      def locality_data
         add_provinces
         add_districts
         add_towns
@@ -244,7 +244,7 @@ module CountryAddressData
       end
 
       def build_locality(**)
-        CountryAddressData::Locality.new(subdivisions: [], **)
+        CountryLocalityData::Locality.new(subdivisions: [], **)
       end
     end
   end

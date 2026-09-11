@@ -47,6 +47,6 @@ class UpdateBroadcast < ApplicationWorkflow
   end
 
   def locality_data
-    CountryAddressData.address_data(broadcast.account.iso_country_code).collection
+    CountryLocalityData.locality_data(broadcast.account.iso_country_code).collection
   end
 end

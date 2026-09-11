@@ -49,6 +49,6 @@ RSpec.describe BuildGeocodeTargetAreaRecords do
   end
 
   def locality_data_for(country_code)
-    CountryAddressData.address_data(country_code).collection
+    CountryLocalityData.locality_data(country_code).collection
   end
 end

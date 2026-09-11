@@ -1,9 +1,9 @@
 require "rails_helper"
 
-module CountryAddressData
+module CountryLocalityData
   RSpec.describe Myanmar do
     it "returns address localities in Myanmar" do
-      result = CountryAddressData.address_data(:MM)
+      result = CountryLocalityData.locality_data(:MM)
 
       expect(result).to have_attributes(
         local_language: :my,

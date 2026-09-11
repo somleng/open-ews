@@ -1,13 +1,13 @@
 require "rails_helper"
 
-module CountryAddressData
+module CountryLocalityData
   RSpec.describe Laos do
     it "returns address localities in Laos" do
       province = Baan::Province.all.first
       district = Baan::District.all.first
       village = Baan::Village.all.first
 
-      result = CountryAddressData.address_data(:LA)
+      result = CountryLocalityData.locality_data(:LA)
 
       expect(result).to have_attributes(
         local_language: :lo,

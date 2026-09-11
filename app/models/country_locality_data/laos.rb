@@ -1,7 +1,7 @@
-module CountryAddressData
+module CountryLocalityData
   class Laos
     class << self
-      def address_data
+      def locality_data
         add_provinces
         add_districts
         add_villages
@@ -30,7 +30,7 @@ module CountryAddressData
       end
 
       def build_locality(data, &)
-        CountryAddressData::Locality.new(
+        CountryLocalityData::Locality.new(
           value: data.code,
           name_en: data.name_en,
           name_local: data.name_lo,

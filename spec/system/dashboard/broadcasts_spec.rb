@@ -209,6 +209,8 @@ RSpec.describe "Broadcasts" do
 
     within("#target_areas") do
       expect(page).to have_content("Banteay Meanchey")
+      expect(page).to have_content("Mongkol Borey")
+      expect(page).to have_content("Banteay Neang")
       expect(page).to have_content("Banan")
     end
   end

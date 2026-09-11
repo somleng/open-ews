@@ -1,13 +1,13 @@
 require "rails_helper"
 
-module CountryAddressData
+module CountryLocalityData
   RSpec.describe Cambodia do
     it "returns address localities in Cambodia" do
       province = Pumi::Province.all.first
       district = Pumi::District.all.first
       commune = Pumi::Commune.all.first
 
-      result = CountryAddressData.address_data(:KH)
+      result = CountryLocalityData.locality_data(:KH)
 
       expect(result).to have_attributes(
         local_language: :km,

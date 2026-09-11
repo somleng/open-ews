@@ -1,12 +1,12 @@
 require "rails_helper"
 
-module CountryAddressData
+module CountryLocalityData
   RSpec.describe Nepal do
     it "returns address localities in Nepal" do
       province = Gaun::Province.all.first
       district = Gaun::District.all.first
 
-      result = CountryAddressData.address_data(:NP)
+      result = CountryLocalityData.locality_data(:NP)
 
       expect(result).to have_attributes(
         local_language: :ne,
