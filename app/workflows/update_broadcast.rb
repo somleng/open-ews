@@ -13,7 +13,7 @@ class UpdateBroadcast < ApplicationWorkflow
   def call
     broadcast.transaction do
       broadcast.update!(params)
-      update_broadcast_target_areas if params.key?(:target_areas)
+      update_target_areas if params.key?(:target_areas)
       if desired_status.present?
         broadcast.transition_to!(desired_status)
 
@@ -37,8 +37,16 @@ class UpdateBroadcast < ApplicationWorkflow
 
   private
 
-  def update_broadcast_target_areas
+  def update_target_areas
     BroadcastGeocodeTargetArea.where(broadcast_id: broadcast.id).delete_all
-    BroadcastGeocodeTargetArea.insert_all(BuildBroadcastGeocodeTargetAreaRecords.call(broadcast))
+    BroadcastGeocodeTargetArea.insert_all(build_target_area_records)
+  end
+
+  def build_target_area_records
+    BuildGeocodeTargetAreaRecords.call(broadcast.target_areas.geocode, locality_data:).map { it.merge(broadcast_id: broadcast.id) }
+  end
+
+  def locality_data
+    CountryAddressData.address_data(broadcast.account.iso_country_code).collection
   end
 end

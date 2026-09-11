@@ -12,12 +12,19 @@ class CreateBroadcast < ApplicationWorkflow
       broadcast = Broadcast.create!(params)
       broadcast.transition_to!(desired_status) if desired_status.present?
       BroadcastGeocodeTargetArea.insert_all(
-        BuildBroadcastGeocodeTargetAreaRecords.call(broadcast),
+        build_geocode_target_area_records(broadcast),
         unique_by: [ :broadcast_id, :administrative_level, :geocode ]
       )
       ExecuteWorkflowJob.perform_later(StartBroadcast.to_s, broadcast) if broadcast.queued?
       CreateEvent.call(type: "broadcast.created", resource: broadcast)
       broadcast
     end
+  end
+
+  private
+
+  def build_geocode_target_area_records(broadcast)
+    locality_data = CountryAddressData.address_data(broadcast.account.iso_country_code).collection
+    BuildGeocodeTargetAreaRecords.call(broadcast.target_areas.geocode, locality_data:).map { it.merge(broadcast_id: broadcast.id) }
   end
 end
