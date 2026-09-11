@@ -4,22 +4,36 @@ class TargetAreaDataType < ActiveRecord::Type::Json
       new(geocode: [], value: {})
     end
   end
-  AdministrativeArea = Data.define(:levels)
-  AdministrativeLevel = Data.define(:field_name, :geocode, :level)
+
+  AdministrativeArea = Data.define(:divisions) do
+    def path
+      divisions.map(&:geocode)
+    end
+
+    def level
+      path.size
+    end
+
+    def division
+      divisions.last
+    end
+  end
+
+  AdministrativeDivision = Data.define(:field_name, :geocode, :level)
 
   def cast(value)
     return TargetAreas.blank if value.blank?
     return value if value.is_a?(TargetAreas)
 
     geocode_areas = Array(value.with_indifferent_access[:geocode]).map do |area|
-      levels = area.map do |field_name, value|
-        AdministrativeLevel.new(
+      divisions = area.map do |field_name, value|
+        AdministrativeDivision.new(
           field_name:,
           geocode: value,
           level: administrative_level_for(field_name)
         )
       end
-      AdministrativeArea.new(levels: levels.sort_by(&:level))
+      AdministrativeArea.new(divisions: divisions.sort_by(&:level))
     end
 
     TargetAreas.new(geocode: geocode_areas, value:)

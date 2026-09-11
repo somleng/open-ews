@@ -9,7 +9,7 @@ module CountryAddressData
     end
 
     def self.blank
-      new(local_language: nil, address_field: nil, data: -> { [] })
+      new(local_language: nil, address_field: nil, data: -> { Collection.new })
     end
 
     def collection

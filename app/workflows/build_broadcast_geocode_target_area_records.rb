@@ -13,14 +13,13 @@ class BuildBroadcastGeocodeTargetAreaRecords < ApplicationWorkflow
 
   def call
     geocode_areas = broadcast.target_areas.geocode.each_with_object({}) do |area, result|
-      target_administrative_level = area.levels.last
       add_target_area(
         result,
-        administrative_level: target_administrative_level.level,
-        geocode: target_administrative_level.geocode
+        administrative_level: area.level,
+        geocode: area.division.geocode
       )
 
-      subdivisions_of(area).each do |locality|
+      locality_data.subdivisions_of(area.path).each do |locality|
         add_target_area(
           result,
           administrative_level: locality.administrative_level,
@@ -39,13 +38,5 @@ class BuildBroadcastGeocodeTargetAreaRecords < ApplicationWorkflow
       geocode:,
       broadcast_id: broadcast.id
     }
-  end
-
-  def subdivisions_of(target_area)
-    target_path = target_area.levels.map(&:geocode)
-
-    locality_data.select do |locality|
-      locality.path.size > target_path.size && locality.path.join(".").start_with?(target_path.join("."))
-    end
   end
 end

@@ -27,6 +27,10 @@ module CountryAddressData
       end
     end
 
+    def subdivisions_of(path)
+      items.select { it.path.size > path.size && it.path.join(".").start_with?(path.join(".")) }
+    end
+
     private
 
     def items
