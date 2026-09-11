@@ -14,10 +14,6 @@ module CountryAddressData
       data[item.path] = item
     end
 
-    def find_by_path(path)
-      data.fetch(path)
-    end
-
     def to_tree
       data.values.each_with_object([]) do |locality, tree|
         parent_path = locality.path[0...-1]
