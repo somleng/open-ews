@@ -1,44 +1,44 @@
 module CountryAddressData
   class Cambodia
-    def self.address_data
-      @address_data ||= begin
-        data = Pumi::Commune.all.each_with_object(Hash.new { |h1, k1| h1[k1] = Hash.new { |h2, k2| h2[k2] = [] } }) do |commune, result|
-          province_locality = CountryAddressData::Locality.new(
-            value: commune.province.iso3166_2,
-            name_en: commune.province.name_latin,
-            name_local: commune.province.name_km,
-            path: [ commune.province.iso3166_2 ],
-            subdivisions: []
-          )
-          district_locality = CountryAddressData::Locality.new(
-            value: commune.district.id,
-            name_en: commune.district.name_latin,
-            name_local: commune.district.name_km,
-            path: [ commune.province.iso3166_2, commune.district.id ],
-            subdivisions: []
-          )
-          commune_locality = CountryAddressData::Locality.new(
-            value: commune.id,
-            name_en: commune.name_latin,
-            name_local: commune.name_km,
-            path: [ commune.province.iso3166_2, commune.district.id, commune.id ],
-            subdivisions: []
-          )
+    class << self
+      def address_data
+        collection = Collection.new
 
-          result[province_locality][district_locality] << commune_locality
-        end
-
-        data.map do |province, districts|
-          districts.each do |district, communes|
-            communes.each do |commune|
-              district.subdivisions << commune
-            end
-
-            province.subdivisions << district
+        Pumi::Province.all.each do |province|
+          locality = build_locality(province) do
+            [ province.iso3166_2, [ province.iso3166_2 ] ]
           end
-
-          province
+          collection.add(locality)
         end
+
+        Pumi::District.all.each do |district|
+          locality = build_locality(district) do
+            [ district.id, [ district.province.iso3166_2, district.id ] ]
+          end
+          collection.add(locality)
+        end
+
+        Pumi::Commune.all.each do |commune|
+          locality = build_locality(commune) do
+            [ commune.id, [ commune.province.iso3166_2, commune.district.id, commune.id ] ]
+          end
+          collection.add(locality)
+        end
+
+        collection
+      end
+
+      private
+
+      def build_locality(data, &)
+        value, path = yield(data)
+        CountryAddressData::Locality.new(
+          value:,
+          name_en: data.name_latin,
+          name_local: data.name_km,
+          path:,
+          subdivisions: []
+        )
       end
     end
   end

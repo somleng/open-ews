@@ -1,11 +1,23 @@
 module CountryAddressData
-  Configuration = Data.define(:local_language, :address_field, :data) do
+  class Configuration
+    attr_reader :local_language, :address_field, :data
+
+    def initialize(local_language:, address_field:, data:)
+      @local_language = local_language
+      @address_field = address_field
+      @data = data
+    end
+
     def self.blank
       new(local_language: nil, address_field: nil, data: -> { [] })
     end
 
-    def localities
-      data.call
+    def collection
+      @collection ||= data.call
+    end
+
+    def tree
+      @tree ||= collection.to_tree
     end
   end
 
