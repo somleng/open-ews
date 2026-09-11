@@ -110,20 +110,16 @@ module ApplicationHelper
 
     Rails.cache.fetch("#{iso_country_code}-#{I18n.locale}") do
       locality_data = CountryLocalityData.locality_data(iso_country_code)
-      LocalityTreeBuilder.new(locality_data.collection).to_tree.map { treeview_node(it, local_language: locality_data.local_language) }
+      locality_data.to_tree do |locality|
+        {
+          id: locality.value,
+          administrative_level: locality.administrative_level,
+          field_name: FieldDefinitions::BroadcastGeocodeFieldMap.to_name(locality.administrative_level),
+          text: I18n.locale == locality_data.local_language ? locality.name_local : locality.name_en,
+          children: []
+        }
+      end
     end
-  end
-
-  def treeview_node(locality, local_language:)
-    children = locality.subdivisions.map { treeview_node(it, local_language:) } if locality.subdivisions.present?
-
-    {
-      id: locality.value,
-      administrative_level: locality.administrative_level,
-      field_name: FieldDefinitions::BroadcastGeocodeFieldMap.to_name(locality.administrative_level),
-      text: I18n.locale == local_language ? locality.name_local : locality.name_en,
-      children:
-    }
   end
 
   def broadcast_status(broadcast)

@@ -23,6 +23,10 @@ module CountryLocalityData
     def collection
       cache.data
     end
+
+    def to_tree(...)
+      collection.to_tree(...)
+    end
   end
 
   SETTINGS = {
