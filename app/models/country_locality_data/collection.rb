@@ -18,7 +18,7 @@ module CountryLocalityData
       items.select { it.path.size > path.size && it.path.join(".").start_with?(path.join(".")) }
     end
 
-    def to_tree(&)
+    def to_tree(children_as: :children, &)
       nodes_by_path = {}
 
       items.sort_by { it.path.size }.each_with_object([]) do |locality, tree|
@@ -27,7 +27,7 @@ module CountryLocalityData
         parent_node = nodes_by_path[locality.path[0...-1]]
 
         if parent_node.present?
-          parent_node.fetch(:children) << node_data
+          parent_node.fetch(children_as) << node_data
         else
           tree << node_data
         end
