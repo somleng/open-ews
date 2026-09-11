@@ -1,22 +1,39 @@
 module CountryAddressData
   class Nepal
-    def self.address_data
-      @address_data ||= Gaun::Province.all.map do |province|
+    class << self
+      def address_data
+        add_provinces
+        add_districts
+
+        collection
+      end
+
+      private
+
+      def add_provinces
+        Gaun::Province.all.map do |province|
+          collection.add(build_locality(province) { [ province.code ] })
+        end
+      end
+
+      def add_districts
+        Gaun::District.all.map do |district|
+          collection.add(build_locality(district) { [ district.province.code, district.code ] })
+        end
+      end
+
+      def build_locality(data, &)
         CountryAddressData::Locality.new(
-          value: province.code,
-          name_en: province.name_en,
-          name_local: province.name_ne,
-          path: [ province.code ],
-          subdivisions: province.districts.map do |district|
-            CountryAddressData::Locality.new(
-              value: district.code,
-              name_en: district.name_en,
-              name_local: district.name_ne,
-              path: [ province.code, district.code ],
-              subdivisions: []
-            )
-          end
+          value: data.code,
+          name_en: data.name_en,
+          name_local: data.name_ne,
+          path: yield(data),
+          subdivisions: []
         )
+      end
+
+      def collection
+        @collection ||= Collection.new
       end
     end
   end
