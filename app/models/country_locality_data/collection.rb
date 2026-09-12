@@ -2,42 +2,42 @@ module CountryLocalityData
   class Collection
     include Enumerable
 
-    attr_accessor :data
-
-    delegate :each, to: :items
-
     def initialize
       @data = {}
+    end
+
+    def each(&)
+      data.each_value(&)
     end
 
     def add(item)
       data[item.path] = item
     end
 
-    def subdivisions_of(path)
-      items.select { it.path.size > path.size && it.path[0...path.size] == path }
+    def subdivisions_of(parent_path)
+      select { it.path.size > parent_path.size && it.path.take(parent_path.size) == parent_path }
     end
 
     def to_tree(children_as: :children, &)
       nodes_by_path = {}
 
-      items.sort_by { it.path.size }.each_with_object([]) do |locality, tree|
-        node_data = yield(locality)
-        nodes_by_path[locality.path] = node_data
-        parent_node = nodes_by_path[locality.path[0...-1]]
+      sort_by { it.path.size }.each_with_object([]) do |locality, roots|
+        node = yield(locality)
+        nodes_by_path[locality.path] = node
 
-        if parent_node.present?
-          parent_node.fetch(children_as) << node_data
+        parent_path = locality.path.take(locality.path.size - 1)
+        parent = nodes_by_path[parent_path]
+
+        if parent
+          parent.fetch(children_as) << node
         else
-          tree << node_data
+          roots << node
         end
       end
     end
 
     private
 
-    def items
-      data.values
-    end
+    attr_reader :data
   end
 end
