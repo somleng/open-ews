@@ -105,18 +105,21 @@ module ApplicationHelper
     tag.time(time.utc.iso8601, data: { behavior: "local-time" })
   end
 
-  def treeview_locality_data
+  def locality_tree
     iso_country_code = current_account.iso_country_code
 
     Rails.cache.fetch("#{iso_country_code}-#{I18n.locale}") do
       locality_data = CountryLocalityData.locality_data(iso_country_code)
+      display_local_language = I18n.locale == locality_data.local_language
       locality_data.to_tree do |locality|
         {
           id: locality.value,
-          administrative_level: locality.administrative_level,
-          field_name: FieldDefinitions::BroadcastGeocodeFieldMap.to_name(locality.administrative_level),
-          text: I18n.locale == locality_data.local_language ? locality.name_local : locality.name_en,
-          children: []
+          text: display_local_language ? locality.name_local : locality.name_en,
+          children: [],
+          metadata: {
+            path: locality.path,
+            field_name: FieldDefinitions::BroadcastGeocodeFieldMap.to_name(locality.administrative_level)
+          }
         }
       end
     end

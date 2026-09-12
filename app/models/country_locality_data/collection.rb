@@ -15,7 +15,7 @@ module CountryLocalityData
     end
 
     def subdivisions_of(path)
-      items.select { it.path.size > path.size && it.path.join(".").start_with?(path.join(".")) }
+      items.select { it.path.size > path.size && it.path[0...path.size] == path }
     end
 
     def to_tree(children_as: :children, &)

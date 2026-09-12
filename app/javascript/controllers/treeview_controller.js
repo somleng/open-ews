@@ -26,9 +26,9 @@ export default class extends Controller {
   }
 
   #markChecked() {
-    const selectedLeafValues = this.selectedValue.map((n) => {
-      return Object.values(n).at(-1)
-    })
+    const selectedPaths = new Set(
+      this.selectedValue.map((path) => this.#pathKey(path)),
+    )
 
     this.tree.available().each((n) => {
       const node = n.itree.ref
@@ -40,7 +40,7 @@ export default class extends Controller {
       label.innerHTML = originalLabel.innerHTML
       parent.replaceChild(label, originalLabel)
 
-      if (selectedLeafValues.includes(n.id)) {
+      if (selectedPaths.has(this.#pathKey(n.metadata.path))) {
         n.check()
       }
     })
@@ -59,5 +59,9 @@ export default class extends Controller {
 
       checkbox.disabled = true
     })
+  }
+
+  #pathKey(path) {
+    return path.join(".")
   }
 }

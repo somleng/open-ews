@@ -32,7 +32,6 @@ RSpec.describe Broadcast do
       create(
         :geocode_target_area,
         broadcast: non_matching_broadcast,
-        administrative_level: 1,
         path: [ "KH-2" ]
       )
 

@@ -193,15 +193,16 @@ RSpec.describe "Broadcasts" do
   it "show a broadcast with a tree", :js do
     account = create(:account, iso_country_code: "KH")
     user = create(:user, account:)
-    broadcast = create(
-      :broadcast,
-      account:,
-      target_areas: {
-        geocode: [
-          { iso_region_code: "KH-1" },
-          { iso_region_code: "KH-2", administrative_division_level_2_code: "0201" }
-        ]
-      }
+    broadcast = create(:broadcast, account:)
+    create(
+      :geocode_target_area,
+      path: [ "KH-1", "0102", "010201" ],
+      broadcast:
+    )
+    create(
+      :geocode_target_area,
+      path: [ "KH-2", "0201" ],
+      broadcast:
     )
 
     account_sign_in(user)
@@ -211,7 +212,14 @@ RSpec.describe "Broadcasts" do
       expect(page).to have_content("Banteay Meanchey")
       expect(page).to have_content("Mongkol Borey")
       expect(page).to have_content("Banteay Neang")
+      expect(page).to have_no_content("Bat Trang")
+      expect(page).to have_no_content("Phnum Srok")
+      expect(page).to have_content("Battambang")
       expect(page).to have_content("Banan")
+      expect(page).to have_content("Kantueu Muoy")
+      expect(page).to have_content("Kantueu Pir")
+      expect(page).to have_no_content("Thma Koul")
+      expect(page).to have_no_content("Phnom Penh")
     end
   end
 

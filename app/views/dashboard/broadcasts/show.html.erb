@@ -145,20 +145,34 @@
       <% filter.data.fields.values.each do |field| %>
         <div class="row mb-3" id="beneficiary_filter_<%= field.name %>">
           <div class="col">
-            <input class="field-name form-control" type="text" value="<%= human_attribute_name(field.name, namespace: current_account.iso_country_code) %>" readonly />
+            <%= tag.input(
+              class: "field-name form-control",
+              type: "text",
+              value: human_attribute_name(field.name, namespace: current_account.iso_country_code),
+              readonly: true
+            ) %>
           </div>
           <div class="col">
-            <input class="field-operator form-control" type="text" value="<%= human_operator(field.operator) %>" readonly />
+            <%= tag.input(
+              class: "field-operator form-control",
+              type: "text",
+              value: human_operator(field.operator),
+              readonly: true
+            ) %>
           </div>
           <div class="col">
             <% if field.operator == "between" %>
               <div class="row">
-                <div class="col">
-                  <input class="field-value form-control" type="text" value="<%= field.value[0] %>" readonly />
-                </div>
-                <div class="col">
-                  <input class="field-value form-control" type="text" value="<%= field.value[1] %>" readonly />
-                </div>
+                <% field.value.each do |value| %>
+                  <div class="col">
+                    <%= tag.input(
+                      class: "field-value form-control",
+                      type: "text",
+                      value:,
+                      readonly: true
+                    ) %>
+                  </div>
+                <% end %>
               </div>
             <% elsif field.value.is_a?(Array) %>
               <select class="input-tags-readonly form-control" readonly multiple>
@@ -167,7 +181,12 @@
                 <% end %>
               </select>
             <% else %>
-              <input class="field-value form-control" type="text" value="<%= human_value(field.value, schema: field.field_definition.filter.schema) %>" readonly />
+              <%= tag.input(
+                class: "field-value form-control",
+                type: "text",
+                value: human_value(field.value, schema: field.field_definition.filter.schema),
+                readonly: true
+              ) %>
             <% end %>
           </div>
         </div>
@@ -182,10 +201,13 @@
       <% if CountryLocalityData.supported?(current_account.iso_country_code) %>
         <div class="row" id="target_areas">
           <div class="col">
-            <div data-controller="treeview"
-                  data-treeview-data-value="<%= treeview_locality_data.to_json %>"
-                  data-treeview-selected-value="<%= Array(@broadcast.target_areas.value["geocode"]).to_json %>">
-            </div>
+            <%= tag.div(
+              data: {
+                controller: :treeview,
+                treeview_data_value: locality_tree.to_json,
+                treeview_selected_value: @broadcast.geocode_target_areas.pluck(:path).to_json
+              }
+            ) %>
           </div>
         </div>
       <% else %>

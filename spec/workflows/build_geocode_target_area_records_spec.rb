@@ -31,7 +31,8 @@ RSpec.describe BuildGeocodeTargetAreaRecords do
       { administrative_level: 3, geocode: "020101", path: [ "KH-2", "0201", "020101" ] }
     )
     expect(result).not_to include(
-      { administrative_level: 1, geocode: "KH-2", path: [ "KH-2" ] }
+      include(geocode: "KH-2"),
+      include(geocode: "KH-12")
     )
   end
 
