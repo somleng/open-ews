@@ -50,6 +50,6 @@ class TargetAreaDataType < ActiveRecord::Type::Json
   private
 
   def administrative_level_for(field_name)
-    FieldDefinitions::BroadcastGeocodeFieldMap.to_administrative_level(field_name)
+    FieldDefinitions::GeocodeFieldMap.to_administrative_level(field_name)
   end
 end

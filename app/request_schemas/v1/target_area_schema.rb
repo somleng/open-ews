@@ -12,7 +12,7 @@ module V1
 
     rule(:geocode).each do
       levels = value.keys
-              .map { FieldDefinitions::BroadcastGeocodeFieldMap.to_administrative_level(it) }
+              .map { FieldDefinitions::GeocodeFieldMap.to_administrative_level(it) }
               .sort
 
       next if levels == (1..levels.size).to_a

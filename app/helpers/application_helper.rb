@@ -118,7 +118,7 @@ module ApplicationHelper
           children: [],
           metadata: {
             path: locality.path,
-            field_name: FieldDefinitions::BroadcastGeocodeFieldMap.to_name(locality.administrative_level)
+            field_name: FieldDefinitions::GeocodeFieldMap.to_name(locality.administrative_level)
           }
         }
       end
