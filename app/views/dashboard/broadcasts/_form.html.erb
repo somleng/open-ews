@@ -18,7 +18,16 @@
           <%= f.input :channel, collection: f.object.channel_options_for_select, include_blank: false, disabled: f.object.persisted?, input_html: { data: { broadcasts_target: "channelInput", action: "broadcasts#toggleChannel" } } %>
         </div>
         <div class="col" data-broadcasts-target="audioFileInput">
-          <%= f.input :audio_file, hint: (link_to(@broadcast.object.audio_file.filename, rails_blob_path(@broadcast.object.audio_file)) if @broadcast.persisted? && @broadcast.object.audio_file.attached?), required: f.object.new_record?, as: :file, input_html: { direct_upload: true, accept: Broadcast::AUDIO_CONTENT_TYPES.join(", ") }  %>
+          <%= f.input(
+            :audio_file,
+            hint: (link_to(@broadcast.object.audio_file.filename, rails_blob_path(@broadcast.object.audio_file)) if @broadcast.persisted? && @broadcast.object.audio_file.attached?),
+            required: f.object.new_record?,
+            as: :file,
+            input_html: {
+              direct_upload: true,
+              accept: Broadcast::AUDIO_CONTENT_TYPES.join(", ")
+            }
+          ) %>
         </div>
         <div class="col" data-broadcasts-target="messageInput">
           <%= f.input(
@@ -53,8 +62,7 @@
           "dashboard/beneficiaries/filter_fields",
           address_field_label: ApplicationRecord.human_attribute_name(:target_areas),
           filter_form:,
-          whitelist: @broadcast.beneficiary_filter_fields,
-          whitelist_behavior: :hide
+          whitelist: @broadcast.beneficiary_filter_fields
         ) %>
       <% end %>
     </div>
