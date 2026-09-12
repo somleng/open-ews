@@ -17,6 +17,8 @@ class BroadcastForm < ApplicationForm
             ),
             default: -> { BeneficiaryFilterForm.new }
 
+  attribute :target_areas, TargetAreaDataType.new
+  attribute :geocode_target_areas, GeocodeTargetAreaDataType.new
   attribute :object, default: -> { Broadcast.new }
 
   enumerize :channel, in: Broadcast.channel.values, default: ->(form) { form.supported_channels.first }
@@ -46,7 +48,9 @@ class BroadcastForm < ApplicationForm
       channel: broadcast.channel,
       audio_file: broadcast.audio_file.blob,
       beneficiary_groups: broadcast.beneficiary_group_ids,
-      beneficiary_filter: BeneficiaryFilterData.new(data: broadcast.beneficiary_filter)
+      beneficiary_filter: BeneficiaryFilterData.new(data: broadcast.beneficiary_filter),
+      target_areas: broadcast.target_areas,
+      geocode_target_areas: broadcast.target_areas.geocode
     )
   end
 
@@ -64,6 +68,7 @@ class BroadcastForm < ApplicationForm
       filter_data: BeneficiaryFilterData,
       field_definitions: FieldDefinitions::BeneficiaryFields
     ).serialize(beneficiary_filter)
+     object.target_areas.with(geocode: geocode_target_areas)
 
     if new_record?
       object.created_by = created_by

@@ -13,16 +13,16 @@ RSpec.describe TargetAreaDataType do
       klass.new(target_areas: {}).target_areas
     ).to have_attributes(value: {}, geocode: [])
 
-    expect(
-      klass.new(
-        target_areas: {
-          "geocode" => [
-            { "iso_region_code" => "KH-1" },
-            { "administrative_division_level_2_code" => "0201", "iso_region_code" => "KH-2" }
-          ]
-        }
-      ).target_areas
-    ).to have_attributes(
+    result = klass.new(
+      target_areas: {
+        "geocode" => [
+          { "iso_region_code" => "KH-1" },
+          { "administrative_division_level_2_code" => "0201", "iso_region_code" => "KH-2" }
+        ]
+      }
+    ).target_areas
+
+    expect(result).to have_attributes(
       value: be_present,
       geocode: contain_exactly(
         have_attributes(

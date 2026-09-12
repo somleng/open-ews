@@ -67,6 +67,33 @@
           ) %>
         <% end %>
       <% end %>
+
+      <%= f.input(
+        :target_areas,
+        as: :hidden,
+        input_html: {
+          value: @broadcast.target_areas.value.to_json
+        }
+      ) %>
+
+      <% if CountryLocalityData.supported?(current_account.iso_country_code)  %>
+        <div class="hr-text">
+          <%= Broadcast.human_attribute_name(:target_areas) %>
+        </div>
+
+        <div class="row" id="target_areas">
+          <div class="col">
+            <%= tag.div(
+              data: {
+                controller: :treeview,
+                treeview_data_value: locality_tree.to_json,
+                treeview_selected_value: @broadcast.object.geocode_target_areas.pluck(:path).to_json
+              }
+            ) %>
+          </div>
+        </div>
+
+      <% end %>
     </div>
 
     <div class="card-footer text-end">
