@@ -5,9 +5,9 @@ class TargetAreaDataType < ActiveRecord::Type::Json
     end
   end
 
-  AdministrativeArea = Data.define(:divisions) do
+  AdministrativeArea = Data.define(:hierarchy) do
     def path
-      divisions.map(&:geocode)
+      hierarchy.map(&:geocode)
     end
 
     def level
@@ -15,7 +15,7 @@ class TargetAreaDataType < ActiveRecord::Type::Json
     end
 
     def division
-      divisions.last
+      hierarchy.last
     end
   end
 
@@ -26,14 +26,14 @@ class TargetAreaDataType < ActiveRecord::Type::Json
     return value if value.is_a?(TargetAreas)
 
     geocode_areas = Array(value.with_indifferent_access[:geocode]).map do |area|
-      divisions = area.map do |field_name, value|
+      hierarchy = area.map do |field_name, value|
         AdministrativeDivision.new(
           field_name:,
           geocode: value,
           level: administrative_level_for(field_name)
         )
       end
-      AdministrativeArea.new(divisions: divisions.sort_by(&:level))
+      AdministrativeArea.new(hierarchy: hierarchy.sort_by(&:level))
     end
 
     TargetAreas.new(geocode: geocode_areas, value:)

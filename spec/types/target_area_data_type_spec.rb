@@ -26,7 +26,9 @@ RSpec.describe TargetAreaDataType do
       value: be_present,
       geocode: contain_exactly(
         have_attributes(
-          divisions: match(
+          level: 1,
+          division: have_attributes(geocode: "KH-1"),
+          hierarchy: match(
             [
               have_attributes(
                 field_name: "iso_region_code",
@@ -37,7 +39,9 @@ RSpec.describe TargetAreaDataType do
           )
         ),
         have_attributes(
-          divisions: match(
+          level: 2,
+          division: have_attributes(geocode: "0201"),
+          hierarchy: match(
             [
               have_attributes(
                 field_name: "iso_region_code",
