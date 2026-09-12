@@ -89,8 +89,9 @@ FactoryBot.define do
 
   factory :geocode_target_area do
     broadcast
-    administrative_level { 1 }
-    geocode { "KH-1" }
+    path { [ "KH-1" ] }
+    geocode { path.last }
+    administrative_level { path.size }
   end
 
   factory :beneficiary do

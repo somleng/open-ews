@@ -11,14 +11,14 @@ class BuildGeocodeTargetAreaRecords < ApplicationWorkflow
     geocode_areas = target_areas.each_with_object({}) do |area, result|
       add_target_area(
         result,
-        administrative_level: area.level,
+        path: area.path,
         geocode: area.division.geocode
       )
 
       locality_data.subdivisions_of(area.path).each do |locality|
         add_target_area(
           result,
-          administrative_level: locality.administrative_level,
+          path: locality.path,
           geocode: locality.value
         )
       end
@@ -28,7 +28,7 @@ class BuildGeocodeTargetAreaRecords < ApplicationWorkflow
 
   private
 
-  def add_target_area(collection, administrative_level:, geocode:)
-    collection[[ administrative_level, geocode ]] = { administrative_level:, geocode: }
+  def add_target_area(collection, path:, geocode:)
+    collection[[ path ]] = { path:, administrative_level: path.size, geocode: }
   end
 end

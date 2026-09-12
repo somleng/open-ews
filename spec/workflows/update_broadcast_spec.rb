@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe UpdateBroadcast do
   it "updates a broadcast" do
     broadcast = create(:broadcast, :pending, account: create(:account, iso_country_code: "US"))
-    create(:geocode_target_area, broadcast:, administrative_level: 1, geocode: "US-AL")
+    create(:geocode_target_area, broadcast:, path: [ "US-AL" ])
 
     UpdateBroadcast.call(
       broadcast,
@@ -19,11 +19,13 @@ RSpec.describe UpdateBroadcast do
       geocode_target_areas: contain_exactly(
         have_attributes(
           administrative_level: 1,
-          geocode: "US-NY"
+          geocode: "US-NY",
+          path: [ "US-NY" ]
         ),
         have_attributes(
           administrative_level: 2,
-          geocode: "0201"
+          geocode: "0201",
+          path: [ "US-CA", "0201" ]
         )
       )
     )

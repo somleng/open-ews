@@ -65,20 +65,17 @@ RSpec.resource "Broadcasts"  do
       create(
         :geocode_target_area,
         broadcast: matching_broadcast,
-        administrative_level: 1,
-        geocode: "KH-1"
+        path: [ "KH-1" ]
       )
       create(
         :geocode_target_area,
         broadcast: matching_broadcast,
-        administrative_level: 2,
-        geocode: "0102"
+        path: [ "KH-1", "0102" ]
       )
       create(
         :geocode_target_area,
         broadcast: matching_broadcast,
-        administrative_level: 3,
-        geocode: "010201"
+        path: [ "KH-1", "0102", "010201" ]
       )
 
       set_authorization_header_for(account)
@@ -112,26 +109,22 @@ RSpec.resource "Broadcasts"  do
       create(
         :geocode_target_area,
         broadcast: matching_broadcast,
-        administrative_level: 1,
-        geocode: "KH-1"
+        path: [ "KH-1" ]
       )
       create(
         :geocode_target_area,
         broadcast: matching_broadcast,
-        administrative_level: 2,
-        geocode: "0102"
+        path: [ "KH-1", "0102" ]
       )
       create(
         :geocode_target_area,
         broadcast: matching_broadcast,
-        administrative_level: 3,
-        geocode: "010201"
+        path: [ "KH-1", "0102", "010201" ]
       )
       create(
         :geocode_target_area,
         broadcast: non_matching_broadcast,
-        administrative_level: 1,
-        geocode: "KH-2"
+        path: [ "KH-2" ]
       )
 
       set_authorization_header_for(account)

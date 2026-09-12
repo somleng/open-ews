@@ -17,26 +17,23 @@ RSpec.describe Broadcast do
       create(
         :geocode_target_area,
         broadcast: matching_broadcast,
-        administrative_level: 1,
-        geocode: "KH-1"
+        path: [ "KH-1" ]
       )
       create(
         :geocode_target_area,
         broadcast: matching_broadcast,
-        administrative_level: 2,
-        geocode: "0102"
+        path: [ "KH-1", "0102" ]
       )
       create(
         :geocode_target_area,
         broadcast: matching_broadcast,
-        administrative_level: 3,
-        geocode: "010201"
+        path: [ "KH-1", "0102", "010201" ]
       )
       create(
         :geocode_target_area,
         broadcast: non_matching_broadcast,
         administrative_level: 1,
-        geocode: "KH-2"
+        path: [ "KH-2" ]
       )
 
       result = Broadcast.geocode_target_areas_equal(administrative_level: 1, geocode: [ "KH-1" ])
@@ -53,29 +50,27 @@ RSpec.describe Broadcast do
       create(
         :geocode_target_area,
         broadcast: matching_broadcast,
-        administrative_level: 1,
-        geocode: "KH-1"
+        path: [ "KH-1" ]
       )
       create(
         :geocode_target_area,
         broadcast: matching_broadcast,
-        administrative_level: 2,
-        geocode: "0102"
+        path: [ "KH-1", "0102" ],
       )
       create(
         :geocode_target_area,
         broadcast: matching_broadcast,
-        administrative_level: 3,
-        geocode: "010201"
+        path: [ "KH-1", "0102", "010201" ]
       )
       create(
         :geocode_target_area,
         broadcast: non_matching_broadcast,
-        administrative_level: 1,
-        geocode: "KH-2"
+        path: [ "KH-2" ]
       )
 
-      result = Broadcast.geocode_target_areas_contain(administrative_level: 3, geocode: [ "010201", "010202" ])
+      result = Broadcast.geocode_target_areas_contain(
+        administrative_level: 3, geocode: [ "010201", "010202" ]
+      )
 
       expect(result).to contain_exactly(matching_broadcast)
     end

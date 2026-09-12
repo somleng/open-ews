@@ -10,8 +10,8 @@ RSpec.describe BuildGeocodeTargetAreaRecords do
     result = BuildGeocodeTargetAreaRecords.call(target_areas, locality_data: locality_data_for("US"))
 
     expect(result).to contain_exactly(
-      { administrative_level: 1, geocode: "US-AL" },
-      { administrative_level: 2, geocode: "0201" }
+      { administrative_level: 1, geocode: "US-AL", path: [ "US-AL" ] },
+      { administrative_level: 2, geocode: "0201", path: [ "US-NY", "0201" ] }
     )
   end
 
@@ -24,14 +24,14 @@ RSpec.describe BuildGeocodeTargetAreaRecords do
     result = BuildGeocodeTargetAreaRecords.call(target_areas, locality_data: locality_data_for("KH"))
 
     expect(result).to include(
-      { administrative_level: 1, geocode: "KH-1" },
-      { administrative_level: 2, geocode: "0201" },
-      { administrative_level: 2, geocode: "0102" },
-      { administrative_level: 3, geocode: "010201" },
-      { administrative_level: 3, geocode: "020101" }
+      { administrative_level: 1, geocode: "KH-1", path: [ "KH-1" ] },
+      { administrative_level: 2, geocode: "0201", path: [ "KH-2", "0201" ] },
+      { administrative_level: 2, geocode: "0102", path: [ "KH-1", "0102" ] },
+      { administrative_level: 3, geocode: "010201", path: [ "KH-1", "0102", "010201" ] },
+      { administrative_level: 3, geocode: "020101", path: [ "KH-2", "0201", "020101" ] }
     )
     expect(result).not_to include(
-      { administrative_level: 1, geocode: "KH-2" }
+      { administrative_level: 1, geocode: "KH-2", path: [ "KH-2" ] }
     )
   end
 

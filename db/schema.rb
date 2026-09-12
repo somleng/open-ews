@@ -216,6 +216,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_10_012554) do
     t.bigint "broadcast_id", null: false
     t.datetime "created_at", null: false
     t.string "geocode", null: false
+    t.string "path", null: false, array: true
     t.datetime "updated_at", null: false
     t.index ["administrative_level", "geocode"], name: "index_geocode_target_areas_on_administrative_level_and_geocode"
     t.index ["broadcast_id", "administrative_level", "geocode"], name: "idx_on_broadcast_id_administrative_level_geocode_c460e89501", unique: true

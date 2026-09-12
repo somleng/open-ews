@@ -49,11 +49,13 @@ RSpec.describe CreateBroadcast do
       geocode_target_areas: contain_exactly(
         have_attributes(
           administrative_level: 1,
-          geocode: "US-NY"
+          geocode: "US-NY",
+          path: [ "US-NY" ]
         ),
         have_attributes(
           administrative_level: 2,
-          geocode: "0201"
+          geocode: "0201",
+          path: [ "US-CA", "0201" ]
         )
       )
     )
