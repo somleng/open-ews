@@ -1,9 +1,9 @@
 class AggregateQuery
-  attr_reader :scope, :group_by_fields
+  attr_reader :scope, :group_by
 
-  def initialize(scope, group_by_fields)
+  def initialize(scope:, group_by:)
     @scope = scope
-    @group_by_fields = group_by_fields
+    @group_by = group_by
   end
 
   def apply
@@ -13,10 +13,10 @@ class AggregateQuery
   private
 
   def joins_with
-    group_by_fields.map(&:association).compact_blank.uniq
+    group_by.map { it.query.association }.compact_blank.uniq
   end
 
   def group_columns
-    group_by_fields.map(&:column)
+    group_by.map { it.query.arel_column }
   end
 end

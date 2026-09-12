@@ -18,7 +18,16 @@
           <%= f.input :channel, collection: f.object.channel_options_for_select, include_blank: false, disabled: f.object.persisted?, input_html: { data: { broadcasts_target: "channelInput", action: "broadcasts#toggleChannel" } } %>
         </div>
         <div class="col" data-broadcasts-target="audioFileInput">
-          <%= f.input :audio_file, hint: (link_to(@broadcast.object.audio_file.filename, rails_blob_path(@broadcast.object.audio_file)) if @broadcast.persisted? && @broadcast.object.audio_file.attached?), required: f.object.new_record?, as: :file, input_html: { direct_upload: true, accept: Broadcast::AUDIO_CONTENT_TYPES.join(", ") }  %>
+          <%= f.input(
+            :audio_file,
+            hint: (link_to(@broadcast.object.audio_file.filename, rails_blob_path(@broadcast.object.audio_file)) if @broadcast.persisted? && @broadcast.object.audio_file.attached?),
+            required: f.object.new_record?,
+            as: :file,
+            input_html: {
+              direct_upload: true,
+              accept: Broadcast::AUDIO_CONTENT_TYPES.join(", ")
+            }
+          ) %>
         </div>
         <div class="col" data-broadcasts-target="messageInput">
           <%= f.input(
@@ -46,16 +55,44 @@
         <%= t("beneficiary_filters")%>
       </div>
 
-      <%= render("shared/filter_form/field_headers") %>
+      <% beneficiary_fields = @broadcast.beneficiary_filter_fields %>
+      <% if beneficiary_fields.any? %>
+        <%= render("shared/filter_form/field_headers") %>
 
-      <%= f.simple_fields_for(:beneficiary_filter, @broadcast.beneficiary_filter) do |filter_form| %>
-        <%= render(
-          "dashboard/beneficiaries/filter_fields",
-          address_field_label: ApplicationRecord.human_attribute_name(:target_areas),
-          filter_form:,
-          whitelist: @broadcast.beneficiary_filter_fields,
-          whitelist_behavior: :hide
-        ) %>
+        <%= f.simple_fields_for(:beneficiary_filter, @broadcast.beneficiary_filter) do |filter_form| %>
+          <%= render(
+            "dashboard/beneficiaries/filter_fields",
+            filter_form:,
+            whitelist: beneficiary_fields
+          ) %>
+        <% end %>
+      <% end %>
+
+      <%= f.input(
+        :target_areas,
+        as: :hidden,
+        input_html: {
+          value: @broadcast.target_areas.value.to_json
+        }
+      ) %>
+
+      <% if CountryLocalityData.supported?(current_account.iso_country_code)  %>
+        <div class="hr-text">
+          <%= Broadcast.human_attribute_name(:target_areas) %>
+        </div>
+
+        <div class="row" id="target_areas">
+          <div class="col">
+            <%= tag.div(
+              data: {
+                controller: :treeview,
+                treeview_data_value: locality_tree.to_json,
+                treeview_selected_value: @broadcast.object.geocode_target_areas.pluck(:path).to_json
+              }
+            ) %>
+          </div>
+        </div>
+
       <% end %>
     </div>
 
