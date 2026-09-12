@@ -8,27 +8,20 @@ class BuildGeocodeTargetAreaRecords < ApplicationWorkflow
   end
 
   def call
-    geocode_areas = target_areas.each_with_object({}) do |area, result|
-      add_target_area(
-        result,
-        path: area.path,
-        geocode: area.division.geocode
-      )
-
-      locality_data.subdivisions_of(area.path).each do |locality|
-        add_target_area(
-          result,
-          path: locality.path,
-          geocode: locality.value
-        )
-      end
-    end
-    geocode_areas.values
+    target_areas.flat_map { expand_target_area(it) }.uniq { it[:path] }
   end
 
   private
 
-  def add_target_area(collection, path:, geocode:)
-    collection[path] = { path:, administrative_level: path.size, geocode: }
+  def expand_target_area(area)
+    [ build_record(path: area.path), *subdivision_records_for(area) ]
+  end
+
+  def subdivision_records_for(area)
+    locality_data.subdivisions_of(area.path).map { build_record(path: it.path) }
+  end
+
+  def build_record(path:)
+    { path:, administrative_level: path.size, geocode: path.last }
   end
 end
