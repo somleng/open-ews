@@ -5,7 +5,7 @@ class CreateGeocodeTargetAreas < ActiveRecord::Migration[8.1]
       t.integer :administrative_level, null: false
       t.string :path, array: true, null: false
       t.string :geocode, null: false
-      t.index [ :broadcast_id, :administrative_level, :geocode ], unique: true
+      t.index [ :broadcast_id, :path ], unique: true
       t.index [ :administrative_level, :geocode ]
 
       t.timestamps

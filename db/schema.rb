@@ -219,7 +219,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_10_012554) do
     t.string "path", null: false, array: true
     t.datetime "updated_at", null: false
     t.index ["administrative_level", "geocode"], name: "index_geocode_target_areas_on_administrative_level_and_geocode"
-    t.index ["broadcast_id", "administrative_level", "geocode"], name: "idx_on_broadcast_id_administrative_level_geocode_c460e89501", unique: true
+    t.index ["broadcast_id", "path"], name: "index_geocode_target_areas_on_broadcast_id_and_path", unique: true
   end
 
   create_table "imports", force: :cascade do |t|

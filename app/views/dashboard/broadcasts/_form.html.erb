@@ -55,15 +55,17 @@
         <%= t("beneficiary_filters")%>
       </div>
 
-      <%= render("shared/filter_form/field_headers") %>
+      <% beneficiary_fields = @broadcast.beneficiary_filter_fields %>
+      <% if beneficiary_fields.any? %>
+        <%= render("shared/filter_form/field_headers") %>
 
-      <%= f.simple_fields_for(:beneficiary_filter, @broadcast.beneficiary_filter) do |filter_form| %>
-        <%= render(
-          "dashboard/beneficiaries/filter_fields",
-          address_field_label: ApplicationRecord.human_attribute_name(:target_areas),
-          filter_form:,
-          whitelist: @broadcast.beneficiary_filter_fields
-        ) %>
+        <%= f.simple_fields_for(:beneficiary_filter, @broadcast.beneficiary_filter) do |filter_form| %>
+          <%= render(
+            "dashboard/beneficiaries/filter_fields",
+            filter_form:,
+            whitelist: beneficiary_fields
+          ) %>
+        <% end %>
       <% end %>
     </div>
 
