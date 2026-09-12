@@ -29,6 +29,6 @@ class BuildGeocodeTargetAreaRecords < ApplicationWorkflow
   private
 
   def add_target_area(collection, path:, geocode:)
-    collection[[ path ]] = { path:, administrative_level: path.size, geocode: }
+    collection[path] = { path:, administrative_level: path.size, geocode: }
   end
 end
